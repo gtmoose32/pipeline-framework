@@ -71,9 +71,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PipelineFramework\PipelineFramework.csproj">
-      <Project>{07bd310e-d670-4611-a6fe-2c5a969112dd}</Project>
-      <Name>PipelineFramework</Name>
+    <ProjectReference Include="..\..\src\PipelineFramework.Core\PipelineFramework.Core.csproj">
+      <Project>{ac6f987e-3037-4319-a992-0229d149df8f}</Project>
+      <Name>PipelineFramework.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

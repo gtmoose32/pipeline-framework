@@ -3,27 +3,48 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelineFramework", "src\PipelineFramework\PipelineFramework.csproj", "{07BD310E-D670-4611-A6FE-2C5A969112DD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipelineFramework.Tests", "tests\PipelineFramework.Tests\PipelineFramework.Tests.csproj", "{DCE0A698-10C3-4F81-BCC9-0920EC0B8B89}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{46CCC4C7-9316-4C7B-95B3-AACF3E79A8DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AB50D3FB-CC30-46A1-92D2-8148D569E711}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelineFramework.Core", "src\PipelineFramework.Core\PipelineFramework.Core.csproj", "{AC6F987E-3037-4319-A992-0229D149DF8F}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PipelineFramework", "src\PipelineFramework\PipelineFramework.shproj", "{D97A4782-B671-4C36-8690-ED70C20C1AFF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelineFramework.LightInject", "src\PipelineFramework.LightInject\PipelineFramework.LightInject.csproj", "{6B111514-CEF0-4DEE-8A25-B678C626CDBB}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\PipelineFramework\PipelineFramework.projitems*{d97a4782-b671-4c36-8690-ed70c20c1aff}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{07BD310E-D670-4611-A6FE-2C5A969112DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07BD310E-D670-4611-A6FE-2C5A969112DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07BD310E-D670-4611-A6FE-2C5A969112DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07BD310E-D670-4611-A6FE-2C5A969112DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DCE0A698-10C3-4F81-BCC9-0920EC0B8B89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DCE0A698-10C3-4F81-BCC9-0920EC0B8B89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCE0A698-10C3-4F81-BCC9-0920EC0B8B89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCE0A698-10C3-4F81-BCC9-0920EC0B8B89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC6F987E-3037-4319-A992-0229D149DF8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC6F987E-3037-4319-A992-0229D149DF8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC6F987E-3037-4319-A992-0229D149DF8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC6F987E-3037-4319-A992-0229D149DF8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B111514-CEF0-4DEE-8A25-B678C626CDBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B111514-CEF0-4DEE-8A25-B678C626CDBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B111514-CEF0-4DEE-8A25-B678C626CDBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B111514-CEF0-4DEE-8A25-B678C626CDBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DCE0A698-10C3-4F81-BCC9-0920EC0B8B89} = {AB50D3FB-CC30-46A1-92D2-8148D569E711}
+		{AC6F987E-3037-4319-A992-0229D149DF8F} = {46CCC4C7-9316-4C7B-95B3-AACF3E79A8DA}
+		{D97A4782-B671-4C36-8690-ED70C20C1AFF} = {46CCC4C7-9316-4C7B-95B3-AACF3E79A8DA}
+		{6B111514-CEF0-4DEE-8A25-B678C626CDBB} = {46CCC4C7-9316-4C7B-95B3-AACF3E79A8DA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AA4EB542-AAE6-49C6-9BCA-E66759481D44}
