@@ -5,6 +5,10 @@
     <RootNamespace>PipelineFramework</RootNamespace>
     <Authors>Marty Mathis</Authors>
     <PackageTags>pipeline linear workflow component  servicefabric</PackageTags>
+    <PackageLicenseUrl>https://github.com/gtmoose32/pipeline-framework/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

@@ -5,6 +5,10 @@
     <Authors>Marty Mathis</Authors>
     <Company>Marty Mathis</Company>
     <PackageTags>pipeline linear workflow component  servicefabric lightinject</PackageTags>
+    <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseUrl>https://github.com/gtmoose32/pipeline-framework/blob/master/LICENSE.txt</PackageLicenseUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
