@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
+    <Authors>Marty Mathis</Authors>
+    <Company>Marty Mathis</Company>
+    <PackageTags>pipeline linear workflow component  servicefabric lightinject</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">

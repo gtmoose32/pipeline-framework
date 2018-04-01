@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
-using PipelineFramework.Tests.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace PipelineFramework.Tests
+namespace PipelineFramework.Core.Tests
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
@@ -49,7 +49,7 @@ namespace PipelineFramework.Tests
         public void GetSettingValue_SettingNotFoundShouldThrowTrueTest()
         {
             Action act = () => _target.GetSettingValue("setting");
-            act.ShouldThrowExactly<PipelineComponentSettingNotFoundException>()
+            act.Should().ThrowExactly<PipelineComponentSettingNotFoundException>()
                 .And.SettingName.Should().Be("setting");
         }
 
@@ -68,7 +68,7 @@ namespace PipelineFramework.Tests
             _target.Add("setting", "xxx");
             Action act = () => _target.GetSettingValue<int>("setting");
 
-            act.ShouldThrowExactly<Exception>()
+            act.Should().ThrowExactly<Exception>()
                 .WithInnerExceptionExactly<FormatException>();
         }
 

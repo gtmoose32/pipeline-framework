@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PipelineFramework.Tests.Infrastructure;
+using PipelineFramework.Core.Tests.Infrastructure;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PipelineFramework.Tests
+namespace PipelineFramework.Core.Tests
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
@@ -15,7 +15,7 @@ namespace PipelineFramework.Tests
         [TestInitialize]
         public void Initialize()
         {
-            _target = new Settings(new AsyncFooComponent()); 
+            _target = new Settings(new FooComponent()); 
         }
 
         [TestMethod]

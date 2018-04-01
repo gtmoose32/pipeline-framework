@@ -1,8 +1,8 @@
-﻿using PipelineFramework.Abstractions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using PipelineFramework.Abstractions;
 
-namespace PipelineFramework.Tests.Infrastructure
+namespace PipelineFramework.Core.Tests.Infrastructure
 {
     [ExcludeFromCodeCoverage]
     public class Resolver : IPipelineComponentResolver

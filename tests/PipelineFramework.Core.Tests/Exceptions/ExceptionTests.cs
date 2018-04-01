@@ -1,12 +1,12 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using PipelineFramework.Tests.Infrastructure;
 
-namespace PipelineFramework.Tests.Exceptions
+namespace PipelineFramework.Core.Tests.Exceptions
 {
     [ExcludeFromCodeCoverage]
     [TestClass]

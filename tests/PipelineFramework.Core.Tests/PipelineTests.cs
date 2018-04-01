@@ -1,41 +1,19 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PipelineFramework.Abstractions;
-using PipelineFramework.Exceptions;
-using PipelineFramework.Tests.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PipelineFramework.Abstractions;
+using PipelineFramework.Core.Tests.Infrastructure;
+using PipelineFramework.Exceptions;
 
-namespace PipelineFramework.Tests
+namespace PipelineFramework.Core.Tests
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
-    public class PipelineTests
+    public class PipelineTests : PipelineTestsBase
     {
-        private IPipelineComponentResolver _resolver;
-
-        #region Test Setup
-        [TestInitialize]
-        public void Init()
-        {
-            var components = new Dictionary<string, IPipelineComponent>
-            {
-                {typeof(FooComponent).Name, new FooComponent()},
-                {typeof(BarComponent).Name, new BarComponent()},
-                {typeof(FooSettingNotFoundComponent).Name, new FooSettingNotFoundComponent() },
-                {typeof(BarExceptionComponent).Name, new BarExceptionComponent() },
-                {typeof(DelayComponent).Name, new DelayComponent() },
-                {"Component1", new ConfigurableComponent()},
-                {"Component2", new ConfigurableComponent()},
-                {typeof(FilteringComponent).Name, new FilteringComponent()}
-            };
-
-            _resolver = new Resolver(components);
-        }
-        #endregion
-
         [TestMethod]
         public void Pipeline_DuplicateComponentsConfiguredDifferently_Test()
         {
@@ -46,7 +24,7 @@ namespace PipelineFramework.Tests
             };
 
             var payload = new Payload();
-            var target = new Pipeline<Payload>(_resolver, new List<string> { "Component1", "Component2" }, settings);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, new List<string> { "Component1", "Component2" }, settings);
             var actual = target.Execute(payload);
 
             Assert.IsNotNull(actual);
@@ -69,7 +47,7 @@ namespace PipelineFramework.Tests
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-            var target = new Pipeline<Payload>(_resolver, types, config);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, config);
             target.Execute(new Payload(), cts.Token);
         }
 
@@ -84,7 +62,7 @@ namespace PipelineFramework.Tests
                 config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
             }
 
-            var target = new Pipeline<Payload>(_resolver, types, config);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, config);
             var result = target.Execute(new Payload());
 
             Assert.IsNotNull(result);
@@ -99,7 +77,7 @@ namespace PipelineFramework.Tests
             //var types = new List<string> { "Foo", "Bar" };
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
 
-            var target = new Pipeline<Payload>(_resolver, types, null);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, null);
             var result = target.Execute(new Payload());
 
             Assert.IsNotNull(result);
@@ -114,7 +92,7 @@ namespace PipelineFramework.Tests
             //var types = new List<string> { "Foo", "Bar" };
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
 
-            var target = new Pipeline<Payload>(_resolver, types, new Dictionary<string, IDictionary<string, string>>());
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, new Dictionary<string, IDictionary<string, string>>());
             var result = target.Execute(new Payload());
 
             Assert.IsNotNull(result);
@@ -128,7 +106,7 @@ namespace PipelineFramework.Tests
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
 
-            var target = new Pipeline<Payload>(_resolver, types, null);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, null);
             var result = target.Execute(new Payload());
 
             Assert.IsNotNull(result);
@@ -142,7 +120,7 @@ namespace PipelineFramework.Tests
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
 
-            var target = new Pipeline<Payload>(_resolver, types, new Dictionary<string, IDictionary<string, string>>());
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, new Dictionary<string, IDictionary<string, string>>());
             var result = target.Execute(new Payload());
 
             Assert.IsNotNull(result);
@@ -160,7 +138,7 @@ namespace PipelineFramework.Tests
                 t => t.Name,
                 t => new Dictionary<string, string> { { "test", "value" } });
 
-            var target = new Pipeline<Payload>(_resolver, types, config);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, config);
             target.Execute(new Payload());
         }
 
@@ -175,7 +153,7 @@ namespace PipelineFramework.Tests
                 config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
             }
 
-            var target = new Pipeline<Payload>(_resolver, types, config);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, config);
             try
             {
                 target.Execute(new Payload());
@@ -189,7 +167,7 @@ namespace PipelineFramework.Tests
         [TestMethod]
         public void Pipeline_FilterExecution_Test()
         {
-            var types = new List<Type> { typeof(FooComponent), typeof(FilteringComponent), typeof(BarComponent) };
+            var types = new List<Type> { typeof(FooComponent), typeof(PipelineExecutionTerminatingComponent), typeof(BarComponent) };
             var config = new Dictionary<string, IDictionary<string, string>>();
 
             foreach (var t in types)
@@ -197,7 +175,7 @@ namespace PipelineFramework.Tests
                 config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
             }
 
-            var target = new Pipeline<Payload>(_resolver, types, config);
+            var target = new Pipeline<Payload>(PipelineComponentResolver, types, config);
             var result = target.Execute(new Payload());
 
             Assert.IsNotNull(result);
