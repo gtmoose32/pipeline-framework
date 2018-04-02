@@ -9,17 +9,16 @@
     <Import_RootNamespace>PipelineFramework</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\AsyncPipelineComponentBase`1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipelineComponent`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\AsyncPipelineComponentBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipelineComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipelineFactoryExecutor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipeline`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipeline.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipelineComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipelineComponentResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipelineComponent`1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipelineFactoryExecutor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipeline`1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineBase`1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineComponentBase`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipeline.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineComponentBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AsyncPipeline`1.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentExceptionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentSettingNotFound.cs" />
