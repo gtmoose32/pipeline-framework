@@ -9,6 +9,9 @@
     <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseUrl>https://github.com/gtmoose32/pipeline-framework/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <Version>1.0.0</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>PipelineFramework allows to easily compose and execute linear workflows using pipeline components.</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
