@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <Authors>Marty Mathis</Authors>
+    <Company>Marty Mathis</Company>
+    <PackageTags>pipeline linear workflow component  servicefabric lightinject</PackageTags>
+    <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseUrl>https://github.com/gtmoose32/pipeline-framework/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <Version>1.0.0</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>PipelineFramework allows to easily compose and execute linear workflows using pipeline components.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <Import Project="..\PipelineFramework\PipelineFramework.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="LightInject" Version="5.1.2" />
+  </ItemGroup>
+
+</Project>
