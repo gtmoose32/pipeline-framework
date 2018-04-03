@@ -1,5 +1,7 @@
 ﻿using PipelineFramework.Abstractions;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace PipelineFramework.Exceptions
 {
@@ -10,8 +12,9 @@ namespace PipelineFramework.Exceptions
     [Serializable]
     public class PipelineExecutionException : PipelineComponentExceptionBase
     {
-        private const string ErrorMessage = "An exception has occurred within a pipeline component named '{0}', of type '{1}'.  See inner exception for details.";
+        private const string ErrorMessage = "Pipeline execution halted!  Pipeline component named '{0}' has thrown an exception.  See inner exception for details.";
 
+        #region ctor
         /// <summary>
         /// Creates a new instance.
         /// </summary>
@@ -20,16 +23,20 @@ namespace PipelineFramework.Exceptions
         // ReSharper disable once UnusedParameter.Local
         public PipelineExecutionException(
             IPipelineComponent component, Exception componentException)
-            : base(component, componentException) 
+            : base(component, componentException)
         { }
+
+        [ExcludeFromCodeCoverage]
+        protected PipelineExecutionException(
+            SerializationInfo info,
+            StreamingContext context) : base(info, context)
+        { }  
+        #endregion
 
         /// <inheritdoc />
         protected override string GetErrorMessage()
         {
-            return string.Format(
-                ErrorMessage, 
-                ThrowingComponent.Name, 
-                ThrowingComponent.GetType().Name);
+            return string.Format(ErrorMessage, ThrowingComponent.Name);
         }
     }
 }

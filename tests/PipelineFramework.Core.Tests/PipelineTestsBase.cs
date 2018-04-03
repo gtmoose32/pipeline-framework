@@ -22,7 +22,7 @@ namespace PipelineFramework.Core.Tests
                 {typeof(PipelineExecutionTerminatingComponent).Name, new PipelineExecutionTerminatingComponent()}
             };
 
-            PipelineComponentResolver = new Resolver(components);
+            PipelineComponentResolver = new DictionaryPipelineComponentResolver(components);
 
         }
 

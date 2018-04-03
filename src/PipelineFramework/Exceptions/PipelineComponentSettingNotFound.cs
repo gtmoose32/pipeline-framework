@@ -1,5 +1,6 @@
 ﻿using PipelineFramework.Abstractions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework.Exceptions
 {
@@ -10,19 +11,26 @@ namespace PipelineFramework.Exceptions
     public class PipelineComponentSettingNotFoundException : PipelineComponentExceptionBase
     {
         private const string ErrorMessage =
-            "Pipeline component named '{0}' of type '{1}' is referencing a setting named '{2}' that cannot be found.";
+            "Pipeline component named '{0}' is referencing a setting named '{1}' that cannot be found.";
 
+        #region ctor
         /// <summary>
         /// Creates a new exception instance.
         /// </summary>
         /// <param name="component">Type of <see cref="IPipelineComponent"/> that threw the exception.</param>
         /// <param name="settingName">The name of the setting that cannot be found.</param>
-        // ReSharper disable once UnusedParameter.Local
         public PipelineComponentSettingNotFoundException(IPipelineComponent component, string settingName)
             : base(component)
         {
             SettingName = settingName;
         }
+
+        [ExcludeFromCodeCoverage]
+        protected PipelineComponentSettingNotFoundException(
+            System.Runtime.Serialization.SerializationInfo info,
+            System.Runtime.Serialization.StreamingContext context) : base(info, context)
+        { } 
+        #endregion
 
         /// <summary>
         /// Name of the setting that could not be found.
@@ -32,11 +40,7 @@ namespace PipelineFramework.Exceptions
         /// <inheritdoc />
         protected override string GetErrorMessage()
         {
-            return string.Format(
-                ErrorMessage, 
-                ThrowingComponent.Name, 
-                ThrowingComponent.GetType().Name, 
-                SettingName);
+            return string.Format(ErrorMessage, ThrowingComponent.Name, SettingName);
         }
     }
 }

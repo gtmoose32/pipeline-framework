@@ -20,7 +20,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineComponentBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AsyncPipeline`1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DictionaryPipelineComponentResolver.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentExceptionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentNotFoundException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentSettingNotFound.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineExecutionException.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
