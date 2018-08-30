@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AB50D3FB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelineFramework.Core", "src\PipelineFramework.Core\PipelineFramework.Core.csproj", "{AC6F987E-3037-4319-A992-0229D149DF8F}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "PipelineFramework", "src\PipelineFramework\PipelineFramework.shproj", "{D97A4782-B671-4C36-8690-ED70C20C1AFF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelineFramework.LightInject", "src\PipelineFramework.LightInject\PipelineFramework.LightInject.csproj", "{6B111514-CEF0-4DEE-8A25-B678C626CDBB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelineFramework.LightInject.Tests", "tests\PipelineFramework.LightInject.Tests\PipelineFramework.LightInject.Tests.csproj", "{D834A981-D80B-4239-8EAD-F25A9458A4F6}"
@@ -18,9 +16,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PipelineFramework.Core.Tests", "tests\PipelineFramework.Core.Tests\PipelineFramework.Core.Tests.csproj", "{29D75D6A-E501-4A1B-9F28-EB9492AB409C}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\PipelineFramework\PipelineFramework.projitems*{d97a4782-b671-4c36-8690-ed70c20c1aff}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -48,7 +43,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AC6F987E-3037-4319-A992-0229D149DF8F} = {46CCC4C7-9316-4C7B-95B3-AACF3E79A8DA}
-		{D97A4782-B671-4C36-8690-ED70C20C1AFF} = {46CCC4C7-9316-4C7B-95B3-AACF3E79A8DA}
 		{6B111514-CEF0-4DEE-8A25-B678C626CDBB} = {46CCC4C7-9316-4C7B-95B3-AACF3E79A8DA}
 		{D834A981-D80B-4239-8EAD-F25A9458A4F6} = {AB50D3FB-CC30-46A1-92D2-8148D569E711}
 		{29D75D6A-E501-4A1B-9F28-EB9492AB409C} = {AB50D3FB-CC30-46A1-92D2-8148D569E711}

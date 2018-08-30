@@ -8,25 +8,4 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>PipelineFramework</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\AsyncPipelineComponentBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipelineComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipelineFactoryExecutor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IAsyncPipeline.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipelineComponent.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipelineComponentResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipelineFactoryExecutor.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\IPipeline.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\PipelineComponentBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)AsyncPipeline`1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)DictionaryPipelineComponentResolver.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentExceptionBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentNotFoundException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineComponentSettingNotFound.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Exceptions\PipelineExecutionException.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Pipeline`1.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Settings.cs" />
-  </ItemGroup>
 </Project>
