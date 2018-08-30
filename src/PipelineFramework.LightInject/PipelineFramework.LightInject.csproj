@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseUrl>https://github.com/gtmoose32/pipeline-framework/blob/master/LICENSE.txt</PackageLicenseUrl>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>PipelineFramework allows to easily compose and execute linear workflows using pipeline components.</Description>
     <NeutralLanguage>en</NeutralLanguage>
@@ -18,10 +18,9 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <Import Project="..\PipelineFramework\PipelineFramework.projitems" Label="Shared" />
-
   <ItemGroup>
     <PackageReference Include="LightInject" Version="5.1.2" />
+    <PackageReference Include="Pipeline.Framework.Core" Version="1.0.1" />
   </ItemGroup>
 
 </Project>
