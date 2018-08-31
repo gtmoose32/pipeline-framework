@@ -7,6 +7,7 @@ using PipelineFramework.Abstractions;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using UnitTestCommon;
 
 namespace PipelineFramework.LightInject.Tests
 {

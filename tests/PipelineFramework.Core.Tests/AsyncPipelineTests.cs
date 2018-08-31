@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
-using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UnitTestCommon;
 
 namespace PipelineFramework.Core.Tests
 {
@@ -35,8 +35,8 @@ namespace PipelineFramework.Core.Tests
                 {"Component2", new Dictionary<string, string> {{"TestValue", "Component2Value"}, {"UseFoo", "false"}}}
             };
 
-            var payload = new Payload();
-            var target = new AsyncPipeline<Payload>(
+            var payload = new TestPayload();
+            var target = new AsyncPipeline<TestPayload>(
                 PipelineComponentResolver, new List<string> { "Component1", "Component2" }, settings);
 
             var result = await target.ExecuteAsync(payload);
@@ -60,8 +60,8 @@ namespace PipelineFramework.Core.Tests
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-            var target = new AsyncPipeline<Payload>(PipelineComponentResolver, types, config);
-            Func<Task<Payload>> act = () => target.ExecuteAsync(new Payload(), cts.Token);
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            Func<Task<TestPayload>> act = () => target.ExecuteAsync(new TestPayload(), cts.Token);
 
             act.Should().Throw<OperationCanceledException>();
         }
@@ -74,8 +74,8 @@ namespace PipelineFramework.Core.Tests
                 t => t.Name,
                 t => new Dictionary<string, string> { { "test", "value" } });
 
-            var target = new AsyncPipeline<Payload>(PipelineComponentResolver, types, config);
-            var result = await target.ExecuteAsync(new Payload());
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var result = await target.ExecuteAsync(new TestPayload());
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
@@ -88,8 +88,8 @@ namespace PipelineFramework.Core.Tests
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
 
-            var target = new AsyncPipeline<Payload>(PipelineComponentResolver, types, null);
-            var result = await target.ExecuteAsync(new Payload());
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, null);
+            var result = await target.ExecuteAsync(new TestPayload());
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
@@ -106,8 +106,8 @@ namespace PipelineFramework.Core.Tests
                 t => new Dictionary<string, string> { { "test", "value" } });
 
 
-            var target = new AsyncPipeline<Payload>(PipelineComponentResolver, types, config);
-            Func<Task<Payload>> act = () => target.ExecuteAsync(new Payload());
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            Func<Task<TestPayload>> act = () => target.ExecuteAsync(new TestPayload());
 
             act.Should().ThrowExactly<PipelineExecutionException>()
                 .And.InnerException.Should().BeOfType<NotImplementedException>();
@@ -124,8 +124,8 @@ namespace PipelineFramework.Core.Tests
                 config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
             }
 
-            var target = new AsyncPipeline<Payload>(PipelineComponentResolver, types, config);
-            Func<Task<Payload>> act = () => target.ExecuteAsync(new Payload());
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            Func<Task<TestPayload>> act = () => target.ExecuteAsync(new TestPayload());
 
             act.Should().ThrowExactly<PipelineExecutionException>()
                 .And.InnerException.Should().BeOfType<PipelineComponentSettingNotFoundException>();
@@ -147,8 +147,8 @@ namespace PipelineFramework.Core.Tests
                 config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
             }
 
-            var target = new AsyncPipeline<Payload>(PipelineComponentResolver, types, config);
-            var result = await target.ExecuteAsync(new Payload());
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var result = await target.ExecuteAsync(new TestPayload());
 
             result.Should().NotBeNull();
             result.Count.Should().Be(2);

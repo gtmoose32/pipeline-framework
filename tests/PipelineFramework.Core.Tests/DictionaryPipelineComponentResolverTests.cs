@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
-using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using UnitTestCommon;
 
 namespace PipelineFramework.Core.Tests
 {
@@ -31,7 +31,7 @@ namespace PipelineFramework.Core.Tests
             _components.Add(name, new FooComponent());
 
             //Act
-            var result = _target.GetInstance<IAsyncPipelineComponent<Payload>>(name);
+            var result = _target.GetInstance<IAsyncPipelineComponent<TestPayload>>(name);
 
             //Assert
             result.Should().NotBeNull();
@@ -45,7 +45,7 @@ namespace PipelineFramework.Core.Tests
             var name = typeof(FooComponent).Name;
 
             //Act
-            Action act = () => _target.GetInstance<IAsyncPipelineComponent<Payload>>(name);
+            Action act = () => _target.GetInstance<IAsyncPipelineComponent<TestPayload>>(name);
 
             //Assert
             act.Should().ThrowExactly<PipelineComponentNotFoundException>();

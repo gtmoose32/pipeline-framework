@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using UnitTestCommon;
 
 namespace PipelineFramework.LightInject.Tests
 {

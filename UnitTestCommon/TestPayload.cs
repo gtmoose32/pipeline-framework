@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace PipelineFramework.LightInject.Tests
+namespace UnitTestCommon
 {
     [ExcludeFromCodeCoverage]
     public class TestPayload

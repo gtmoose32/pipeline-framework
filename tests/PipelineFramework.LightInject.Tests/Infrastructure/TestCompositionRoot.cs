@@ -1,10 +1,11 @@
-﻿using LightInject;
-using PipelineFramework.Abstractions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using LightInject;
+using PipelineFramework.Abstractions;
+using UnitTestCommon;
 
-namespace PipelineFramework.LightInject.Tests
+namespace PipelineFramework.LightInject.Tests.Infrastructure
 {
     [ExcludeFromCodeCoverage]
     public class TestCompositionRoot : PipelineCompositionRootBase
