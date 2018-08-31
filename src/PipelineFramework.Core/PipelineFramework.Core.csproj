@@ -19,6 +19,4 @@
     <LangVersion>latest</LangVersion>
     <PackageReleaseNotes />
   </PropertyGroup>
-
-  <Import Project="..\PipelineFramework\PipelineFramework.projitems" Label="Shared" />
 </Project>
