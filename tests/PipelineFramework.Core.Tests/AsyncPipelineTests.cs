@@ -1,14 +1,13 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PipelineFramework.Abstractions;
 using PipelineFramework.Exceptions;
+using PipelineFramework.Tests.SharedInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using UnitTestCommon;
 
 namespace PipelineFramework.Core.Tests
 {
@@ -17,13 +16,25 @@ namespace PipelineFramework.Core.Tests
     public class AsyncPipelineTests : PipelineTestsBase
     {
         [TestMethod]
-        public void AsyncPipelineComponentBase_Test()
+        public void AsyncPipelineComponent_Initialize_Test()
         {
             const string name = "myname";
-            IPipelineComponent target = new AsyncFooComponent();
+            var target = new AsyncTestComponent();
             target.Initialize(name, new Dictionary<string, string> {{"test", "value"}});
 
             target.Name.Should().Be(name);
+            target.TestSettings.Count.Should().Be(1);
+        }
+
+        [TestMethod]
+        public void AsyncPipelineComponent_Initialize_NullSettings_Test()
+        {
+            const string name = "myname";
+            var target = new AsyncTestComponent();
+            target.Initialize(name, null);
+
+            target.Name.Should().Be(name);
+            target.TestSettings.Count.Should().Be(0);
         }
 
         [TestMethod]

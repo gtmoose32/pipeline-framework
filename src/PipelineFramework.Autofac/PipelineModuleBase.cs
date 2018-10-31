@@ -9,6 +9,9 @@ namespace PipelineFramework.Autofac
         {
             base.Load(builder);
 
+            builder.Register(context => new PipelineFactoryExecutor(context)).InstancePerLifetimeScope();
+            builder.Register(context => context.Resolve<PipelineFactoryExecutor>()).As<IPipelineFactoryExecutor>();
+            builder.Register(context => context.Resolve<PipelineFactoryExecutor>()).As<IAsyncPipelineFactoryExecutor>();
             builder.RegisterType<PipelineComponentResolver>().As<IPipelineComponentResolver>().InstancePerLifetimeScope();
         }
     }

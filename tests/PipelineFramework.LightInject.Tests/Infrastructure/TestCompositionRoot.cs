@@ -1,9 +1,9 @@
-﻿using System;
+﻿using LightInject;
+using PipelineFramework.Abstractions;
+using PipelineFramework.Tests.SharedInfrastructure;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using LightInject;
-using PipelineFramework.Abstractions;
-using UnitTestCommon;
 
 namespace PipelineFramework.LightInject.Tests.Infrastructure
 {

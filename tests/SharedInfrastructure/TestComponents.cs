@@ -4,10 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace UnitTestCommon
+namespace PipelineFramework.Tests.SharedInfrastructure
 {
     [ExcludeFromCodeCoverage]
-    public class AsyncFooComponent : AsyncPipelineComponentBase<TestPayload>
+    public class AsyncTestComponent : AsyncPipelineComponentBase<TestPayload>
     {
         public override Task<TestPayload> ExecuteAsync(TestPayload payload, CancellationToken cancellationToken)
         {
@@ -16,6 +16,8 @@ namespace UnitTestCommon
 
             return Task.FromResult(payload);
         }
+
+        public Settings TestSettings => Settings;
     }
 
     [ExcludeFromCodeCoverage]

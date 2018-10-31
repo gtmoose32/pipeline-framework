@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace UnitTestCommon
+namespace PipelineFramework.Tests.SharedInfrastructure
 {
     [ExcludeFromCodeCoverage]
     public class TestPayload

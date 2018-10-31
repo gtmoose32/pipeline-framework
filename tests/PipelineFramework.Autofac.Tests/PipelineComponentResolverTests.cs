@@ -1,23 +1,24 @@
-﻿using FluentAssertions;
-using LightInject;
+﻿using Autofac;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
 using PipelineFramework.Tests.SharedInfrastructure;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PipelineFramework.LightInject.Tests
+namespace PipelineFramework.Autofac.Tests
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
     public class PipelineComponentResolverTests
     {
-        private readonly IServiceContainer _container;
+        private readonly IContainer _container;
 
         public PipelineComponentResolverTests()
         {
-            _container = new ServiceContainer(new ContainerOptions { EnablePropertyInjection = false });
-            _container.Register<IPipelineComponent<TestPayload>, FooComponent>(typeof(FooComponent).Name);
+            var builder = new ContainerBuilder();
+            builder.RegisterType<FooComponent>().Named<IPipelineComponent<TestPayload>>(typeof(FooComponent).Name);
+            _container = builder.Build();
         }
 
         [TestMethod]

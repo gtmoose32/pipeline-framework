@@ -4,10 +4,10 @@ using LightInject;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using PipelineFramework.Abstractions;
+using PipelineFramework.Tests.SharedInfrastructure;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using UnitTestCommon;
 
 namespace PipelineFramework.LightInject.Tests
 {

@@ -1,7 +1,7 @@
 ﻿using PipelineFramework.Abstractions;
+using PipelineFramework.Tests.SharedInfrastructure;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using UnitTestCommon;
 
 namespace PipelineFramework.Core.Tests
 {

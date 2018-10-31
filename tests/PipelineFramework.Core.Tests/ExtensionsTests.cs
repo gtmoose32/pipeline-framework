@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Exceptions;
+using PipelineFramework.Tests.SharedInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using UnitTestCommon;
 
 namespace PipelineFramework.Core.Tests
 {

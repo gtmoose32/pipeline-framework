@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net46;netstandard2.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <Authors>Marty Mathis</Authors>
     <Company>Marty Mathis</Company>
@@ -14,13 +14,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>PipelineFramework allows you to easily compose and execute linear workflows using pipeline components.</Description>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageId>Pipeline.Framework.Autofac</PackageId>
-    <Product>Pipeline.Framework.Autofac</Product>
+    <PackageId>PipelineFramework.Autofac</PackageId>
+    <Product>PipelineFramework.Autofac</Product>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
-    <PackageReference Include="Pipeline.Framework.Core" Version="1.0.1" />
+    <PackageReference Include="PipelineFramework.Core" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

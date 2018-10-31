@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
     <RootNamespace>PipelineFramework</RootNamespace>
     <Authors>Marty Mathis</Authors>
     <PackageTags>pipeline linear workflow component  servicefabric</PackageTags>
@@ -9,13 +9,13 @@
     <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>PipelineFramework allows to easily compose and execute linear workflows using pipeline components.</Description>
-    <PackageId>Pipeline.Framework.Core</PackageId>
-    <Product>Pipeline.Framework.Core</Product>
+    <PackageId>PipelineFramework.Core</PackageId>
+    <Product>PipelineFramework.Core</Product>
     <LangVersion>latest</LangVersion>
     <PackageReleaseNotes />
   </PropertyGroup>

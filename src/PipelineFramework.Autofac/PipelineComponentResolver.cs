@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using PipelineFramework.Abstractions;
+using System;
 
 namespace PipelineFramework.Autofac
 {
@@ -9,7 +10,7 @@ namespace PipelineFramework.Autofac
 
         public PipelineComponentResolver(IComponentContext componentContext)
         {
-            _componentContext = componentContext;
+            _componentContext = componentContext ?? throw new ArgumentNullException(nameof(componentContext));
         }
 
         public T GetInstance<T>(string name) where T : IPipelineComponent
