@@ -29,21 +29,5 @@ namespace PipelineFramework.Autofac.Tests
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<Pipeline<TestPayload>>();
         }
-
-        [TestMethod]
-        public void PipelineCompositionRoot_GetPipelineFactoryExecutor()
-        {
-            var result = _container.Resolve<IPipelineFactoryExecutor>();
-
-            result.Should().NotBeNull();
-        }
-
-        [TestMethod]
-        public void PipelineCompositionRoot_GetAsyncPipelineFactoryExecutor()
-        {
-            var result = _container.Resolve<IAsyncPipelineFactoryExecutor>();
-
-            result.Should().NotBeNull();
-        }
     }
 }

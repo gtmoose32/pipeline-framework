@@ -28,21 +28,5 @@ namespace PipelineFramework.LightInject.Tests
             result.Should().NotBeNull();
             result.Should().BeAssignableTo<Pipeline<TestPayload>>();
         }
-
-        [TestMethod]
-        public void PipelineCompositionRoot_GetPipelineFactoryExecutor()
-        {
-            var result = _container.GetInstance<IPipelineFactoryExecutor>();
-
-            result.Should().NotBeNull();
-        }
-
-        [TestMethod]
-        public void PipelineCompositionRoot_GetAsyncPipelineFactoryExecutor()
-        {
-            var result = _container.GetInstance<IAsyncPipelineFactoryExecutor>();
-
-            result.Should().NotBeNull();
-        }
     }
 }

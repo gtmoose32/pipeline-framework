@@ -9,12 +9,8 @@ namespace PipelineFramework.LightInject
         {
             var container = registry as IServiceFactory;
 
-            registry
-                .RegisterInstance(new LightInjectPipelineFactoryExecutor(container))
-                .Register<IPipelineFactoryExecutor>(factory => container.GetInstance<LightInjectPipelineFactoryExecutor>())
-                .Register<IAsyncPipelineFactoryExecutor>(factory => container.GetInstance<LightInjectPipelineFactoryExecutor>())
-                .Register<IPipelineComponentResolver>(factory =>
-                    new PipelineComponentResolver(container), new PerContainerLifetime());
+            registry.Register<IPipelineComponentResolver>(factory =>
+                new PipelineComponentResolver(container), new PerContainerLifetime());
         }
     }
 }
