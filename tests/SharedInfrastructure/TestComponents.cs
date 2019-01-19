@@ -1,5 +1,6 @@
 ﻿using PipelineFramework.Abstractions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace PipelineFramework.Tests.SharedInfrastructure
             return Task.FromResult(payload);
         }
 
-        public Settings TestSettings => Settings;
+        public IDictionary<string, string> TestSettings => Settings;
     }
 
     [ExcludeFromCodeCoverage]

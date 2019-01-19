@@ -9,7 +9,7 @@ namespace PipelineFramework
     /// This class is merely a wrapper around <see cref="IDictionary{String, String}"/> that provides a detailed exception when 
     /// a specified setting is not found.
     /// </summary>
-    public class Settings : IDictionary<string, string>
+    internal class Settings : IDictionary<string, string>
     {
         private readonly IDictionary<string, string> _settings;
         private readonly IPipelineComponent _component;

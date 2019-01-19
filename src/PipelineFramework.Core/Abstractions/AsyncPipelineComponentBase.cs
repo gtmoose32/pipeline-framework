@@ -25,7 +25,7 @@ namespace PipelineFramework.Abstractions
         /// <summary>
         /// Gets the pipeline component settings.
         /// </summary>
-        protected Settings Settings { get; }
+        protected IDictionary<string, string> Settings { get; }
 
         /// <inheritdoc />
         public string Name { get; private set; }
