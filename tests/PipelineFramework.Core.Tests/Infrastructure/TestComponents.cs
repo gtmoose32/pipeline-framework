@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PipelineFramework.Tests.SharedInfrastructure
+namespace PipelineFramework.Core.Tests.Infrastructure
 {
     [ExcludeFromCodeCoverage]
     public class AsyncTestComponent : AsyncPipelineComponentBase<TestPayload>
