@@ -1,4 +1,5 @@
 # Pipeline Framework
+[![Build status](https://dev.azure.com/gtmoose/Mathis%20Home/_apis/build/status/Pipeline%20Framework/Pipeline%20Framework%20-%20CI)](https://dev.azure.com/gtmoose/Mathis%20Home/_build/latest?definitionId=8) [![nuget](https://img.shields.io/nuget/v/PipelineFramework.Core.svg)](https://www.nuget.org/packages/PipelineFramework.Core/)
 
 ## What is it?
 
