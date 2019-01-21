@@ -7,7 +7,7 @@ Pipeline Framework allows you to easily construct and execute linear workflows u
 
 For more information please visit the [wiki](https://github.com/gtmoose32/pipeline-framework/wiki).
 
-If you are looking for Dependency Injection (IOC) container extensions project, they have been moved to their own repository, [Pipeline Framework Dependency Injection](https://github.com/gtmoose32/pipeline-framework-di).
+If you are looking for dependency injection (IOC) container extensions, they have been moved to their own repository, [Pipeline Framework Dependency Injection](https://github.com/gtmoose32/pipeline-framework-di).
 
 ## Installing Pipeline Framework
 You should install [Pipeline Framework with NuGet](https://www.nuget.org/packages/PipelineFramework.Core/):
