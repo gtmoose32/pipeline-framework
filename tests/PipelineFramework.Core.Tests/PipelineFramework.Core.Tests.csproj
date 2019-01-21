@@ -18,6 +18,4 @@
     <ProjectReference Include="..\..\src\PipelineFramework.Core\PipelineFramework.Core.csproj" />
   </ItemGroup>
 
-  <Import Project="..\SharedInfrastructure\SharedInfrastructure.projitems" Label="Shared" />
-
 </Project>
