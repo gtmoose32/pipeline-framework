@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
-using PipelineFramework.Tests.SharedInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -34,7 +34,7 @@ namespace PipelineFramework.Core.Tests
 
         [ExpectedException(typeof(OperationCanceledException), AllowDerivedTypes = true)]
         [TestMethod]
-        public void Pipeline_Excecution_Cancellation_Test()
+        public void Pipeline_Exececution_Cancellation_Test()
         {
             var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
             var config = new Dictionary<string, IDictionary<string, string>>();

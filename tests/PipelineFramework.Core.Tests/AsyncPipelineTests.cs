@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
-using PipelineFramework.Tests.SharedInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
