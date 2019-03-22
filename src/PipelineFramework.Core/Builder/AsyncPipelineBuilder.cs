@@ -1,5 +1,4 @@
 ﻿using PipelineFramework.Abstractions;
-using System;
 using System.Collections.Generic;
 
 namespace PipelineFramework.Builder
@@ -10,15 +9,11 @@ namespace PipelineFramework.Builder
         ISettingsHolder<AsyncPipeline<TPayload>, TPayload>,
         IPipelineBuilder<AsyncPipeline<TPayload>, TPayload>
     {
-        private readonly List<Type> _componentTypes = new List<Type>();
-        private readonly List<string> _componentNames = new List<string>();
-        private IPipelineComponentResolver _componentResolver;
-        private IDictionary<string, IDictionary<string, string>> _settings;
-        private readonly bool _useComponentTypes;
+        private readonly PipelineBuilderState _state;
 
         private AsyncPipelineBuilder(bool useComponentTypes)
         {
-            _useComponentTypes = useComponentTypes;
+            _state = new PipelineBuilderState(useComponentTypes);
         }
 
         public static IPipelineComponentHolder<AsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> UsingComponentTypes()
@@ -34,45 +29,45 @@ namespace PipelineFramework.Builder
         public IPipelineComponentHolderOrDone<AsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> WithComponent<TComponent>()
             where TComponent : IAsyncPipelineComponent<TPayload>
         {
-            _componentTypes.Add(typeof(TComponent));
+            _state.AddComponent(typeof(TComponent));
             return this;
         }
 
         public IPipelineComponentNameHolderOrDone<AsyncPipeline<TPayload>, TPayload> WithComponentName(string name)
         {
-            _componentNames.Add(name);
+            _state.AddComponent(name);
             return this;
         }
 
         public ISettingsHolder<AsyncPipeline<TPayload>, TPayload> WithComponentResolver(IPipelineComponentResolver componentResolver)
         {
-            _componentResolver = componentResolver;
+            _state.ComponentResolver = componentResolver;
             return this;
         }
 
         public IPipelineBuilder<AsyncPipeline<TPayload>, TPayload> WithSettings(IDictionary<string, IDictionary<string, string>> settings)
         {
-            _settings = settings;
+            _state.Settings = settings;
             return this;
         }
 
         public IPipelineBuilder<AsyncPipeline<TPayload>, TPayload> WithNoSettings()
         {
-            _settings = new Dictionary<string, IDictionary<string, string>>();
+            _state.UseDefaultSettings();
             return this;
         }
 
         public AsyncPipeline<TPayload> Build()
         {
-            return _useComponentTypes
+            return _state.UseComponentTypes
                 ? new AsyncPipeline<TPayload>(
-                    _componentResolver,
-                    _componentTypes,
-                    _settings)
+                    _state.ComponentResolver,
+                    _state.ComponentTypes,
+                    _state.Settings)
                 : new AsyncPipeline<TPayload>(
-                    _componentResolver,
-                    _componentNames,
-                    _settings);
+                    _state.ComponentResolver,
+                    _state.ComponentNames,
+                    _state.Settings);
         }
     }
 }
