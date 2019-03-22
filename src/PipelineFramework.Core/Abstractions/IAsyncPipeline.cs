@@ -7,7 +7,7 @@ namespace PipelineFramework.Abstractions
     /// Defines an pipeline that executes a linear work flow asynchronously. 
     /// </summary>
     /// <typeparam name="T">Type of payload passed through the pipeline during execution.</typeparam>
-    public interface IAsyncPipeline<T>
+    public interface IAsyncPipeline<T> : IPipeline
     {
         /// <summary>
         /// Executes linear work flow asynchronously.
