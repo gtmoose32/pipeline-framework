@@ -2,8 +2,8 @@
 
 namespace PipelineFramework.Builder.Interfaces
 {
-    public interface IPipelineComponentHolderOrDone<out TPipeline, TComponentBase, TPayload> : 
-        IPipelineComponentHolder<TPipeline, TComponentBase, TPayload>,
+    public interface IAdditionalPipelineComponentHolder<out TPipeline, TComponentBase, TPayload> : 
+        IInitialPipelineComponentHolder<TPipeline, TComponentBase, TPayload>,
         IComponentResolverHolder<TPipeline>
         where TPipeline : IPipeline
         where TComponentBase : IPipelineComponent

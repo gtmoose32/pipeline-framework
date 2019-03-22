@@ -29,8 +29,8 @@ namespace PipelineFramework.Core.Examples
                 }}
             };
 
-            var pipeline = AsyncPipelineBuilder<ExamplePipelinePayload>
-                .Initialize()
+            var pipeline = PipelineBuilder<ExamplePipelinePayload>
+                .Async()
                 .WithComponent<FooComponent>()
                 .WithComponent<DelayComponent>()
                 .WithComponent<BarComponent>()

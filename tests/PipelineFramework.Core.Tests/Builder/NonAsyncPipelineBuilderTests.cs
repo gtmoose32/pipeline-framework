@@ -7,13 +7,13 @@ using System.Collections.Generic;
 namespace PipelineFramework.Core.Tests.Builder
 {
     [TestClass]
-    public class PipelineBuilderTests : PipelineTestsBase
+    public class NonAsyncPipelineBuilderTests : PipelineTestsBase
     {
         [TestMethod]
         public void TestBuilderByComponentType()
         {
             // Arrange
-            var pipeline = PipelineBuilder<TestPayload>
+            var pipeline = NonAsyncPipelineBuilder<TestPayload>
                 .Initialize()
                 .WithComponent<FooComponent>()
                 .WithComponent<BarComponent>()
@@ -39,7 +39,7 @@ namespace PipelineFramework.Core.Tests.Builder
         public void TestBuilderByComponentName()
         {
             // Arrange
-            var pipeline = PipelineBuilder<TestPayload>
+            var pipeline = NonAsyncPipelineBuilder<TestPayload>
                 .Initialize()
                 .WithComponent("FooComponent")
                 .WithComponent("BarComponent")
@@ -64,7 +64,7 @@ namespace PipelineFramework.Core.Tests.Builder
         public void TestBuilderMixAndMatchComponents()
         {
             // Arrange
-            var pipeline = PipelineBuilder<TestPayload>
+            var pipeline = NonAsyncPipelineBuilder<TestPayload>
                 .Initialize()
                 .WithComponent<FooComponent>()
                 .WithComponent("BarComponent")
@@ -89,7 +89,7 @@ namespace PipelineFramework.Core.Tests.Builder
         public void TestBuilderWithSettings()
         {
             // Arrange
-            var pipeline = PipelineBuilder<TestPayload>
+            var pipeline = NonAsyncPipelineBuilder<TestPayload>
                 .Initialize()
                 .WithComponent("Component1")
                 .WithComponent("Component2")

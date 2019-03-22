@@ -1,68 +1,19 @@
-﻿using System.Collections.Generic;
-using PipelineFramework.Abstractions;
+﻿using PipelineFramework.Abstractions;
 using PipelineFramework.Builder;
 using PipelineFramework.Builder.Interfaces;
 
 namespace PipelineFramework
 {
-    /// <summary>
-    /// Builder implementation to assist in creating <see cref="IPipeline{T}"/> instances
-    /// </summary>
-    /// <typeparam name="TPayload"></typeparam>
-    public class PipelineBuilder<TPayload> :
-        IPipelineComponentHolderOrDone<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload>,
-        ISettingsHolder<IPipeline<TPayload>>,
-        IPipelineBuilder<IPipeline<TPayload>>
+    public static class PipelineBuilder<TPayload>
     {
-        private readonly PipelineBuilderState _state;
-
-        private PipelineBuilder()
+        public static IInitialPipelineComponentHolder<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> Async()
         {
-            _state = new PipelineBuilderState();
+            return AsyncPipelineBuilder<TPayload>.Initialize();
         }
 
-        public static IPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> Initialize()
+        public static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> NonAsync()
         {
-            return new PipelineBuilder<TPayload>();
-        }
-
-        public IPipelineComponentHolderOrDone<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> WithComponent<TComponent>()
-            where TComponent : IPipelineComponent<TPayload>
-        {
-            _state.AddComponent(typeof(TComponent));
-            return this;
-        }
-
-        public IPipelineComponentHolderOrDone<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> WithComponent(string name)
-        {
-            _state.AddComponent(name);
-            return this;
-        }
-
-        public ISettingsHolder<IPipeline<TPayload>> WithComponentResolver(IPipelineComponentResolver componentResolver)
-        {
-            _state.ComponentResolver = componentResolver;
-            return this;
-        }
-
-        public IPipelineBuilder<IPipeline<TPayload>> WithSettings(IDictionary<string, IDictionary<string, string>> settings)
-        {
-            _state.Settings = settings;
-            return this;
-        }
-
-        public IPipelineBuilder<IPipeline<TPayload>> WithNoSettings()
-        {
-            _state.UseDefaultSettings();
-            return this;
-        }
-
-        public IPipeline<TPayload> Build()
-        {
-            return new Pipeline<TPayload>(
-                    _state.ComponentResolver,
-                    _state.ComponentNames,
-                    _state.Settings);
+            return NonAsyncPipelineBuilder<TPayload>.Initialize();
         }
     }
 }
