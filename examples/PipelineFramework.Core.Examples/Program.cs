@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using PipelineFramework.Builder;
 
 namespace PipelineFramework.Core.Examples
 {
@@ -28,10 +29,15 @@ namespace PipelineFramework.Core.Examples
                 }}
             };
 
-            var order = new List<Type> {typeof(FooComponent), typeof(DelayComponent), typeof(BarComponent)};
-
-            var pipeline = new AsyncPipeline<ExamplePipelinePayload>(resolver, order, settings);
-
+            var pipeline = AsyncPipelineBuilder<ExamplePipelinePayload>
+                .Initialize()
+                .WithComponent<FooComponent>()
+                .WithComponent<DelayComponent>()
+                .WithComponent<BarComponent>()
+                .WithComponentResolver(resolver)
+                .WithSettings(settings)
+                .Build();
+                    
             var result = await pipeline.ExecuteAsync(new ExamplePipelinePayload(), CancellationToken.None);
 
             result.Messages.ForEach(Console.WriteLine);

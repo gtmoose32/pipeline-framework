@@ -2,8 +2,8 @@
 
 namespace PipelineFramework.Builder.Interfaces
 {
-    public interface IComponentResolverHolder<out TPipeline, TPayload> where TPipeline : IPipeline
+    public interface IComponentResolverHolder<out TPipeline> where TPipeline : IPipeline
     {
-        ISettingsHolder<TPipeline, TPayload> WithComponentResolver(IPipelineComponentResolver componentResolver);
+        ISettingsHolder<TPipeline> WithComponentResolver(IPipelineComponentResolver componentResolver);
     }
 }

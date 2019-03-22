@@ -1,74 +1,67 @@
 ﻿using PipelineFramework.Abstractions;
-using System.Collections.Generic;
 using PipelineFramework.Builder.Interfaces;
+using System.Collections.Generic;
 
 namespace PipelineFramework.Builder
 {
+    /// <summary>
+    /// Builder to assist in correctly creating <see cref="IAsyncPipeline{T}"/> instances.
+    /// </summary>
+    /// <typeparam name="TPayload"></typeparam>
     public class AsyncPipelineBuilder<TPayload> :
-        IPipelineComponentHolderOrDone<AsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload>,
-        IPipelineComponentNameHolderOrDone<AsyncPipeline<TPayload>, TPayload>, 
-        ISettingsHolder<AsyncPipeline<TPayload>, TPayload>,
-        IPipelineBuilder<AsyncPipeline<TPayload>, TPayload>
+        IPipelineComponentHolderOrDone<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload>,
+        ISettingsHolder<IAsyncPipeline<TPayload>>,
+        IPipelineBuilder<IAsyncPipeline<TPayload>>
     {
         private readonly PipelineBuilderState _state;
 
-        private AsyncPipelineBuilder(bool useComponentTypes)
+        private AsyncPipelineBuilder()
         {
-            _state = new PipelineBuilderState(useComponentTypes);
+            _state = new PipelineBuilderState();
         }
 
-        public static IPipelineComponentHolder<AsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> UsingComponentTypes()
+        public static IPipelineComponentHolder<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> Initialize()
         {
-            return new AsyncPipelineBuilder<TPayload>(true);
+            return new AsyncPipelineBuilder<TPayload>();
         }
 
-        public static IPipelineComponentNameHolder<AsyncPipeline<TPayload>, TPayload> UsingComponentNames()
-        {
-            return new AsyncPipelineBuilder<TPayload>(false);
-        }
-
-        public IPipelineComponentHolderOrDone<AsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> WithComponent<TComponent>()
+        public IPipelineComponentHolderOrDone<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> WithComponent<TComponent>()
             where TComponent : IAsyncPipelineComponent<TPayload>
         {
             _state.AddComponent(typeof(TComponent));
             return this;
         }
 
-        public IPipelineComponentNameHolderOrDone<AsyncPipeline<TPayload>, TPayload> WithComponentName(string name)
+        public IPipelineComponentHolderOrDone<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> WithComponent(string componentName)
         {
-            _state.AddComponent(name);
+            _state.AddComponent(componentName);
             return this;
         }
 
-        public ISettingsHolder<AsyncPipeline<TPayload>, TPayload> WithComponentResolver(IPipelineComponentResolver componentResolver)
+        public ISettingsHolder<IAsyncPipeline<TPayload>> WithComponentResolver(IPipelineComponentResolver componentResolver)
         {
             _state.ComponentResolver = componentResolver;
             return this;
         }
 
-        public IPipelineBuilder<AsyncPipeline<TPayload>, TPayload> WithSettings(IDictionary<string, IDictionary<string, string>> settings)
+        public IPipelineBuilder<IAsyncPipeline<TPayload>> WithSettings(IDictionary<string, IDictionary<string, string>> settings)
         {
             _state.Settings = settings;
             return this;
         }
 
-        public IPipelineBuilder<AsyncPipeline<TPayload>, TPayload> WithNoSettings()
+        public IPipelineBuilder<IAsyncPipeline<TPayload>> WithNoSettings()
         {
             _state.UseDefaultSettings();
             return this;
         }
 
-        public AsyncPipeline<TPayload> Build()
+        public IAsyncPipeline<TPayload> Build()
         {
-            return _state.UseComponentTypes
-                ? new AsyncPipeline<TPayload>(
-                    _state.ComponentResolver,
-                    _state.ComponentTypes,
-                    _state.Settings)
-                : new AsyncPipeline<TPayload>(
-                    _state.ComponentResolver,
-                    _state.ComponentNames,
-                    _state.Settings);
+            return new AsyncPipeline<TPayload>(
+                _state.ComponentResolver,
+                _state.ComponentNames,
+                _state.Settings);
         }
     }
 }

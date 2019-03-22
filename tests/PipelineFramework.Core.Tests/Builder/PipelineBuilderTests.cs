@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
 using PipelineFramework.Core.Tests.Infrastructure;
+using System.Collections.Generic;
 
 namespace PipelineFramework.Core.Tests.Builder
 {
@@ -13,7 +14,7 @@ namespace PipelineFramework.Core.Tests.Builder
         {
             // Arrange
             var pipeline = PipelineBuilder<TestPayload>
-                .UsingComponentTypes()
+                .Initialize()
                 .WithComponent<FooComponent>()
                 .WithComponent<BarComponent>()
                 .WithComponentResolver(PipelineComponentResolver)
@@ -23,14 +24,15 @@ namespace PipelineFramework.Core.Tests.Builder
             var payload = new TestPayload();
 
             // Act
-            Assert.IsFalse(payload.FooWasCalled);
-            Assert.IsFalse(payload.BarWasCalled);
+            payload.FooWasCalled.Should().BeFalse();
+            payload.BarWasCalled.Should().BeFalse();
             var result = pipeline.Execute(payload);
 
             // Assert
-            Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.FooWasCalled);
-            Assert.IsTrue(result.BarWasCalled);
+            result.Count.Should().Be(2);
+            result.Count.Should().Be(2);
+            result.FooWasCalled.Should().BeTrue();
+            result.BarWasCalled.Should().BeTrue();
         }
 
         [TestMethod]
@@ -38,9 +40,9 @@ namespace PipelineFramework.Core.Tests.Builder
         {
             // Arrange
             var pipeline = PipelineBuilder<TestPayload>
-                .UsingComponentNames()
-                .WithComponentName("FooComponent")
-                .WithComponentName("BarComponent")
+                .Initialize()
+                .WithComponent("FooComponent")
+                .WithComponent("BarComponent")
                 .WithComponentResolver(PipelineComponentResolver)
                 .WithNoSettings()
                 .Build();
@@ -48,14 +50,39 @@ namespace PipelineFramework.Core.Tests.Builder
             var payload = new TestPayload();
 
             // Act
-            Assert.IsFalse(payload.FooWasCalled);
-            Assert.IsFalse(payload.BarWasCalled);
+            payload.FooWasCalled.Should().BeFalse();
+            payload.BarWasCalled.Should().BeFalse();
             var result = pipeline.Execute(payload);
 
             // Assert
-            Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.FooWasCalled);
-            Assert.IsTrue(result.BarWasCalled);
+            result.Count.Should().Be(2);
+            result.FooWasCalled.Should().BeTrue();
+            result.BarWasCalled.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public void TestBuilderMixAndMatchComponents()
+        {
+            // Arrange
+            var pipeline = PipelineBuilder<TestPayload>
+                .Initialize()
+                .WithComponent<FooComponent>()
+                .WithComponent("BarComponent")
+                .WithComponentResolver(PipelineComponentResolver)
+                .WithNoSettings()
+                .Build();
+
+            var payload = new TestPayload();
+
+            // Act
+            payload.FooWasCalled.Should().BeFalse();
+            payload.BarWasCalled.Should().BeFalse();
+            var result = pipeline.Execute(payload);
+
+            // Assert
+            result.Count.Should().Be(2);
+            result.FooWasCalled.Should().BeTrue();
+            result.BarWasCalled.Should().BeTrue();
         }
 
         [TestMethod]
@@ -63,9 +90,9 @@ namespace PipelineFramework.Core.Tests.Builder
         {
             // Arrange
             var pipeline = PipelineBuilder<TestPayload>
-                .UsingComponentNames()
-                .WithComponentName("Component1")
-                .WithComponentName("Component2")
+                .Initialize()
+                .WithComponent("Component1")
+                .WithComponent("Component2")
                 .WithComponentResolver(PipelineComponentResolver)
                 .WithSettings(new Dictionary<string, IDictionary<string, string>>
                 {
@@ -89,13 +116,13 @@ namespace PipelineFramework.Core.Tests.Builder
             var payload = new TestPayload();
 
             // Act
-            Assert.IsNull(payload.FooStatus);
-            Assert.IsNull(payload.BarStatus);
+            payload.FooStatus.Should().BeNull();
+            payload.BarStatus.Should().BeNull();
             var result = pipeline.Execute(payload);
 
             // Assert
-            Assert.AreEqual("MyFooTestValue", result.FooStatus);
-            Assert.AreEqual("MyBarTestValue", result.BarStatus);
+            result.FooStatus.Should().Be("MyFooTestValue");
+            result.BarStatus.Should().Be("MyBarTestValue");
         }
     }
 }

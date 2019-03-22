@@ -28,8 +28,8 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(actual);
             Assert.AreSame(actual, payload);
-            Assert.AreEqual(actual.FooStatus, "Component1Value");
-            Assert.AreEqual(payload.BarStatus, "Component2Value");
+            Assert.AreEqual("Component1Value", actual.FooStatus);
+            Assert.AreEqual("Component2Value", payload.BarStatus);
         }
 
         [ExpectedException(typeof(OperationCanceledException), AllowDerivedTypes = true)]
@@ -73,8 +73,7 @@ namespace PipelineFramework.Core.Tests
         [TestMethod]
         public void Pipeline_Execution_ComponentNames_NullSettings_Test()
         {
-            //var types = new List<string> { "Foo", "Bar" };
-            var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
+            var types = new List<string> { typeof(FooComponent).Name, typeof(BarComponent).Name };
 
             var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, null);
             var result = target.Execute(new TestPayload());
@@ -88,8 +87,7 @@ namespace PipelineFramework.Core.Tests
         [TestMethod]
         public void Pipeline_Execution_ComponentNames_EmptySettings_Test()
         {
-            //var types = new List<string> { "Foo", "Bar" };
-            var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
+            var types = new List<string> { typeof(FooComponent).Name, typeof(BarComponent).Name };
 
             var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, new Dictionary<string, IDictionary<string, string>>());
             var result = target.Execute(new TestPayload());

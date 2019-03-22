@@ -2,7 +2,7 @@
 
 namespace PipelineFramework.Builder.Interfaces
 {
-    public interface IPipelineBuilder<out TPipeline, TPayload> where TPipeline : IPipeline
+    public interface IPipelineBuilder<out TPipeline> where TPipeline : IPipeline
     {
         TPipeline Build();
     }
