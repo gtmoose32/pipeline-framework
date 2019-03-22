@@ -1,8 +1,9 @@
-﻿using PipelineFramework.Abstractions;
+﻿using System.Collections.Generic;
+using PipelineFramework.Abstractions;
+using PipelineFramework.Builder;
 using PipelineFramework.Builder.Interfaces;
-using System.Collections.Generic;
 
-namespace PipelineFramework.Builder
+namespace PipelineFramework
 {
     /// <summary>
     /// Builder implementation to assist in creating <see cref="IPipeline{T}"/> instances
