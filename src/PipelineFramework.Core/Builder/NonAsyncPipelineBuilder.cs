@@ -32,9 +32,9 @@ namespace PipelineFramework.Builder
             return this;
         }
 
-        public IAdditionalPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> WithComponent(string name)
+        public IAdditionalPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> WithComponent(string componentName)
         {
-            _state.AddComponent(name);
+            _state.AddComponent(componentName);
             return this;
         }
 
