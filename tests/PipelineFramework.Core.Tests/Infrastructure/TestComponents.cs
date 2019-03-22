@@ -46,6 +46,7 @@ namespace PipelineFramework.Core.Tests.Infrastructure
         public override TestPayload Execute(TestPayload payload, CancellationToken cancellationToken)
         {
             payload.FooStatus = $"{GetType().Name} executed!";
+            payload.FooWasCalled = true;
             payload.Count++;
             return payload;
         }
@@ -78,6 +79,7 @@ namespace PipelineFramework.Core.Tests.Infrastructure
         public override TestPayload Execute(TestPayload payload, CancellationToken cancellationToken)
         {
             payload.BarStatus = $"{GetType().Name} executed!";
+            payload.BarWasCalled = true;
             payload.Count++;
             return payload;
         }

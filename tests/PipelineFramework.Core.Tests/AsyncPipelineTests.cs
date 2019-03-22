@@ -59,7 +59,7 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public void AsyncPipeline_Excecution_Cancellation_Test()
+        public void AsyncPipeline_Execution_Cancellation_Test()
         {
             var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
             var config = new Dictionary<string, IDictionary<string, string>>();

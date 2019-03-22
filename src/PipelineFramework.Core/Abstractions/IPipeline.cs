@@ -6,7 +6,7 @@ namespace PipelineFramework.Abstractions
     /// Defines a pipeline that executes a linear work flow. 
     /// </summary>
     /// <typeparam name="T">Type of payload passed through the pipeline during execution.</typeparam>
-    public interface IPipeline<T>
+    public interface IPipeline<T> : IPipeline
     {
         /// <summary>
         /// Executes linear work flow.
@@ -16,4 +16,6 @@ namespace PipelineFramework.Abstractions
         /// <returns>Type of payload returned after execution.</returns>
         T Execute(T payload, CancellationToken cancellationToken = default);
     }
+
+    public interface IPipeline { }
 }

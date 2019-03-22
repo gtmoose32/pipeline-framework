@@ -26,4 +26,23 @@ namespace PipelineFramework.Core.Examples.Components
             return payload;
         }
     }
+
+    public class DelayComponentNonAsync : PipelineComponentBase<ExamplePipelinePayload>
+    {
+        private TimeSpan _delay;
+
+        public override void Initialize(string name, IDictionary<string, string> settings)
+        {
+            base.Initialize(name, settings);
+
+            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5), false);
+        }
+
+        public override ExamplePipelinePayload Execute(ExamplePipelinePayload payload, CancellationToken cancellationToken)
+        {
+            Thread.Sleep((int) _delay.TotalMilliseconds);
+            payload.Messages.Add($"Component {Name} delayed for {_delay}");
+            return payload;
+        }
+    }
 }

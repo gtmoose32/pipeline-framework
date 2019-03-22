@@ -11,11 +11,11 @@ namespace PipelineFramework
     /// Asynchronous pipeline implementation that provides execution of a linear workflow.
     /// </summary>
     /// <typeparam name="T">Type of payload that travels down the execution pipeline.</typeparam>
-    public class AsyncPipeline<T> : PipelineBase<IAsyncPipelineComponent<T>>, IAsyncPipeline<T>
+    internal class AsyncPipeline<T> : PipelineBase<IAsyncPipelineComponent<T>>, IAsyncPipeline<T>
     {
         #region ctor
         /// <inheritdoc />
-        public AsyncPipeline(
+        internal AsyncPipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<string> componentNames,
             IDictionary<string, IDictionary<string, string>> settings)
@@ -23,7 +23,7 @@ namespace PipelineFramework
         { }
 
         /// <inheritdoc />
-        public AsyncPipeline(
+        internal AsyncPipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<Type> componentTypes,
             IDictionary<string, IDictionary<string, string>> settings)

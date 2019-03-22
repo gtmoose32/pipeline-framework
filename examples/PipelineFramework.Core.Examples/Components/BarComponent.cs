@@ -21,4 +21,16 @@ namespace PipelineFramework.Core.Examples.Components
             return payload;
         }
     }
+
+    public class BarComponentNonAsync : PipelineComponentBase<ExamplePipelinePayload>
+    {
+        public override ExamplePipelinePayload Execute(ExamplePipelinePayload payload, CancellationToken cancellationToken)
+        {
+            payload.Result = new Random().Next(100);
+
+            payload.Messages.Add($"Component {Name} called external api and returned result {payload.Result}");
+
+            return payload;
+        }
+    }
 }

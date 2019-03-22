@@ -15,4 +15,14 @@ namespace PipelineFramework.Core.Examples.Components
             return Task.FromResult(payload);
         }
     }
+
+    public class FooComponentNonAsync : PipelineComponentBase<ExamplePipelinePayload>
+    {
+        public override ExamplePipelinePayload Execute(ExamplePipelinePayload payload, CancellationToken cancellationToken)
+        {
+            payload.FooKey = Guid.NewGuid();
+            payload.Messages.Add($"Component {Name} retrieved FooKey {payload.FooKey}");
+            return payload;
+        }
+    }
 }
