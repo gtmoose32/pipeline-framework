@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using PipelineFramework.Builder;
 
 namespace PipelineFramework.Core.Examples
 {
@@ -17,6 +16,9 @@ namespace PipelineFramework.Core.Examples
                 {typeof(FooComponent).Name, new FooComponent()},
                 {typeof(DelayComponent).Name, new DelayComponent()},
                 {typeof(BarComponent).Name, new BarComponent()},
+                {typeof(FooComponentNonAsync).Name, new FooComponentNonAsync()},
+                {typeof(DelayComponentNonAsync).Name, new DelayComponentNonAsync()},
+                {typeof(BarComponentNonAsync).Name, new BarComponentNonAsync()}
             };
 
             var resolver = new DictionaryPipelineComponentResolver(components);
@@ -29,6 +31,15 @@ namespace PipelineFramework.Core.Examples
                 }}
             };
 
+            await InvokePipelineAsync(resolver, settings);
+            InvokePipeline(resolver, settings);
+
+            Console.Read();
+        }
+
+        private static async Task InvokePipelineAsync(DictionaryPipelineComponentResolver resolver, Dictionary<string, IDictionary<string, string>> settings)
+        {
+            
             var pipeline = PipelineBuilder<ExamplePipelinePayload>
                 .Async()
                 .WithComponent<FooComponent>()
@@ -37,12 +48,28 @@ namespace PipelineFramework.Core.Examples
                 .WithComponentResolver(resolver)
                 .WithSettings(settings)
                 .Build();
-                    
+
+            Console.WriteLine("Executing pipeline asynchronously.");
             var result = await pipeline.ExecuteAsync(new ExamplePipelinePayload(), CancellationToken.None);
 
             result.Messages.ForEach(Console.WriteLine);
+        }
 
-            Console.Read();
+        private static void InvokePipeline(DictionaryPipelineComponentResolver resolver, Dictionary<string, IDictionary<string, string>> settings)
+        {
+            var pipeline = PipelineBuilder<ExamplePipelinePayload>
+                .NonAsync()
+                .WithComponent<FooComponentNonAsync>()
+                .WithComponent<DelayComponentNonAsync>()
+                .WithComponent<BarComponentNonAsync>()
+                .WithComponentResolver(resolver)
+                .WithSettings(settings)
+                .Build();
+
+            Console.WriteLine("Executing pipeline synchronously.");
+            var result = pipeline.Execute(new ExamplePipelinePayload());
+
+            result.Messages.ForEach(Console.WriteLine);
         }
     }
 }
