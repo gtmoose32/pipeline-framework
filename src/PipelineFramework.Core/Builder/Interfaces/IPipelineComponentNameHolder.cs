@@ -1,6 +1,6 @@
 ﻿using PipelineFramework.Abstractions;
 
-namespace PipelineFramework.Builder
+namespace PipelineFramework.Builder.Interfaces
 {
     public interface IPipelineComponentNameHolder<out TPipeline, TPayload> where TPipeline : IPipeline
     {

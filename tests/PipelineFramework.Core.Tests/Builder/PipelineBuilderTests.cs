@@ -1,19 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
 using PipelineFramework.Core.Tests.Infrastructure;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace PipelineFramework.Core.Tests.Builder
 {
     [TestClass]
-    public class AsyncPipelineBuilderTests : PipelineTestsBase
+    public class PipelineBuilderTests : PipelineTestsBase
     {
         [TestMethod]
-        public async Task TestBuilderByComponentType()
+        public void TestBuilderByComponentType()
         {
             // Arrange
-            var pipeline = AsyncPipelineBuilder<TestPayload>
+            var pipeline = PipelineBuilder<TestPayload>
                 .UsingComponentTypes()
                 .WithComponent<FooComponent>()
                 .WithComponent<BarComponent>()
@@ -26,7 +25,7 @@ namespace PipelineFramework.Core.Tests.Builder
             // Act
             Assert.IsFalse(payload.FooWasCalled);
             Assert.IsFalse(payload.BarWasCalled);
-            var result = await pipeline.ExecuteAsync(payload);
+            var result = pipeline.Execute(payload);
 
             // Assert
             Assert.AreEqual(2, result.Count);
@@ -35,10 +34,10 @@ namespace PipelineFramework.Core.Tests.Builder
         }
 
         [TestMethod]
-        public async Task TestBuilderByComponentName()
+        public void TestBuilderByComponentName()
         {
             // Arrange
-            var pipeline = AsyncPipelineBuilder<TestPayload>
+            var pipeline = PipelineBuilder<TestPayload>
                 .UsingComponentNames()
                 .WithComponentName("FooComponent")
                 .WithComponentName("BarComponent")
@@ -51,7 +50,7 @@ namespace PipelineFramework.Core.Tests.Builder
             // Act
             Assert.IsFalse(payload.FooWasCalled);
             Assert.IsFalse(payload.BarWasCalled);
-            var result = await pipeline.ExecuteAsync(payload);
+            var result = pipeline.Execute(payload);
 
             // Assert
             Assert.AreEqual(2, result.Count);
@@ -60,10 +59,10 @@ namespace PipelineFramework.Core.Tests.Builder
         }
 
         [TestMethod]
-        public async Task TestBuilderWithSettings()
+        public void TestBuilderWithSettings()
         {
             // Arrange
-            var pipeline = AsyncPipelineBuilder<TestPayload>
+            var pipeline = PipelineBuilder<TestPayload>
                 .UsingComponentNames()
                 .WithComponentName("Component1")
                 .WithComponentName("Component2")
@@ -92,7 +91,7 @@ namespace PipelineFramework.Core.Tests.Builder
             // Act
             Assert.IsNull(payload.FooStatus);
             Assert.IsNull(payload.BarStatus);
-            var result = await pipeline.ExecuteAsync(payload);
+            var result = pipeline.Execute(payload);
 
             // Assert
             Assert.AreEqual("MyFooTestValue", result.FooStatus);

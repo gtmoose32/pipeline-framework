@@ -1,5 +1,6 @@
 ﻿using PipelineFramework.Abstractions;
 using System.Collections.Generic;
+using PipelineFramework.Builder.Interfaces;
 
 namespace PipelineFramework.Builder
 {
