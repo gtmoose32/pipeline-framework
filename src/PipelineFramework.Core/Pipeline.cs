@@ -1,8 +1,8 @@
-﻿using System;
+﻿using PipelineFramework.Abstractions;
+using PipelineFramework.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Threading;
-using PipelineFramework.Abstractions;
-using PipelineFramework.Exceptions;
 
 namespace PipelineFramework
 {
@@ -10,11 +10,11 @@ namespace PipelineFramework
     /// Pipeline implementation that provides execution of a linear workflow.
     /// </summary>
     /// <typeparam name="T">Type of payload that travels down the execution pipeline.</typeparam>
-    internal class Pipeline<T> : PipelineBase<IPipelineComponent<T>>, IPipeline<T>
+    public class Pipeline<T> : PipelineBase<IPipelineComponent<T>>, IPipeline<T>
     {
         #region ctor
         /// <inheritdoc />
-        internal Pipeline(
+        public Pipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<string> componentNames,
             IDictionary<string, IDictionary<string, string>> settings)
@@ -22,7 +22,7 @@ namespace PipelineFramework
         { }
 
         /// <inheritdoc />
-        internal Pipeline(
+        public Pipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<Type> componentTypes,
             IDictionary<string, IDictionary<string, string>> settings)
