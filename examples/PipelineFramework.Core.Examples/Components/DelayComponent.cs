@@ -1,11 +1,13 @@
 ﻿using PipelineFramework.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PipelineFramework.Core.Examples.Components
 {
+    [ExcludeFromCodeCoverage]
     public class DelayComponent : AsyncPipelineComponentBase<ExamplePipelinePayload>
     {
         private TimeSpan _delay;
@@ -27,6 +29,7 @@ namespace PipelineFramework.Core.Examples.Components
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class DelayComponentNonAsync : PipelineComponentBase<ExamplePipelinePayload>
     {
         private TimeSpan _delay;

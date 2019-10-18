@@ -1,10 +1,12 @@
 ﻿using PipelineFramework.Abstractions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PipelineFramework.Core.Examples.Components
 {
+    [ExcludeFromCodeCoverage]
     public class BarComponent : AsyncPipelineComponentBase<ExamplePipelinePayload>
     {
         public override async Task<ExamplePipelinePayload> ExecuteAsync(ExamplePipelinePayload payload, CancellationToken cancellationToken)
@@ -22,6 +24,7 @@ namespace PipelineFramework.Core.Examples.Components
         }
     }
 
+    [ExcludeFromCodeCoverage]
     public class BarComponentNonAsync : PipelineComponentBase<ExamplePipelinePayload>
     {
         public override ExamplePipelinePayload Execute(ExamplePipelinePayload payload, CancellationToken cancellationToken)

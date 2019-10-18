@@ -2,6 +2,7 @@
 using PipelineFramework.Exceptions;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework
 {
@@ -33,6 +34,7 @@ namespace PipelineFramework
             return _settings.GetEnumerator();
         }
 
+        [ExcludeFromCodeCoverage]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

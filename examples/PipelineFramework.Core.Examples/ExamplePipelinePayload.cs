@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework.Core.Examples
 {
+    [ExcludeFromCodeCoverage]
     public class ExamplePipelinePayload
     {
         public ExamplePipelinePayload()

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using PipelineFramework.Abstractions;
-using PipelineFramework.Builder.Interfaces;
+using PipelineFramework.Builder;
 
-namespace PipelineFramework.Builder
+namespace PipelineFramework.Abstractions.Builder
 {
     internal abstract class PipelineBuilderBase<TPipeline, TComponentBase, TPayload> : 
         IPipelineBuilder<TPipeline>,

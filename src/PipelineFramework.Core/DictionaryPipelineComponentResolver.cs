@@ -13,7 +13,7 @@ namespace PipelineFramework
             _components = components;
         }
 
-        public T GetInstance<T>(string name) where T : IPipelineComponent
+        public T GetInstance<T>(string name) where T : class, IPipelineComponent
         {
             if (!_components.ContainsKey(name))
                 throw new PipelineComponentNotFoundException($"PipelineComponent named '{name}' could not be located.");

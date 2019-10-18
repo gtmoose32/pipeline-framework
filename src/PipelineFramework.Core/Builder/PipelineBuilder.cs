@@ -1,8 +1,7 @@
 ﻿using PipelineFramework.Abstractions;
-using PipelineFramework.Builder;
-using PipelineFramework.Builder.Interfaces;
+using PipelineFramework.Abstractions.Builder;
 
-namespace PipelineFramework
+namespace PipelineFramework.Builder
 {
     public static class PipelineBuilder<TPayload>
     {

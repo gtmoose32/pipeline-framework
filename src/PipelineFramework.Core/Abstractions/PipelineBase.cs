@@ -9,7 +9,7 @@ namespace PipelineFramework.Abstractions
     /// </summary>
     /// <typeparam name="TComponent"></typeparam>
     public abstract class PipelineBase<TComponent>
-        where TComponent : IPipelineComponent
+        where TComponent : class, IPipelineComponent
     {
         #region ctor
         /// <summary>

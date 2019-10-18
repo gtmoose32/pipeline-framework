@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using PipelineFramework.Abstractions;
 
-namespace PipelineFramework.Builder.Interfaces
+namespace PipelineFramework.Abstractions.Builder
 {
     public interface ISettingsHolder<out TPipeline> where TPipeline : IPipeline
     {

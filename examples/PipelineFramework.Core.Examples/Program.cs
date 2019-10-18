@@ -1,24 +1,27 @@
 ﻿using PipelineFramework.Abstractions;
+using PipelineFramework.Builder;
 using PipelineFramework.Core.Examples.Components;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace PipelineFramework.Core.Examples
 {
+    [ExcludeFromCodeCoverage]
     class Program
     {
         static async Task Main()
         {
             var components = new Dictionary<string, IPipelineComponent>
             {
-                {typeof(FooComponent).Name, new FooComponent()},
-                {typeof(DelayComponent).Name, new DelayComponent()},
-                {typeof(BarComponent).Name, new BarComponent()},
-                {typeof(FooComponentNonAsync).Name, new FooComponentNonAsync()},
-                {typeof(DelayComponentNonAsync).Name, new DelayComponentNonAsync()},
-                {typeof(BarComponentNonAsync).Name, new BarComponentNonAsync()}
+                {nameof(FooComponent), new FooComponent()},
+                {nameof(DelayComponent), new DelayComponent()},
+                {nameof(BarComponent), new BarComponent()},
+                {nameof(FooComponentNonAsync), new FooComponentNonAsync()},
+                {nameof(DelayComponentNonAsync), new DelayComponentNonAsync()},
+                {nameof(BarComponentNonAsync), new BarComponentNonAsync()}
             };
 
             var resolver = new DictionaryPipelineComponentResolver(components);
@@ -27,13 +30,17 @@ namespace PipelineFramework.Core.Examples
             {
                 {typeof(DelayComponent).Name, new Dictionary<string, string>
                 {
-                    {"DelayTimeSpan", "00:00:10"}
+                    {"DelayTimeSpan", "00:00:05"}
                 }}
             };
+
+            Console.WriteLine();
 
             await InvokePipelineAsync(resolver, settings);
             InvokePipeline(resolver, settings);
 
+            Console.WriteLine();
+            Console.Write("Press any key to exit...");
             Console.Read();
         }
 
@@ -57,6 +64,8 @@ namespace PipelineFramework.Core.Examples
 
         private static void InvokePipeline(DictionaryPipelineComponentResolver resolver, Dictionary<string, IDictionary<string, string>> settings)
         {
+            Console.WriteLine();
+
             var pipeline = PipelineBuilder<ExamplePipelinePayload>
                 .NonAsync()
                 .WithComponent<FooComponentNonAsync>()

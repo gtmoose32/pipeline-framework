@@ -10,6 +10,6 @@
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        T GetInstance<T>(string name) where T : IPipelineComponent;
+        T GetInstance<T>(string name) where T : class, IPipelineComponent;
     }
 }

@@ -3,10 +3,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
 using PipelineFramework.Core.Tests.Infrastructure;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace PipelineFramework.Core.Tests.Builder
 {
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class AsyncPipelineBuilderTests : PipelineTestsBase
     {

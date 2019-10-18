@@ -3,9 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
 using PipelineFramework.Core.Tests.Infrastructure;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework.Core.Tests.Builder
 {
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class PipelineBuilderStateTests
     {

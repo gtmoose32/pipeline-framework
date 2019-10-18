@@ -1,6 +1,4 @@
-﻿using PipelineFramework.Abstractions;
-
-namespace PipelineFramework.Builder.Interfaces
+﻿namespace PipelineFramework.Abstractions.Builder
 {
     public interface IComponentResolverHolder<out TPipeline> where TPipeline : IPipeline
     {

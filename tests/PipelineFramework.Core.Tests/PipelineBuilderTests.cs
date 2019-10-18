@@ -1,11 +1,14 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
-using PipelineFramework.Builder.Interfaces;
+using PipelineFramework.Abstractions.Builder;
+using PipelineFramework.Builder;
 using PipelineFramework.Core.Tests.Infrastructure;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework.Core.Tests
 {
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class PipelineBuilderTests
     {

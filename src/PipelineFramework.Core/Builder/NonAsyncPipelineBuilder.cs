@@ -1,5 +1,5 @@
 ﻿using PipelineFramework.Abstractions;
-using PipelineFramework.Builder.Interfaces;
+using PipelineFramework.Abstractions.Builder;
 
 namespace PipelineFramework.Builder
 {
