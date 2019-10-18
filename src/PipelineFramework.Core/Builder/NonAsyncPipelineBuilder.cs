@@ -14,16 +14,11 @@ namespace PipelineFramework.Builder
         }
 
         internal static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> Initialize()
-        {
-            return new NonAsyncPipelineBuilder<TPayload>();
-        }
-
+            => new NonAsyncPipelineBuilder<TPayload>();
+        
         public override IPipeline<TPayload> Build()
-        {
-            return new Pipeline<TPayload>(
-                    State.ComponentResolver,
-                    State.ComponentNames,
-                    State.Settings);
-        }
+            => State.UseNoSettings
+                ? new Pipeline<TPayload>(State.ComponentResolver, State.ComponentNames)
+                : new Pipeline<TPayload>(State.ComponentResolver, State.ComponentNames, State.Settings);
     }
 }

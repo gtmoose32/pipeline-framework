@@ -18,7 +18,7 @@ namespace PipelineFramework
         public AsyncPipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<string> componentNames,
-            IDictionary<string, IDictionary<string, string>> settings)
+            IDictionary<string, IDictionary<string, string>> settings = null)
         : base(resolver, componentNames, settings)
         { }
 
@@ -26,7 +26,7 @@ namespace PipelineFramework
         public AsyncPipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<Type> componentTypes,
-            IDictionary<string, IDictionary<string, string>> settings)
+            IDictionary<string, IDictionary<string, string>> settings = null)
             : base(resolver, componentTypes, settings)
         { }
         #endregion

@@ -16,7 +16,7 @@ namespace PipelineFramework.Abstractions
         /// Abstract pipeline ctor.
         /// </summary>
         /// <param name="resolver">Provides <see cref="IPipelineComponent"/> dependency resolution.</param>
-        /// <param name="componentNames">Names of the pipeline components that are containened within this pipeline. 
+        /// <param name="componentNames">Names of the pipeline components that are contained within this pipeline. 
         /// Order of names denotes order of component execution in the pipeline.</param>
         /// <param name="settings">Configuration settings for the pipeline and all of it's components.</param>
         protected PipelineBase(
@@ -24,8 +24,10 @@ namespace PipelineFramework.Abstractions
             IEnumerable<string> componentNames,
             IDictionary<string, IDictionary<string, string>> settings)
         {
-            var list = new List<TComponent>();
-            foreach (var name in componentNames)
+            if (resolver == null) throw new ArgumentNullException(nameof(resolver));
+            if (componentNames == null) throw new ArgumentNullException(nameof(componentNames));
+
+            Components = componentNames.Select(name =>
             {
                 IDictionary<string, string> componentSettings = null;
                 if (settings != null && settings.ContainsKey(name))
@@ -33,10 +35,8 @@ namespace PipelineFramework.Abstractions
 
                 var component = resolver.GetInstance<TComponent>(name);
                 component.Initialize(name, componentSettings);
-                list.Add(component);
-            }
-
-            Components = list;
+                return component;
+            });
         }
 
         /// <summary>

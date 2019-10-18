@@ -28,9 +28,6 @@ namespace PipelineFramework.Builder
             _componentNames.Add(componentName);
         }
 
-        public void UseDefaultSettings()
-        {
-            Settings = new Dictionary<string, IDictionary<string, string>>();
-        }
+        public bool UseNoSettings { get; set; } = false;
     }
 }

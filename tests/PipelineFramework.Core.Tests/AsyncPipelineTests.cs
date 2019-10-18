@@ -8,6 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using PipelineFramework.Abstractions;
+// ReSharper disable ObjectCreationAsStatement
 
 namespace PipelineFramework.Core.Tests
 {
@@ -15,6 +17,24 @@ namespace PipelineFramework.Core.Tests
     [TestClass]
     public class AsyncPipelineTests : PipelineTestsBase
     {
+        [TestMethod]
+        public void AsyncPipeline_NullResolver_Test()
+        {
+            Action act = () => new AsyncPipeline<TestPayload>(null, new List<Type>());
+
+            act.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [TestMethod]
+        public void AsyncPipeline_NullTypeList_Test()
+        {
+            Action act = () => new AsyncPipeline<TestPayload>(
+                new DictionaryPipelineComponentResolver(new Dictionary<string, IPipelineComponent>()),  
+                null as IEnumerable<Type>);
+
+            act.Should().ThrowExactly<ArgumentNullException>();
+        }
+
         [TestMethod]
         public void AsyncPipelineComponent_Initialize_Test()
         {
@@ -90,8 +110,8 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
-            Assert.IsTrue(result.BarStatus == $"{typeof(BarComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
+            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
@@ -104,8 +124,8 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
-            Assert.IsTrue(result.BarStatus == $"{typeof(BarComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
+            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
@@ -163,7 +183,7 @@ namespace PipelineFramework.Core.Tests
 
             result.Should().NotBeNull();
             result.Count.Should().Be(2);
-            result.FooStatus.Should().Be($"{typeof(FooComponent).Name} executed!");
+            result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
             result.BarStatus.Should().BeNull();
         }
     }

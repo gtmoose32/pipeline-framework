@@ -34,7 +34,7 @@ namespace PipelineFramework.Core.Tests
 
         [ExpectedException(typeof(OperationCanceledException), AllowDerivedTypes = true)]
         [TestMethod]
-        public void Pipeline_Exececution_Cancellation_Test()
+        public void Pipeline_Execution_Cancellation_Test()
         {
             var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
             var config = new Dictionary<string, IDictionary<string, string>>();
@@ -54,20 +54,17 @@ namespace PipelineFramework.Core.Tests
         public void Pipeline_Execution_Test()
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
-
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> {{"test", "value"}});
 
             var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
             var result = target.Execute(new TestPayload());
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
-            Assert.IsTrue(result.BarStatus == $"{typeof(BarComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
+            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
@@ -80,8 +77,8 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
-            Assert.IsTrue(result.BarStatus == $"{typeof(BarComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
+            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
@@ -94,8 +91,8 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
-            Assert.IsTrue(result.BarStatus == $"{typeof(BarComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
+            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
@@ -108,8 +105,8 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
-            Assert.IsTrue(result.BarStatus == $"{typeof(BarComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
+            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
@@ -122,8 +119,8 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
-            Assert.IsTrue(result.BarStatus == $"{typeof(BarComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
+            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
         }
 
         [ExpectedException(typeof(PipelineExecutionException))]
@@ -177,7 +174,7 @@ namespace PipelineFramework.Core.Tests
 
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.FooStatus == $"{typeof(FooComponent).Name} executed!");
+            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
             Assert.IsNull(result.BarStatus);
         }
     }

@@ -26,7 +26,7 @@ namespace PipelineFramework.Abstractions.Builder
 
         public IPipelineBuilder<TPipeline> WithNoSettings()
         {
-            State.UseDefaultSettings();
+            State.UseNoSettings = true;
             return this;
         }
 
