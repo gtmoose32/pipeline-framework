@@ -8,28 +8,23 @@ namespace PipelineFramework.Abstractions
     /// Abstract base class for pipeline components.
     /// </summary>
     /// <typeparam name="T">Type of payload to be used by component.</typeparam>
-    public abstract class PipelineComponentBase<T> : IPipelineComponent<T>
+    public abstract class PipelineComponentBase<T> : PipelineComponentBase, IPipelineComponent<T>
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        public abstract T Execute(T payload, CancellationToken cancellationToken);
+    }
+
+    /// <summary>
+    /// Abstract base class for all pipeline components, both async and sync.
+    /// </summary>
+    public abstract class PipelineComponentBase : IPipelineComponent
+    {
         protected PipelineComponentBase()
         {
             Settings = new Settings(this);
         }
 
-        /// <inheritdoc />
-        public abstract T Execute(T payload, CancellationToken cancellationToken);
-
-        /// <summary>
-        /// Gets the pipeline component settings.
-        /// </summary>
-        protected IDictionary<string, string> Settings { get; }
-
-        /// <inheritdoc />
         public string Name { get; private set; }
 
-        /// <inheritdoc />
         public virtual void Initialize(string name, IDictionary<string, string> settings)
         {
             Name = name;
@@ -39,5 +34,10 @@ namespace PipelineFramework.Abstractions
 
             Settings.AddRange(settings.Select(kvp => kvp));
         }
+
+        /// <summary>
+        /// Gets the pipeline component settings.
+        /// </summary>
+        protected IDictionary<string, string> Settings { get; }
     }
 }
