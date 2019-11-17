@@ -37,12 +37,9 @@ namespace PipelineFramework.Core.Tests
         public void Pipeline_Execution_Cancellation_Test()
         {
             var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
-
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> {{"test", "value"}});
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
@@ -72,7 +69,7 @@ namespace PipelineFramework.Core.Tests
         {
             var types = new List<string> { typeof(FooComponent).Name, typeof(BarComponent).Name };
 
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, null);
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types);
             var result = target.Execute(new TestPayload());
 
             Assert.IsNotNull(result);
@@ -100,7 +97,7 @@ namespace PipelineFramework.Core.Tests
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
 
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, null);
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types);
             var result = target.Execute(new TestPayload());
 
             Assert.IsNotNull(result);
@@ -140,12 +137,9 @@ namespace PipelineFramework.Core.Tests
         public void PipelineComponent_SettingNotFoundException_Test()
         {
             var types = new List<Type> { typeof(FooSettingNotFoundComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
-
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> {{"test", "value"}});
 
             var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
             try
@@ -162,12 +156,9 @@ namespace PipelineFramework.Core.Tests
         public void Pipeline_FilterExecution_Test()
         {
             var types = new List<Type> { typeof(FooComponent), typeof(PipelineExecutionTerminatingComponent), typeof(BarComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
-
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> {{"test", "value"}});
 
             var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
             var result = target.Execute(new TestPayload());
