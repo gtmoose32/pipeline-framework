@@ -50,7 +50,7 @@ namespace PipelineFramework.Abstractions
             IPipelineComponentResolver resolver,
             IEnumerable<Type> componentTypes,
             IDictionary<string, IDictionary<string, string>> settings)
-            : this(resolver, componentTypes.Select(t => t.Name), settings)
+            : this(resolver, componentTypes?.Select(t => t.Name), settings)
         { }
         #endregion
 
