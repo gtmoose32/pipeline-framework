@@ -93,20 +93,6 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public void Pipeline_Execution_NullSettings_Test()
-        {
-            var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
-
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types);
-            var result = target.Execute(new TestPayload());
-
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
-        }
-
-        [TestMethod]
         public void Pipeline_Execution_EmptySettings_Test()
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
@@ -153,7 +139,7 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public void Pipeline_FilterExecution_Test()
+        public void Pipeline_TerminateExecution_Test()
         {
             var types = new List<Type> { typeof(FooComponent), typeof(PipelineExecutionTerminatingComponent), typeof(BarComponent) };
             var config = types.ToDictionary<Type, string, IDictionary<string, string>>(

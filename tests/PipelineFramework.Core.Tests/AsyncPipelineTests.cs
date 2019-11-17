@@ -115,20 +115,6 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public async Task AsyncPipeline_Execution_NullSettings_Test()
-        {
-            var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
-
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types);
-            var result = await target.ExecuteAsync(new TestPayload());
-
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
-        }
-
-        [TestMethod]
         public void AsyncPipelineComponent_Exception_Test()
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarExceptionComponent) };
@@ -160,7 +146,7 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public async Task Pipeline_AsyncFilterExecution_Test()
+        public async Task AsyncPipeline_TerminateExecution_Test()
         {
             var types = new List<Type>
             {
@@ -183,7 +169,7 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public async Task Pipeline_Dispose_Test()
+        public async Task AsyncPipeline_Dispose_Test()
         {
             //Arrange
             var component1 = Substitute.For<IDisposableAsyncPipelineComponent>();
