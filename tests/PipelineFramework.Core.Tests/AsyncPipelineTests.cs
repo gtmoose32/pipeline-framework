@@ -1,5 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using PipelineFramework.Abstractions;
+using PipelineFramework.Builder;
 using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
 using System;
@@ -8,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using PipelineFramework.Abstractions;
+
 // ReSharper disable ObjectCreationAsStatement
 
 namespace PipelineFramework.Core.Tests
@@ -29,7 +32,7 @@ namespace PipelineFramework.Core.Tests
         public void AsyncPipeline_NullTypeList_Test()
         {
             Action act = () => new AsyncPipeline<TestPayload>(
-                new DictionaryPipelineComponentResolver(new Dictionary<string, IPipelineComponent>()),  
+                new DictionaryPipelineComponentResolver(new Dictionary<string, IPipelineComponent>()),
                 null as IEnumerable<Type>);
 
             act.Should().ThrowExactly<ArgumentNullException>();
@@ -40,7 +43,7 @@ namespace PipelineFramework.Core.Tests
         {
             const string name = "myname";
             var target = new AsyncTestComponent();
-            target.Initialize(name, new Dictionary<string, string> {{"test", "value"}});
+            target.Initialize(name, new Dictionary<string, string> { { "test", "value" } });
 
             target.Name.Should().Be(name);
             target.TestSettings.Count.Should().Be(1);
@@ -82,12 +85,9 @@ namespace PipelineFramework.Core.Tests
         public void AsyncPipeline_Execution_Cancellation_Test()
         {
             var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
-
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> { { "test", "value" } });
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
@@ -119,7 +119,7 @@ namespace PipelineFramework.Core.Tests
         {
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
 
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, null);
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types);
             var result = await target.ExecuteAsync(new TestPayload());
 
             Assert.IsNotNull(result);
@@ -148,12 +148,9 @@ namespace PipelineFramework.Core.Tests
         public void AsyncPipelineComponent_SettingNotFoundException_Test()
         {
             var types = new List<Type> { typeof(FooSettingNotFoundComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
-
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> { { "test", "value" } });
 
             var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
             Func<Task<TestPayload>> act = () => target.ExecuteAsync(new TestPayload());
@@ -172,11 +169,9 @@ namespace PipelineFramework.Core.Tests
                 typeof(BarComponent)
             };
 
-            var config = new Dictionary<string, IDictionary<string, string>>();
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> { { "test", "value" } });
 
             var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
             var result = await target.ExecuteAsync(new TestPayload());
@@ -185,6 +180,47 @@ namespace PipelineFramework.Core.Tests
             result.Count.Should().Be(2);
             result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
             result.BarStatus.Should().BeNull();
+        }
+
+        [TestMethod]
+        public async Task Pipeline_Dispose_Test()
+        {
+            //Arrange
+            var component1 = Substitute.For<IDisposableAsyncPipelineComponent>();
+            var component2 = Substitute.For<IAsyncPipelineComponent<TestPayload>>();
+            var component3 = Substitute.For<IDisposableAsyncPipelineComponent>();
+
+            var resolver = new DictionaryPipelineComponentResolver(
+                new Dictionary<string, IPipelineComponent>
+                {
+                    {nameof(component1), component1},
+                    {nameof(component2), component2},
+                    {nameof(component3), component3}
+                });
+
+            var payload = new TestPayload();
+            component1.ExecuteAsync(Arg.Any<TestPayload>(), Arg.Any<CancellationToken>()).Returns(payload);
+            component2.ExecuteAsync(Arg.Any<TestPayload>(), Arg.Any<CancellationToken>()).Returns(payload);
+            component3.ExecuteAsync(Arg.Any<TestPayload>(), Arg.Any<CancellationToken>()).Returns(payload);
+
+            TestPayload result;
+
+            //Act
+            using (var sut = PipelineBuilder<TestPayload>.Async()
+                .WithComponent(nameof(component1))
+                .WithComponent(nameof(component2))
+                .WithComponent(nameof(component3))
+                .WithComponentResolver(resolver)
+                .WithNoSettings()
+                .Build())
+            {
+                result = await sut.ExecuteAsync(payload, CancellationToken.None).ConfigureAwait(false);
+            }
+            
+            //Assert
+            result.Should().NotBeNull();
+            component1.Received().Dispose();
+            component3.Received().Dispose();
         }
     }
 }
