@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace PipelineFramework.Abstractions
 {
@@ -17,5 +18,7 @@ namespace PipelineFramework.Abstractions
         T Execute(T payload, CancellationToken cancellationToken = default);
     }
 
-    public interface IPipeline { }
+    public interface IPipeline : IDisposable
+    {
+    }
 }

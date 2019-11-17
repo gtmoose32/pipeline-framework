@@ -8,7 +8,7 @@ namespace PipelineFramework.Abstractions
     /// Abstract pipeline implementation providing base pipeline functionality.
     /// </summary>
     /// <typeparam name="TComponent"></typeparam>
-    public abstract class PipelineBase<TComponent>
+    public abstract class PipelineBase<TComponent> : IDisposable
         where TComponent : class, IPipelineComponent
     {
         #region ctor
@@ -58,5 +58,17 @@ namespace PipelineFramework.Abstractions
         /// List of components contained with this pipeline instance.
         /// </summary>
         protected IEnumerable<TComponent> Components { get; }
+
+        /// <summary>
+        /// Disposes of the pipeline.  This method will call dispose on any <see cref="IPipelineComponent"/> that implements the <see cref="IDisposable"/> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            foreach (var component in Components.OfType<IDisposable>())
+            {
+                component.Dispose();
+            }
+        }
     }
 }
