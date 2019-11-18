@@ -4,7 +4,6 @@ using PipelineFramework.Core.Examples.Components;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace PipelineFramework.Core.Examples
@@ -39,46 +38,50 @@ namespace PipelineFramework.Core.Examples
             await InvokePipelineAsync(resolver, settings);
             InvokePipeline(resolver, settings);
 
-            Console.WriteLine();
-            Console.Write("Press any key to exit...");
+            Console.Write("\nPress any key to exit...");
             Console.Read();
         }
 
-        private static async Task InvokePipelineAsync(DictionaryPipelineComponentResolver resolver, Dictionary<string, IDictionary<string, string>> settings)
+        private static async Task InvokePipelineAsync(IPipelineComponentResolver resolver, IDictionary<string, IDictionary<string, string>> settings)
         {
-            
-            var pipeline = PipelineBuilder<ExamplePipelinePayload>
+            Console.WriteLine("Executing pipeline asynchronously.");
+
+            var payload = new ExamplePipelinePayload();
+
+            using (var pipeline = PipelineBuilder<ExamplePipelinePayload>
                 .Async()
                 .WithComponent<FooComponent>()
                 .WithComponent<DelayComponent>()
                 .WithComponent<BarComponent>()
                 .WithComponentResolver(resolver)
                 .WithSettings(settings)
-                .Build();
+                .Build())
+            {
+                payload = await pipeline.ExecuteAsync(payload);
+            }
 
-            Console.WriteLine("Executing pipeline asynchronously.");
-            var result = await pipeline.ExecuteAsync(new ExamplePipelinePayload(), CancellationToken.None);
-
-            result.Messages.ForEach(Console.WriteLine);
+            payload.Messages.ForEach(Console.WriteLine);
         }
 
-        private static void InvokePipeline(DictionaryPipelineComponentResolver resolver, Dictionary<string, IDictionary<string, string>> settings)
+        private static void InvokePipeline(IPipelineComponentResolver resolver, IDictionary<string, IDictionary<string, string>> settings)
         {
-            Console.WriteLine();
+            Console.WriteLine("\nExecuting pipeline synchronously.");
 
-            var pipeline = PipelineBuilder<ExamplePipelinePayload>
+            var payload = new ExamplePipelinePayload();
+
+            using (var pipeline = PipelineBuilder<ExamplePipelinePayload>
                 .NonAsync()
                 .WithComponent<FooComponentNonAsync>()
                 .WithComponent<DelayComponentNonAsync>()
                 .WithComponent<BarComponentNonAsync>()
                 .WithComponentResolver(resolver)
                 .WithSettings(settings)
-                .Build();
+                .Build())
+            {
+                payload = pipeline.Execute(payload);
+            }
 
-            Console.WriteLine("Executing pipeline synchronously.");
-            var result = pipeline.Execute(new ExamplePipelinePayload());
-
-            result.Messages.ForEach(Console.WriteLine);
+            payload.Messages.ForEach(Console.WriteLine);
         }
     }
 }
