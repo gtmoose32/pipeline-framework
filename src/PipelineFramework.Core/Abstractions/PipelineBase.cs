@@ -28,15 +28,16 @@ namespace PipelineFramework.Abstractions
             if (componentNames == null) throw new ArgumentNullException(nameof(componentNames));
 
             Components = componentNames.Select(name =>
-            {
-                IDictionary<string, string> componentSettings = null;
-                if (settings != null && settings.ContainsKey(name))
-                    componentSettings = settings[name];
+                {
+                    IDictionary<string, string> componentSettings = null;
+                    if (settings != null && settings.ContainsKey(name))
+                        componentSettings = settings[name];
 
-                var component = resolver.GetInstance<TComponent>(name);
-                component.Initialize(name, componentSettings);
-                return component;
-            });
+                    var component = resolver.GetInstance<TComponent>(name);
+                    component.Initialize(name, componentSettings);
+                    return component;
+                })
+                .ToArray();
         }
 
         /// <summary>
