@@ -13,10 +13,18 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>PipelineFramework allows to easily compose and execute linear workflows using pipeline components.</Description>
+    <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\Release\netstandard2.0\PipelineFramework.Core.xml</DocumentationFile>
     <PackageId>PipelineFramework.Core</PackageId>
     <Product>PipelineFramework.Core</Product>
     <LangVersion>latest</LangVersion>
-    <PackageReleaseNotes />
+    <PackageReleaseNotes>
+PipelineFramework v4
+
+Changes in v4.1.0
+* Added support for disposable pipelines.  Both async and nonasync pipelines now implement IDisposable
+* Removed conditional CancellationToken parameters from pipeline interfaces in favor of overload methods intead.
+
+    </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 </Project>
