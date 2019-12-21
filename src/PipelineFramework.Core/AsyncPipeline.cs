@@ -31,14 +31,11 @@ namespace PipelineFramework
         { }
         #endregion
 
-        /// <summary>
-        /// Executes linear work flow asynchronously.
-        /// </summary>
-        /// <param name="payload">Type of payload passed through the pipeline during execution.</param>
-        /// <param name="cancellationToken"><see cref="CancellationToken"/> using to cancel execution.</param>
-        /// <returns><see cref="Task{T}"/></returns>
+        /// <inheritdoc />
+        public Task<T> ExecuteAsync(T payload) => ExecuteAsync(payload, default);
 
-        public async Task<T> ExecuteAsync(T payload, CancellationToken cancellationToken = default)
+        /// <inheritdoc />
+        public async Task<T> ExecuteAsync(T payload, CancellationToken cancellationToken)
         {
             IPipelineComponent current = null;
             try

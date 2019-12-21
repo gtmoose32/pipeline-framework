@@ -31,7 +31,10 @@ namespace PipelineFramework
         #endregion
 
         /// <inheritdoc />
-        public T Execute(T payload, CancellationToken cancellationToken = default)
+        public T Execute(T payload) => Execute(payload, default);
+
+        /// <inheritdoc />
+        public T Execute(T payload, CancellationToken cancellationToken)
         {
             IPipelineComponent current = null;
             try
