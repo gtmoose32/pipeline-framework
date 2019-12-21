@@ -9,18 +9,13 @@ namespace PipelineFramework.Core.Examples.Components
     [ExcludeFromCodeCoverage]
     public class BarComponent : AsyncPipelineComponentBase<ExamplePipelinePayload>
     {
-        public override async Task<ExamplePipelinePayload> ExecuteAsync(ExamplePipelinePayload payload, CancellationToken cancellationToken)
+        public override Task<ExamplePipelinePayload> ExecuteAsync(ExamplePipelinePayload payload, CancellationToken cancellationToken)
         {
-            payload.Result = await Task.Run(() =>
-                {
-                    //call some external api and get null result back
-                    return new Random().Next(100);
-                },
-                cancellationToken);
+            payload.Result = new Random().Next(100);
             
             payload.Messages.Add($"Component {Name} called external api and returned result {payload.Result}");
 
-            return payload;
+            return Task.FromResult(payload);
         }
     }
 
