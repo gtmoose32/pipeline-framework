@@ -5,7 +5,7 @@ using System.ComponentModel;
 namespace PipelineFramework
 {
     /// <summary>
-    /// Pipeline Framework useful extensions
+    /// Extension methods for working with pipeline component settings, <see cref="IDictionary{TKey,TValue}"/>.
     /// </summary>
     public static class Extensions
     {
@@ -18,9 +18,9 @@ namespace PipelineFramework
             this IDictionary<string, string> settings, 
             IEnumerable<KeyValuePair<string, string>> config)
         {
-            foreach (var kvp in config)
+            foreach (var setting in config)
             {
-                settings.Add(kvp);
+                settings.Add(setting);
             }
         }
 
@@ -30,16 +30,10 @@ namespace PipelineFramework
         /// </summary>
         /// <param name="settings">Settings dictionary</param>
         /// <param name="name">Name of the setting</param>
-        /// <param name="throwOnSettingNotFound"></param>
         /// <typeparam name="T">Type to be converted to</typeparam>
         /// <returns>Converted setting</returns>
-        public static T GetSettingValue<T>(
-            this IDictionary<string, string> settings, 
-            string name, 
-            bool throwOnSettingNotFound = true)
-        {
-            return settings.GetSettingValue(name).Convert<T>();
-        }
+        public static T GetSettingValue<T>(this IDictionary<string, string> settings, string name)
+            => Convert<T>(settings.GetSettingValue(name));
 
         /// <summary>
         /// Gets a setting from the dictionary and converts it to the specified type.  
@@ -47,67 +41,37 @@ namespace PipelineFramework
         /// </summary>
         /// <param name="settings">Settings dictionary</param>
         /// <param name="name">Name of the setting</param>
-        /// <param name="defaultValue">Value to be returned if the conversion failed.</param>
-        /// <param name="throwOnSettingNotFound"></param>
+        /// <param name="defaultValue">Value to be returned if the setting cannot be found or conversion to type <see cref="T"/> fails.</param>
         /// <typeparam name="T">Type to be converted to</typeparam>
         /// <returns>Converted setting</returns>
-        public static T GetSettingValue<T>(
-            this IDictionary<string, string> settings, 
-            string name, 
-            T defaultValue, 
-            bool throwOnSettingNotFound = true)
-        {
-            return settings.GetSettingValue(name, throwOnSettingNotFound).Convert(defaultValue);
-        }
-
+        public static T GetSettingValue<T>(this IDictionary<string, string> settings, string name, T defaultValue)
+            => settings.TryGetValue(name, out var value)
+                ? Convert<T>(value)
+                : defaultValue;
+        
         /// <summary>
         /// Gets a setting from the dictionary returns it.
         /// If the setting does not exist null will be returned.  
         /// </summary>
         /// <param name="settings">Settings dictionary</param>
         /// <param name="name">Name of the setting</param>
-        /// <param name="throwOnSettingNotFound"></param>
+        /// <param name="defaultValue">Value to be returned if the setting cannot be found or found setting is null.</param>
         /// <returns></returns>
-        public static string GetSettingValue(
-            this IDictionary<string, string> settings, 
-            string name, 
-            bool throwOnSettingNotFound = true)
+        public static string GetSettingValue(this IDictionary<string, string> settings, string name, string defaultValue = null)
+            =>  defaultValue == null 
+                ? settings[name]
+                : settings.TryGetValue(name, out var value) ? value : defaultValue;
+        
+        private static T Convert<T>(string s)
         {
-            if (throwOnSettingNotFound) return settings[name];
-
-            return settings.ContainsKey(name) ? settings[name] : null;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="s"></param>
-        /// <param name="defaultValue"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T Convert<T>(this string s, T defaultValue)
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
             try
             {
-                return (T)converter.ConvertFromString(s);
+                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromString(s);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return defaultValue;
+                throw exception.GetBaseException();
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="s"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T Convert<T>(this string s)
-        {
-            var converter = TypeDescriptor.GetConverter(typeof(T));
-            return (T)converter.ConvertFromString(s);
         }
     }
 }

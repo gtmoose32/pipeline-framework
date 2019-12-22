@@ -39,25 +39,18 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public void GetSettingValue_ShouldThrowFalse_Test()
+        public void GetSettingValue_Test()
         {
             _target.Add("setting", "1");
 
-            var result = _target.GetSettingValue("setting", false);
+            var result = _target.GetSettingValue("setting");
 
             result.Should().NotBeNullOrWhiteSpace();
             result.Should().Be("1");
         }
 
         [TestMethod]
-        public void GetSettingValue_SettingNotFoundShouldThrowFalseTest()
-        {
-            var result = _target.GetSettingValue("setting", false);
-            result.Should().BeNull();
-        }
-
-        [TestMethod]
-        public void GetSettingValue_SettingNotFoundShouldThrowTrueTest()
+        public void GetSettingValue_SettingNotFound_ThrowNotFoundException_Test()
         {
             Action act = () => _target.GetSettingValue("setting");
             act.Should().ThrowExactly<PipelineComponentSettingNotFoundException>()
@@ -79,14 +72,13 @@ namespace PipelineFramework.Core.Tests
             _target.Add("setting", "xxx");
             Action act = () => _target.GetSettingValue<int>("setting");
 
-            act.Should().ThrowExactly<Exception>()
-                .WithInnerExceptionExactly<FormatException>();
+            act.Should().ThrowExactly<FormatException>();
         }
 
         [TestMethod]
         public void GettingSettingGeneric_UseDefaultValue_SettingsNotFound_Test()
         {
-            var result = _target.GetSettingValue("setting", 10, false);
+            var result = _target.GetSettingValue("setting", 10);
 
             result.Should().Be(10);
         }
@@ -94,7 +86,6 @@ namespace PipelineFramework.Core.Tests
         [TestMethod]
         public void GettingSettingGeneric_UseDefaultValueTest()
         {
-            _target.Add("setting", "xxx");
             var result = _target.GetSettingValue("setting", 10);
 
             result.Should().Be(10);
