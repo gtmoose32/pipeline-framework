@@ -12,14 +12,14 @@ namespace PipelineFramework.Core.Tests
         {
             var components = new Dictionary<string, IPipelineComponent>
             {
-                {typeof(FooComponent).Name, new FooComponent()},
-                {typeof(BarComponent).Name, new BarComponent()},
-                {typeof(FooSettingNotFoundComponent).Name, new FooSettingNotFoundComponent() },
-                {typeof(BarExceptionComponent).Name, new BarExceptionComponent() },
-                {typeof(DelayComponent).Name, new DelayComponent() },
+                {nameof(FooComponent), new FooComponent()},
+                {nameof(BarComponent), new BarComponent()},
+                {nameof(FooSettingNotFoundComponent), new FooSettingNotFoundComponent() },
+                {nameof(BarExceptionComponent), new BarExceptionComponent() },
+                {nameof(DelayComponent), new DelayComponent() },
                 {"Component1", new ConfigurableComponent()},
                 {"Component2", new ConfigurableComponent()},
-                {typeof(PipelineExecutionTerminatingComponent).Name, new PipelineExecutionTerminatingComponent()}
+                {nameof(PipelineExecutionTerminatingComponent), new PipelineExecutionTerminatingComponent()}
             };
 
             PipelineComponentResolver = new DictionaryPipelineComponentResolver(components);
