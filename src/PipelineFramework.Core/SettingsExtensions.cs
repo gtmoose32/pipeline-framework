@@ -7,7 +7,7 @@ namespace PipelineFramework
     /// <summary>
     /// Extension methods for working with pipeline component settings, <see cref="IDictionary{TKey,TValue}"/>.
     /// </summary>
-    public static class Extensions
+    public static class SettingsExtensions
     {
         /// <summary>
         /// Adds a list of key value pairs of strings to the dictionary./>

@@ -11,7 +11,7 @@ namespace PipelineFramework.Core.Tests
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
-    public class ExtensionsTests
+    public class SettingsExtensionsTests
     {
         private Settings _target;
 
