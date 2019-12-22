@@ -1,6 +1,7 @@
 ﻿using PipelineFramework.Abstractions;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization;
 
 namespace PipelineFramework.Exceptions
 {
@@ -14,21 +15,21 @@ namespace PipelineFramework.Exceptions
             "Pipeline component named '{0}' is referencing a setting named '{1}' that cannot be found.";
 
         #region ctor
-        /// <summary>
-        /// Creates a new exception instance.
-        /// </summary>
-        /// <param name="component">Type of <see cref="IPipelineComponent"/> that threw the exception.</param>
-        /// <param name="settingName">The name of the setting that cannot be found.</param>
-        public PipelineComponentSettingNotFoundException(IPipelineComponent component, string settingName)
+        internal PipelineComponentSettingNotFoundException(IPipelineComponent component, string settingName)
             : base(component)
         {
             SettingName = settingName;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PipelineComponentSettingNotFoundException"/> with serialized data.
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data of the exception being thrown.</param>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains the contextual information about the source or the destination.</param>
         [ExcludeFromCodeCoverage]
         protected PipelineComponentSettingNotFoundException(
-            System.Runtime.Serialization.SerializationInfo info,
-            System.Runtime.Serialization.StreamingContext context) : base(info, context)
+            SerializationInfo info,
+            StreamingContext context) : base(info, context)
         { } 
         #endregion
 

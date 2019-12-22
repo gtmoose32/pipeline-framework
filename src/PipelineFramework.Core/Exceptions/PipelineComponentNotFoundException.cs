@@ -4,20 +4,21 @@ using System.Runtime.Serialization;
 
 namespace PipelineFramework.Exceptions
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
     [Serializable]
     public class PipelineComponentNotFoundException : Exception
     {
-        //
-        // For guidelines regarding the creation of new exception types, see
-        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/cpconerrorraisinghandlingguidelines.asp
-        // and
-        //    http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dncscol/html/csharp07192001.asp
-        //
-        public PipelineComponentNotFoundException(string message) : base(message)
+        internal PipelineComponentNotFoundException(string message) : base(message)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PipelineComponentNotFoundException"/> with serialized data.
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data of the exception being thrown.</param>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains the contextual information about the source or the destination.</param>
         [ExcludeFromCodeCoverage]
         protected PipelineComponentNotFoundException(
             SerializationInfo info,

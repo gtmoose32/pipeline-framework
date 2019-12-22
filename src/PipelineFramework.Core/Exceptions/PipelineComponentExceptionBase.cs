@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace PipelineFramework.Exceptions
 {
     /// <summary>
-    /// Abstract base class for PEF exceptions.
+    /// Abstract base class for pipeline framework exceptions.
     /// </summary>
     public abstract class PipelineComponentExceptionBase : Exception
     {
@@ -24,6 +24,12 @@ namespace PipelineFramework.Exceptions
             ThrowingComponent = component;
         }
 
+        
+        /// <summary>
+        /// Initializes a new instance with serialized data.
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data of the exception being thrown.</param>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains the contextual information about the source or the destination.</param>
         [ExcludeFromCodeCoverage]
         protected PipelineComponentExceptionBase(
             SerializationInfo info,
@@ -32,7 +38,7 @@ namespace PipelineFramework.Exceptions
         #endregion
 
         /// <summary>
-        /// Exception source Type derived from <see cref="IPipelineComponent{T}" /> 
+        /// The pipeline component which threw the base exception from within the pipeline. 
         /// </summary>
         public IPipelineComponent ThrowingComponent { get; }
 
