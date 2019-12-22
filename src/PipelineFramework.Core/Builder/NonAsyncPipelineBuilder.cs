@@ -3,10 +3,6 @@ using PipelineFramework.Abstractions.Builder;
 
 namespace PipelineFramework.Builder
 {
-    /// <summary>
-    /// Builder implementation to assist in creating <see cref="IPipeline{T}"/> instances
-    /// </summary>
-    /// <typeparam name="TPayload"></typeparam>
     internal class NonAsyncPipelineBuilder<TPayload> : PipelineBuilderBase<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload>
     {
         private NonAsyncPipelineBuilder()
