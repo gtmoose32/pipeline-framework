@@ -25,6 +25,9 @@ namespace PipelineFramework.Abstractions
         T Execute(T payload, CancellationToken cancellationToken);
     }
 
+    /// <summary>
+    /// Defines a pipeline.  This interface is used internally as a marker.
+    /// </summary>
     public interface IPipeline : IDisposable
     {
     }
