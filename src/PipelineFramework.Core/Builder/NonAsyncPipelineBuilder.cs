@@ -5,16 +5,20 @@ namespace PipelineFramework.Builder
 {
     internal class NonAsyncPipelineBuilder<TPayload> : PipelineBuilderBase<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload>
     {
-        private NonAsyncPipelineBuilder()
+        private NonAsyncPipelineBuilder(IPipelineComponentExecutionStatusReceiver executionStatusReceiver)
+            : base(executionStatusReceiver)
         {
         }
 
-        internal static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> Initialize()
-            => new NonAsyncPipelineBuilder<TPayload>();
+        internal static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> Initialize(
+            IPipelineComponentExecutionStatusReceiver executionStatusReceiver) => 
+                new NonAsyncPipelineBuilder<TPayload>(executionStatusReceiver);
         
         public override IPipeline<TPayload> Build()
-            => State.UseNoSettings
-                ? new Pipeline<TPayload>(State.ComponentResolver, State.ComponentNames)
-                : new Pipeline<TPayload>(State.ComponentResolver, State.ComponentNames, State.Settings);
+            => new Pipeline<TPayload>(
+                State.ComponentResolver, 
+                State.ComponentNames, 
+                State.Settings, 
+                State.PipelineComponentExecutionStatusReceiver);
     }
 }

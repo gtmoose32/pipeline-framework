@@ -19,6 +19,6 @@ namespace PipelineFramework.Abstractions.Builder
         /// Instructs the pipeline builder to not use any configuration settings.
         /// </summary>
         /// <returns>A pipeline builder.</returns>
-        IPipelineBuilder<TPipeline> WithNoSettings();
+        IPipelineBuilder<TPipeline> WithoutSettings();
     }
 }

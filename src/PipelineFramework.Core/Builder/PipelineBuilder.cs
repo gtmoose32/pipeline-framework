@@ -12,19 +12,23 @@ namespace PipelineFramework.Builder
         /// <summary>
         /// Initiates an instance Async pipeline builder.
         /// </summary>
+        /// <param name="executionStatusReceiver"></param>
         /// <returns>Initial pipeline builder component holder.</returns>
-        public static IInitialPipelineComponentHolder<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> Async()
+        public static IInitialPipelineComponentHolder<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> InitializeAsyncPipeline(
+            IAsyncPipelineComponentExecutionStatusReceiver executionStatusReceiver = null)
         {
-            return AsyncPipelineBuilder<TPayload>.Initialize();
+            return AsyncPipelineBuilder<TPayload>.Initialize(executionStatusReceiver);
         }
 
         /// <summary>
         /// Initiates an instance NonAsync pipeline builder.
         /// </summary>
+        /// <param name="executionStatusReceiver"></param>
         /// <returns>Initial pipeline builder component  holder.</returns>
-        public static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> NonAsync()
+        public static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> InitializePipeline(
+            IPipelineComponentExecutionStatusReceiver executionStatusReceiver = null)
         {
-            return NonAsyncPipelineBuilder<TPayload>.Initialize();
+            return NonAsyncPipelineBuilder<TPayload>.Initialize(executionStatusReceiver);
         }
     }
 }

@@ -16,12 +16,5 @@
         /// <typeparam name="TComponent">The type to add to the pipeline component holder.</typeparam>
         /// <returns>Additional pipeline component holder.</returns>
         IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent<TComponent>() where TComponent : TComponentBase;
-
-        /// <summary>
-        /// Adds a pipeline component to the pipeline component holder by name.
-        /// </summary>
-        /// <param name="componentName">Component name to add to the pipeline component holder.</param>
-        /// <returns>Additional pipeline component holder.</returns>
-        IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent(string componentName);
     }
 }

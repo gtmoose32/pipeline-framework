@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using PipelineFramework.Builder;
+﻿using PipelineFramework.Builder;
+using System.Collections.Generic;
 
 namespace PipelineFramework.Abstractions.Builder
 {
@@ -11,10 +11,24 @@ namespace PipelineFramework.Abstractions.Builder
     {
         protected readonly PipelineBuilderState State;
 
-        protected PipelineBuilderBase()
+        #region ctor
+        protected PipelineBuilderBase(IPipelineComponentExecutionStatusReceiver executionStatusReceiver) 
+            : this()
+        {
+            State.PipelineComponentExecutionStatusReceiver = executionStatusReceiver;
+        }
+
+        protected PipelineBuilderBase(IAsyncPipelineComponentExecutionStatusReceiver executionStatusReceiver) 
+            : this()
+        {
+            State.AsyncPipelineComponentExecutionStatusReceiver = executionStatusReceiver;
+        }
+
+        private PipelineBuilderBase()
         {
             State = new PipelineBuilderState();
-        }
+        } 
+        #endregion
 
         public abstract TPipeline Build();
 
@@ -24,11 +38,7 @@ namespace PipelineFramework.Abstractions.Builder
             return this;
         }
 
-        public IPipelineBuilder<TPipeline> WithNoSettings()
-        {
-            State.UseNoSettings = true;
-            return this;
-        }
+        public IPipelineBuilder<TPipeline> WithoutSettings() => this;
 
         public ISettingsHolder<TPipeline> WithComponentResolver(IPipelineComponentResolver componentResolver)
         {
@@ -39,12 +49,6 @@ namespace PipelineFramework.Abstractions.Builder
         public IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent<TComponent>() where TComponent : TComponentBase
         {
             State.AddComponent(typeof(TComponent));
-            return this;
-        }
-
-        public IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent(string componentName)
-        {
-            State.AddComponent(componentName);
             return this;
         }
     }
