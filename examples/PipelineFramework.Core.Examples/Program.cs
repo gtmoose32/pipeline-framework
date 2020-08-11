@@ -1,6 +1,8 @@
-﻿using PipelineFramework.Abstractions;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PipelineFramework.Abstractions;
 using PipelineFramework.Builder;
 using PipelineFramework.Core.Examples.Components;
+using PipelineFramework.PipelineComponentResolvers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -13,21 +15,13 @@ namespace PipelineFramework.Core.Examples
     {
         static async Task Main()
         {
-            var components = new Dictionary<string, IPipelineComponent>
-            {
-                {nameof(FooComponent), new FooComponent()},
-                {nameof(DelayComponent), new DelayComponent()},
-                {nameof(BarComponent), new BarComponent()},
-                {nameof(FooComponentNonAsync), new FooComponentNonAsync()},
-                {nameof(DelayComponentNonAsync), new DelayComponentNonAsync()},
-                {nameof(BarComponentNonAsync), new BarComponentNonAsync()}
-            };
-
-            var resolver = new DictionaryPipelineComponentResolver(components);
-
+            var resolver = new DictionaryPipelineComponentResolver();
+            resolver.AddAsync(new FooComponent(), new DelayComponent(), new BarComponent());
+            resolver.Add(new FooComponentNonAsync(), new DelayComponentNonAsync(), new BarComponentNonAsync());
+            
             var settings = new Dictionary<string, IDictionary<string, string>>
             {
-                {typeof(DelayComponent).Name, new Dictionary<string, string>
+                {nameof(DelayComponent), new Dictionary<string, string>
                 {
                     {"DelayTimeSpan", "00:00:05"}
                 }}
@@ -35,21 +29,68 @@ namespace PipelineFramework.Core.Examples
 
             Console.WriteLine();
 
-            await InvokePipelineAsync(resolver, settings);
+            // ReSharper disable once MethodHasAsyncOverload
             InvokePipeline(resolver, settings);
+
+            await InvokePipelineAsync(resolver, settings);
+
+            await InvokePipelineAsyncWithDependencyInjectionAndStatusReceiver(settings);
 
             Console.Write("\nPress any key to exit...");
             Console.Read();
         }
 
+        private static IServiceProvider AddAsyncPipelineToContainer(IDictionary<string, IDictionary<string, string>> settings)
+        {
+            var services = new ServiceCollection();
+            services
+                .AddAsyncPipelineComponent<FooComponent, ExamplePipelinePayload>()
+                .AddAsyncPipelineComponent<DelayComponent, ExamplePipelinePayload>()
+                .AddAsyncPipelineComponent<BarComponent, ExamplePipelinePayload>();
+
+            services.AddPipelineComponentResolver();
+            services.AddAsyncPipelineComponentExecutionStatusReceiver<ExecutionStatusReceiver>();
+
+            services.AddSingleton(provider =>
+                PipelineBuilder<ExamplePipelinePayload>
+                    .InitializeAsyncPipeline(provider.GetService<IAsyncPipelineComponentExecutionStatusReceiver>())
+                    .WithComponent<FooComponent>()
+                    .WithComponent<DelayComponent>()
+                    .WithComponent<BarComponent>()
+                    .WithComponentResolver(provider.GetService<IPipelineComponentResolver>())
+                    .WithSettings(settings)
+                    .Build());
+
+            return services.BuildServiceProvider();
+        }
+
+        private static async Task InvokePipelineAsyncWithDependencyInjectionAndStatusReceiver(IDictionary<string, IDictionary<string, string>> settings)
+        {
+            Console.WriteLine("Executing pipeline asynchronously with dependency injection and execution status receiver.\n");
+
+            var payload = new ExamplePipelinePayload();
+            var serviceProvider = AddAsyncPipelineToContainer(settings);
+
+            using (var pipeline = serviceProvider.GetService<IAsyncPipeline<ExamplePipelinePayload>>()) 
+            {
+                payload = await pipeline.ExecuteAsync(payload);
+            }
+
+            Console.WriteLine("\n");
+
+            payload.Messages.ForEach(Console.WriteLine);
+            
+            Console.WriteLine("\n");
+        }
+
         private static async Task InvokePipelineAsync(IPipelineComponentResolver resolver, IDictionary<string, IDictionary<string, string>> settings)
         {
-            Console.WriteLine("Executing pipeline asynchronously.");
+            Console.WriteLine("Executing pipeline asynchronously.\n");
 
             var payload = new ExamplePipelinePayload();
 
             using (var pipeline = PipelineBuilder<ExamplePipelinePayload>
-                .Async()
+                .InitializeAsyncPipeline()
                 .WithComponent<FooComponent>()
                 .WithComponent<DelayComponent>()
                 .WithComponent<BarComponent>()
@@ -59,18 +100,20 @@ namespace PipelineFramework.Core.Examples
             {
                 payload = await pipeline.ExecuteAsync(payload);
             }
-
+            
             payload.Messages.ForEach(Console.WriteLine);
+
+            Console.WriteLine("\n");
         }
 
         private static void InvokePipeline(IPipelineComponentResolver resolver, IDictionary<string, IDictionary<string, string>> settings)
         {
-            Console.WriteLine("\nExecuting pipeline synchronously.");
+            Console.WriteLine("\nExecuting pipeline synchronously.\n");
 
             var payload = new ExamplePipelinePayload();
 
             using (var pipeline = PipelineBuilder<ExamplePipelinePayload>
-                .NonAsync()
+                .InitializePipeline()
                 .WithComponent<FooComponentNonAsync>()
                 .WithComponent<DelayComponentNonAsync>()
                 .WithComponent<BarComponentNonAsync>()
@@ -81,7 +124,10 @@ namespace PipelineFramework.Core.Examples
                 payload = pipeline.Execute(payload);
             }
 
+
             payload.Messages.ForEach(Console.WriteLine);
+
+            Console.WriteLine("\n");
         }
     }
 }

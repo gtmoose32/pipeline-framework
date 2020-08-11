@@ -12,9 +12,9 @@ namespace PipelineFramework.Core.Examples.Components
     {
         private TimeSpan _delay;
 
-        public override void Initialize(string name, IDictionary<string, string> settings)
+        public override void Initialize(IDictionary<string, string> settings)
         {
-            base.Initialize(name, settings);
+            base.Initialize(settings);
 
             _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5));
         }
@@ -34,9 +34,9 @@ namespace PipelineFramework.Core.Examples.Components
     {
         private TimeSpan _delay;
 
-        public override void Initialize(string name, IDictionary<string, string> settings)
+        public override void Initialize(IDictionary<string, string> settings)
         {
-            base.Initialize(name, settings);
+            base.Initialize(settings);
 
             _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5));
         }
