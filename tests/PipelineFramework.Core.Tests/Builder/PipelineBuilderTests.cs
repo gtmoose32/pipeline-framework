@@ -6,7 +6,7 @@ using PipelineFramework.Builder;
 using PipelineFramework.Core.Tests.Infrastructure;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PipelineFramework.Core.Tests
+namespace PipelineFramework.Core.Tests.Builder
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
@@ -16,7 +16,7 @@ namespace PipelineFramework.Core.Tests
         public void TestAsync()
         {
             // Act/Assert
-            PipelineBuilder<TestPayload>.Async()
+            PipelineBuilder<TestPayload>.InitializeAsyncPipeline()
                 .Should()
                 .BeAssignableTo<IInitialPipelineComponentHolder<IAsyncPipeline<TestPayload>, IAsyncPipelineComponent<TestPayload>, TestPayload>>();
         }
@@ -25,7 +25,7 @@ namespace PipelineFramework.Core.Tests
         public void TestNonAsync()
         {
             // Act/Assert
-            PipelineBuilder<TestPayload>.NonAsync()
+            PipelineBuilder<TestPayload>.InitializePipeline()
                 .Should()
                 .BeAssignableTo<IInitialPipelineComponentHolder<IPipeline<TestPayload>, IPipelineComponent<TestPayload>, TestPayload>>();
         }

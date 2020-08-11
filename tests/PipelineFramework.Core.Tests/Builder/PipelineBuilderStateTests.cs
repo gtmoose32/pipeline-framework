@@ -14,19 +14,6 @@ namespace PipelineFramework.Core.Tests.Builder
         private const string ComponentName = "FooComponent";
 
         [TestMethod]
-        public void TestAddComponentTypeByName()
-        {
-            // Arrange
-            var state = new PipelineBuilderState();
-
-            // Act
-            state.AddComponent(ComponentName);
-
-            // Assert
-            state.ComponentNames.Should().Contain(ComponentName);
-        }
-
-        [TestMethod]
         public void TestAddComponentTypeByType()
         {
             // Arrange
@@ -48,18 +35,7 @@ namespace PipelineFramework.Core.Tests.Builder
 
             // Act
             state.AddComponent(typeof(FooComponent));
-            state.AddComponent(ComponentName);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestAddEmptyNameThrowsArgumentNullException()
-        {
-            // Arrange
-            var state = new PipelineBuilderState();
-
-            // Act
-            state.AddComponent("   ");
+            state.AddComponent(typeof(FooComponent));
         }
     }
 }

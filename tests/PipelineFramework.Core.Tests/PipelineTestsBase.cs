@@ -1,6 +1,4 @@
-﻿using PipelineFramework.Abstractions;
-using PipelineFramework.Core.Tests.Infrastructure;
-using System.Collections.Generic;
+﻿using PipelineFramework.PipelineComponentResolvers;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework.Core.Tests
@@ -10,22 +8,21 @@ namespace PipelineFramework.Core.Tests
     {
         protected PipelineTestsBase()
         {
-            var components = new Dictionary<string, IPipelineComponent>
-            {
-                {nameof(FooComponent), new FooComponent()},
-                {nameof(BarComponent), new BarComponent()},
-                {nameof(FooSettingNotFoundComponent), new FooSettingNotFoundComponent() },
-                {nameof(BarExceptionComponent), new BarExceptionComponent() },
-                {nameof(DelayComponent), new DelayComponent() },
-                {"Component1", new ConfigurableComponent()},
-                {"Component2", new ConfigurableComponent()},
-                {nameof(PipelineExecutionTerminatingComponent), new PipelineExecutionTerminatingComponent()}
-            };
+            //var components = new Dictionary<string, IPipelineComponent>
+            //{
+            //    {nameof(FooComponent), new FooComponent()},
+            //    {nameof(BarComponent), new BarComponent()},
+            //    {nameof(FooSettingNotFoundComponent), new FooSettingNotFoundComponent() },
+            //    {nameof(BarExceptionComponent), new BarExceptionComponent() },
+            //    {nameof(DelayComponent), new DelayComponent() },
+            //    {nameof(ConfigurableComponent), new ConfigurableComponent()},
+            //    {nameof(PipelineExecutionTerminatingComponent), new PipelineExecutionTerminatingComponent()}
+            //};
 
-            PipelineComponentResolver = new DictionaryPipelineComponentResolver(components);
+            PipelineComponentResolver = new DictionaryPipelineComponentResolver();
 
         }
 
-        protected IPipelineComponentResolver PipelineComponentResolver { get; }
+        protected DictionaryPipelineComponentResolver PipelineComponentResolver { get; }
     }
 }

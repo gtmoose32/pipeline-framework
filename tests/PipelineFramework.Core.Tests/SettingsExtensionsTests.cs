@@ -76,7 +76,7 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public void GettingSettingGeneric_UseDefaultValue_SettingsNotFound_Test()
+        public void GettingSettingGeneric_SettingNotFound_UseDefaultValue_Test()
         {
             var result = _target.GetSettingValue("setting", 10);
 
@@ -84,11 +84,21 @@ namespace PipelineFramework.Core.Tests
         }
 
         [TestMethod]
-        public void GettingSettingGeneric_UseDefaultValueTest()
+        public void GettingSettingGeneric_CannotConvertSettingValue_UseDefaultValue_Test()
         {
+            _target.Add("setting", "xxx");
             var result = _target.GetSettingValue("setting", 10);
 
             result.Should().Be(10);
+        }
+
+        [TestMethod]
+        public void GettingSettingGeneric_ConvertToType_Test()
+        {
+            _target.Add("setting", "32");
+            var result = _target.GetSettingValue("setting", 10);
+
+            result.Should().Be(32);
         }
     }
 }
