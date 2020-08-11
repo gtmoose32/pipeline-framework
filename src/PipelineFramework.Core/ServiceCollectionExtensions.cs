@@ -9,15 +9,32 @@ namespace PipelineFramework
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Adds an instance of <see cref="IAsyncPipelineComponentExecutionStatusReceiver"/> to the services collection.
+        /// </summary>
+        /// <typeparam name="T">Type of status receiver to add.</typeparam>
+        /// <param name="services">Services collection dependency injection container.</param>
+        /// <returns><see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddAsyncPipelineComponentExecutionStatusReceiver<T>(this IServiceCollection services)
             where T : class, IAsyncPipelineComponentExecutionStatusReceiver =>
                 services.AddSingleton<IAsyncPipelineComponentExecutionStatusReceiver, T>();
 
+        /// <summary>
+        /// Adds an instance of <see cref="IAsyncPipelineComponentExecutionStatusReceiver"/> to the services collection.
+        /// </summary>
+        /// <typeparam name="T">Type of status receiver to add.</typeparam>
+        /// <param name="services">Services collection dependency injection container.</param>
+        /// <returns><see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddPipelineComponentExecutionStatusReceiver<T>(this IServiceCollection services)
             where T : class, IPipelineComponentExecutionStatusReceiver =>
             services.AddSingleton<IPipelineComponentExecutionStatusReceiver, T>();
 
 
+        /// <summary>
+        /// Adds an instance of <see cref="IPipelineComponentResolver"/> to services collection.
+        /// </summary>
+        /// <param name="services">Services collection dependency injection container.</param>
+        /// <returns><see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddPipelineComponentResolver(this IServiceCollection services)
             => services.AddSingleton<IPipelineComponentResolver>(provider => new ServiceProviderPipelineComponentResolver(provider));
 
