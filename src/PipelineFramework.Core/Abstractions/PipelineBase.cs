@@ -34,7 +34,7 @@ namespace PipelineFramework.Abstractions
                         componentSettings = settings[name];
 
                     var component = resolver.GetInstance<TComponent>(name);
-                    component.Initialize(name, componentSettings);
+                    component.Initialize(componentSettings);
                     return component;
                 })
                 .ToArray();

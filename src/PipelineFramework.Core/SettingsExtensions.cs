@@ -15,7 +15,7 @@ namespace PipelineFramework
         /// <param name="settings">Dictionary to add to.</param>
         /// <param name="config">List of key value pair strings to be added.</param>
         public static void AddRange(
-            this IDictionary<string, string> settings, 
+            this IDictionary<string, string> settings,
             IEnumerable<KeyValuePair<string, string>> config)
         {
             foreach (var setting in config)
@@ -45,10 +45,19 @@ namespace PipelineFramework
         /// <typeparam name="T">Type to be converted to</typeparam>
         /// <returns>Converted setting</returns>
         public static T GetSettingValue<T>(this IDictionary<string, string> settings, string name, T defaultValue)
-            => settings.TryGetValue(name, out var value)
-                ? Convert<T>(value)
-                : defaultValue;
-        
+        {
+            if (!settings.TryGetValue(name, out var value)) return defaultValue;
+
+            try
+            {
+                return Convert<T>(value);
+            }
+            catch
+            {
+                return defaultValue;
+            }
+        }
+
         /// <summary>
         /// Gets a setting from the dictionary returns it.
         /// If the setting does not exist null will be returned.  
@@ -58,10 +67,10 @@ namespace PipelineFramework
         /// <param name="defaultValue">Value to be returned if the setting cannot be found or found setting is null.</param>
         /// <returns></returns>
         public static string GetSettingValue(this IDictionary<string, string> settings, string name, string defaultValue = null)
-            =>  defaultValue == null 
+            => defaultValue == null
                 ? settings[name]
                 : settings.TryGetValue(name, out var value) ? value : defaultValue;
-        
+
         private static T Convert<T>(string s)
         {
             try

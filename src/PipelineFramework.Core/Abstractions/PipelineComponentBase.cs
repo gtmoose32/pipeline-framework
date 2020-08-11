@@ -28,13 +28,11 @@ namespace PipelineFramework.Abstractions
         }
 
         /// <inheritdoc />
-        public string Name { get; private set; }
+        public string Name => GetType().Name;
 
         /// <inheritdoc />
-        public virtual void Initialize(string name, IDictionary<string, string> settings)
+        public virtual void Initialize(IDictionary<string, string> settings)
         {
-            Name = name;
-
             if (settings == null)
                 return;
 

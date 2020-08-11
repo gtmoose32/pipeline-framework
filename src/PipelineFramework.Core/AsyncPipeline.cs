@@ -2,8 +2,10 @@
 using PipelineFramework.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+#pragma warning disable 4014
 
 namespace PipelineFramework
 {
@@ -11,24 +13,32 @@ namespace PipelineFramework
     /// Asynchronous pipeline implementation that provides execution of a linear workflow.
     /// </summary>
     /// <typeparam name="T">Type of payload that travels down the execution pipeline.</typeparam>
-    public class AsyncPipeline<T> : PipelineBase<IAsyncPipelineComponent<T>>, IAsyncPipeline<T>
+    internal class AsyncPipeline<T> : PipelineBase<IAsyncPipelineComponent<T>>, IAsyncPipeline<T>
     {
+        private readonly IAsyncPipelineComponentExecutionStatusReceiver _componentExecutionStatusReceiver;
+
         #region ctor
         /// <inheritdoc />
         public AsyncPipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<string> componentNames,
-            IDictionary<string, IDictionary<string, string>> settings = null)
+            IDictionary<string, IDictionary<string, string>> settings,
+            IAsyncPipelineComponentExecutionStatusReceiver componentExecutionStatusReceiver)
         : base(resolver, componentNames, settings)
-        { }
+        {
+            _componentExecutionStatusReceiver = componentExecutionStatusReceiver;
+        }
 
         /// <inheritdoc />
         public AsyncPipeline(
             IPipelineComponentResolver resolver,
             IEnumerable<Type> componentTypes,
-            IDictionary<string, IDictionary<string, string>> settings = null)
+            IDictionary<string, IDictionary<string, string>> settings,
+            IAsyncPipelineComponentExecutionStatusReceiver componentExecutionStatusReceiver)
             : base(resolver, componentTypes, settings)
-        { }
+        {
+            _componentExecutionStatusReceiver = componentExecutionStatusReceiver;
+        }
         #endregion
 
         /// <inheritdoc />
@@ -45,7 +55,7 @@ namespace PipelineFramework
                     cancellationToken.ThrowIfCancellationRequested();
 
                     current = component;
-                    var currentPayload = await component.ExecuteAsync(payload, cancellationToken);
+                    var currentPayload = await ExecuteComponentAsync(component, payload, cancellationToken).ConfigureAwait(false);
                     if (currentPayload == null) break;
 
                     payload = currentPayload;
@@ -60,6 +70,35 @@ namespace PipelineFramework
             catch (Exception exception)
             {
                 throw new PipelineExecutionException(current, exception);
+            }
+        }
+
+        private async Task<T> ExecuteComponentAsync(IAsyncPipelineComponent<T> component, T payload, CancellationToken cancellationToken)
+        {
+            if (_componentExecutionStatusReceiver == null)
+                return await component.ExecuteAsync(payload, cancellationToken).ConfigureAwait(false);
+
+            await _componentExecutionStatusReceiver.ReceiveExecutionStartingAsync(new PipelineComponentExecutionStartedInfo(component.Name))
+                .ConfigureAwait(false);
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            try
+            {
+                var result = await component.ExecuteAsync(payload, cancellationToken).ConfigureAwait(false);
+                stopwatch.Stop();
+                await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(new PipelineComponentExecutionCompletedInfo(component.Name, stopwatch.Elapsed))
+                    .ConfigureAwait(false);
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                stopwatch.Stop();
+                await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(new PipelineComponentExecutionCompletedInfo(component.Name, stopwatch.Elapsed, e))
+                    .ConfigureAwait(false);
+
+                throw;
             }
         }
     }
