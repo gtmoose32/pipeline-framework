@@ -1,17 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
-using PipelineFramework.PipelineComponentResolvers;
+using PipelineFramework.Extensions.Microsoft.DependencyInjection;
+using PipelineFramework.TestInfrastructure;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using PipelineFramework.Core.Tests.Infrastructure;
 
-namespace PipelineFramework.Core.Tests
+namespace PipelineFramework.Microsoft.DependencyInjection.Tests
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
@@ -104,7 +101,7 @@ namespace PipelineFramework.Core.Tests
         public void AddAsyncPipelineComponentsFromAssembly_Test()
         {
             //Arrange
-            _services.AddAsyncPipelineComponentsFromAssembly(Assembly.GetExecutingAssembly());
+            _services.AddAsyncPipelineComponentsFromAssembly(typeof(TestPayload).Assembly);
             var sut = _services.BuildServiceProvider();
 
             //Act
@@ -119,7 +116,7 @@ namespace PipelineFramework.Core.Tests
         public void AddPipelineComponentsFromAssembly_Test()
         {
             //Arrange
-            _services.AddPipelineComponentsFromAssembly(Assembly.GetExecutingAssembly());
+            _services.AddPipelineComponentsFromAssembly(typeof(TestPayload).Assembly);
             var sut = _services.BuildServiceProvider();
 
             //Act

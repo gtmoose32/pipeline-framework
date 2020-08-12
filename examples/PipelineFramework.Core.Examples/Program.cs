@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace PipelineFramework.Core.Examples
 {
     [ExcludeFromCodeCoverage]
-    class Program
+    static class Program
     {
         static async Task Main()
         {

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PipelineFramework.Core\PipelineFramework.Core.csproj" />
+    <ProjectReference Include="..\..\src\PipelineFramework.Extensions.Microsoft.DependencyInjection\PipelineFramework.Extensions.Microsoft.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

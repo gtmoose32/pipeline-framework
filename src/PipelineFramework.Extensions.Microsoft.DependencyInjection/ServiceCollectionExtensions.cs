@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PipelineFramework.Abstractions;
-using PipelineFramework.PipelineComponentResolvers;
+using PipelineFramework.Extensions.Microsoft.DependencyInjection;
 using System;
 using System.Linq;
 using System.Reflection;
 
+// ReSharper disable once CheckNamespace
 namespace PipelineFramework
 {
     /// <summary>

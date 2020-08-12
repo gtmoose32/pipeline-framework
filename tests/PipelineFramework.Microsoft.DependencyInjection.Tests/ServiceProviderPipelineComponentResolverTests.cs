@@ -2,13 +2,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
-using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
+using PipelineFramework.Extensions.Microsoft.DependencyInjection;
 using PipelineFramework.PipelineComponentResolvers;
+using PipelineFramework.TestInfrastructure;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PipelineFramework.Core.Tests.PipelineComponentResolvers
+namespace PipelineFramework.Microsoft.DependencyInjection.Tests
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
