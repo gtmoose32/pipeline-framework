@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace PipelineFramework
 {
+    /// <summary>
+    /// A set of extension methods for using Microsoft <see cref="IServiceCollection"/> to assist in registering required PipelineFramework objects.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
@@ -39,7 +42,7 @@ namespace PipelineFramework
             => services.AddSingleton<IPipelineComponentResolver>(provider => new ServiceProviderPipelineComponentResolver(provider));
 
         /// <summary>
-        /// Adds the specified <see cref="TComponent"/> as an <see cref="IAsyncPipelineComponent{TPayload}"/> to the services collection.
+        /// Adds the specified pipeline component as an <see cref="IAsyncPipelineComponent{TPayload}"/> to the services collection.
         /// /// </summary>
         /// <typeparam name="TComponent">The component type to be added.</typeparam>
         /// <typeparam name="TPayload">The payload type the pipeline should use.</typeparam>
@@ -50,7 +53,7 @@ namespace PipelineFramework
             => services.AddSingleton<IAsyncPipelineComponent<TPayload>, TComponent>();
 
         /// <summary>
-        /// Adds the specified <see cref="TComponent"/> as an <see cref="IPipelineComponent{TPayload}"/> to the services collection.
+        /// Adds the specified pipeline component as an <see cref="IPipelineComponent{TPayload}"/> to the services collection.
         /// /// </summary>
         /// <typeparam name="TComponent">The component type to be added.</typeparam>
         /// <typeparam name="TPayload">The payload type the pipeline should use.</typeparam>

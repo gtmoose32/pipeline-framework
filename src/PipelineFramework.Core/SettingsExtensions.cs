@@ -41,7 +41,7 @@ namespace PipelineFramework
         /// </summary>
         /// <param name="settings">Settings dictionary</param>
         /// <param name="name">Name of the setting</param>
-        /// <param name="defaultValue">Value to be returned if the setting cannot be found or conversion to type <see cref="T"/> fails.</param>
+        /// <param name="defaultValue">Value to be returned if the setting cannot be found or conversion to default value type fails.</param>
         /// <typeparam name="T">Type to be converted to</typeparam>
         /// <returns>Converted setting</returns>
         public static T GetSettingValue<T>(this IDictionary<string, string> settings, string name, T defaultValue)

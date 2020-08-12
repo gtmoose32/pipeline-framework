@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="name">Name of the pipeline component instance that is being requested.</param>
         /// <typeparam name="T">Pipeline component type being requested.</typeparam>
-        /// <returns>An instance of <see cref="T"/> which must implement <see cref="IPipelineComponent"/>.</returns>
+        /// <returns>An instance of pipeline component which must implement <see cref="IPipelineComponent"/>.</returns>
         T GetInstance<T>(string name) where T : class, IPipelineComponent;
     }
 }
