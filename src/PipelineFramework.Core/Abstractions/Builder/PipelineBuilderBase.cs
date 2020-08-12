@@ -1,4 +1,5 @@
 ﻿using PipelineFramework.Builder;
+using System;
 using System.Collections.Generic;
 
 namespace PipelineFramework.Abstractions.Builder
@@ -49,6 +50,17 @@ namespace PipelineFramework.Abstractions.Builder
         public IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent<TComponent>() where TComponent : TComponentBase
         {
             State.AddComponent(typeof(TComponent));
+            return this;
+        }
+
+        public IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent(Type componentType)
+        {
+            if (!typeof(TComponentBase).IsAssignableFrom(componentType))
+            {
+                throw new InvalidOperationException($"{componentType.Name} does not derive from {nameof(TComponentBase)}");
+            }
+
+            State.AddComponent(componentType);
             return this;
         }
     }

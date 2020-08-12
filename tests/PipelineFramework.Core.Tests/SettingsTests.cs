@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PipelineFramework.Core.Tests.Infrastructure;
+using PipelineFramework.TestInfrastructure;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -30,10 +30,10 @@ namespace PipelineFramework.Core.Tests
             Assert.AreEqual(_target[key], value);
             Assert.IsTrue(_target.TryGetValue(key, out var result));
             Assert.AreEqual(result, value);
-            Assert.AreEqual(_target.Count, 1);
-            Assert.AreEqual(_target.Keys.Count, 1);
-            Assert.AreEqual(_target.Values.Count, 1);
-            Assert.AreEqual(_target.Count, 1);
+            Assert.AreEqual(1, _target.Count);
+            Assert.AreEqual(1, _target.Keys.Count);
+            Assert.AreEqual(1, _target.Values.Count);
+            Assert.AreEqual(1, _target.Count);
             Assert.IsFalse(_target.IsReadOnly);
             Assert.IsTrue(_target.Contains(new KeyValuePair<string, string>(key, value)));
         }
@@ -44,9 +44,11 @@ namespace PipelineFramework.Core.Tests
             const string key = "key";
             _target.Add(key, "value");
 
+            Assert.AreEqual("value", _target[key]);
+
             _target[key] = "new_value";
 
-            Assert.AreEqual(_target[key], "new_value");
+            Assert.AreEqual("new_value", _target[key]);
         }
 
         [TestMethod]
@@ -73,7 +75,7 @@ namespace PipelineFramework.Core.Tests
 
             _target.Clear();
 
-            Assert.AreEqual(_target.Count, 0);
+            Assert.AreEqual(0, _target.Count);
         }
 
         [TestMethod]

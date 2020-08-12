@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace PipelineFramework.Core.Examples
 {
     [ExcludeFromCodeCoverage]
-    class Program
+    static class Program
     {
         static async Task Main()
         {
@@ -43,23 +43,15 @@ namespace PipelineFramework.Core.Examples
         private static IServiceProvider AddAsyncPipelineToContainer(IDictionary<string, IDictionary<string, string>> settings)
         {
             var services = new ServiceCollection();
+
             services
-                .AddAsyncPipelineComponent<FooComponent, ExamplePipelinePayload>()
-                .AddAsyncPipelineComponent<DelayComponent, ExamplePipelinePayload>()
-                .AddAsyncPipelineComponent<BarComponent, ExamplePipelinePayload>();
-
-            services.AddPipelineComponentResolver();
-            services.AddAsyncPipelineComponentExecutionStatusReceiver<ExecutionStatusReceiver>();
-
-            services.AddSingleton(provider =>
-                PipelineBuilder<ExamplePipelinePayload>
-                    .InitializeAsyncPipeline(provider.GetService<IAsyncPipelineComponentExecutionStatusReceiver>())
-                    .WithComponent<FooComponent>()
-                    .WithComponent<DelayComponent>()
-                    .WithComponent<BarComponent>()
-                    .WithComponentResolver(provider.GetService<IPipelineComponentResolver>())
-                    .WithSettings(settings)
-                    .Build());
+                .AddPipelineFramework()
+                .AddAsyncPipeline<ExamplePipelinePayload, ExecutionStatusReceiver>(
+                    cfg => cfg
+                        .WithComponent<FooComponent>()
+                        .WithComponent<DelayComponent>()
+                        .WithComponent<BarComponent>(),
+                    settings);
 
             return services.BuildServiceProvider();
         }

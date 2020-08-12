@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace PipelineFramework.Core.Tests.Infrastructure
+namespace PipelineFramework.TestInfrastructure
 {
     [ExcludeFromCodeCoverage]
     public class TestExecutionStatusReceiver : IAsyncPipelineComponentExecutionStatusReceiver, IPipelineComponentExecutionStatusReceiver

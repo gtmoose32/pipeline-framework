@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace PipelineFramework.Core.Tests.Infrastructure
+namespace PipelineFramework.TestInfrastructure
 {
     [ExcludeFromCodeCoverage]
     public class TestPayload

@@ -10,7 +10,11 @@ namespace PipelineFramework.Exceptions
     [Serializable]
     public class PipelineComponentNotFoundException : Exception
     {
-        internal PipelineComponentNotFoundException(string message) : base(message)
+        /// <summary>
+        /// Instantiates a new <see cref="PipelineComponentNotFoundException"/>
+        /// </summary>
+        /// <param name="message"></param>
+        public PipelineComponentNotFoundException(string message) : base(message)
         {
         }
 

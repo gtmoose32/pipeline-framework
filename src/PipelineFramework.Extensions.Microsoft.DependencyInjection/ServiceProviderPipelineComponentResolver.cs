@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PipelineFramework.PipelineComponentResolvers
+namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
 {
     /// <summary>
     /// A pipeline component resolver that uses Microsoft Dependency Injection container <see cref="IServiceProvider"/> internally to store and resolve any pipeline component instance requests.
