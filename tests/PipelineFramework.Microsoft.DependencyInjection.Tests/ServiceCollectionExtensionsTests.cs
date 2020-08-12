@@ -183,5 +183,107 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
                 .Should().NotBeNull()
                 .And.BeOfType<TestExecutionStatusReceiver>();
         }
+
+        [TestMethod]
+        public void AsyncPipeline_SingletonTest_MultipleScopes_ReturnsSameInstance()
+        {
+            // Arrange
+            RegisterDefaultPipeline(ServiceLifetime.Singleton);
+            var sut = _services.BuildServiceProvider();
+
+            // Act
+            IAsyncPipeline<TestPayload> pipeline1;
+            IAsyncPipeline<TestPayload> pipeline2;
+
+            using (var scope = sut.CreateScope())
+            {
+                pipeline1 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+            }
+
+            using (var scope = sut.CreateScope())
+            {
+                pipeline2 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+            }
+
+            // Assert
+            pipeline1.Should().BeSameAs(pipeline2);
+        }
+
+        [TestMethod]
+        public void AsyncPipeline_ScopedTest_MultipleScopes_ReturnsDifferentInstance()
+        {
+            // Arrange
+            RegisterDefaultPipeline(ServiceLifetime.Scoped);
+            var sut = _services.BuildServiceProvider();
+
+            // Act
+            IAsyncPipeline<TestPayload> pipeline1;
+            IAsyncPipeline<TestPayload> pipeline2;
+
+            using (var scope = sut.CreateScope())
+            {
+                pipeline1 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+            }
+
+            using (var scope = sut.CreateScope())
+            {
+                pipeline2 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+            }
+
+            // Assert
+            pipeline1.Should().NotBeSameAs(pipeline2);
+        }
+
+        [TestMethod]
+        public void AsyncPipeline_ScopedTest_SameScope_ReturnsSameInstance()
+        {
+            // Arrange
+            RegisterDefaultPipeline(ServiceLifetime.Scoped);
+            var sut = _services.BuildServiceProvider();
+
+            // Act
+            IAsyncPipeline<TestPayload> pipeline1;
+            IAsyncPipeline<TestPayload> pipeline2;
+
+            using (var scope = sut.CreateScope())
+            {
+                pipeline1 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+                pipeline2 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+            }
+
+            // Assert
+            pipeline1.Should().BeSameAs(pipeline2);
+        }
+
+        [TestMethod]
+        public void AsyncPipeline_Transient_SameScope_ReturnsDifferentInstances()
+        {
+            // Arrange
+            RegisterDefaultPipeline(ServiceLifetime.Transient);
+            var sut = _services.BuildServiceProvider();
+
+            // Act
+            IAsyncPipeline<TestPayload> pipeline1;
+            IAsyncPipeline<TestPayload> pipeline2;
+
+            using (var scope = sut.CreateScope())
+            {
+                pipeline1 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+                pipeline2 = scope.ServiceProvider.GetRequiredService<IAsyncPipeline<TestPayload>>();
+            }
+
+            // Assert
+            pipeline1.Should().NotBeSameAs(pipeline2);
+        }
+
+        private void RegisterDefaultPipeline(ServiceLifetime lifetime)
+        {
+            _services
+                .AddPipelineFramework()
+                .AddAsyncPipeline<TestPayload>(
+                    cfg => cfg
+                        .WithComponent<FooComponent>()
+                        .WithComponent<BarComponent>(), lifetime: lifetime);
+        }
     }
 }

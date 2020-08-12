@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
 using PipelineFramework.Exceptions;
 using PipelineFramework.Extensions.Microsoft.DependencyInjection;
-using PipelineFramework.PipelineComponentResolvers;
 using PipelineFramework.TestInfrastructure;
 using System;
 using System.Diagnostics.CodeAnalysis;
