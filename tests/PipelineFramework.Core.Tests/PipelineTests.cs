@@ -204,7 +204,7 @@ namespace PipelineFramework.Core.Tests
                 .WithInnerExceptionExactly<NotImplementedException>();
 
             receiver.Received(2)
-                .ReceiveExecutionStarting(Arg.Is<PipelineComponentExecutionStartedInfo>(info => 
+                .ReceiveExecutionStarting(Arg.Is<PipelineComponentExecutionStartingInfo>(info => 
                     info.PipelineComponentName == nameof(FooComponent) || 
                     info.PipelineComponentName == nameof(BarExceptionComponent)));
 

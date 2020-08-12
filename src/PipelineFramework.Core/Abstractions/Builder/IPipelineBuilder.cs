@@ -7,9 +7,9 @@
     public interface IPipelineBuilder<out TPipeline> where TPipeline : IPipeline
     {
         /// <summary>
-        /// Builds a instance of <see cref="TPipeline"/>.
+        /// Creates a new pipeline.
         /// </summary>
-        /// <returns>A new pipeline.</returns>
+        /// <returns>Pipeline</returns>
         TPipeline Build();
     }
 }

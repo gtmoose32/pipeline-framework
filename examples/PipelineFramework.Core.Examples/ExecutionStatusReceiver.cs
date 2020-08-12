@@ -8,7 +8,7 @@ namespace PipelineFramework.Core.Examples
     [ExcludeFromCodeCoverage]
     public class ExecutionStatusReceiver : IAsyncPipelineComponentExecutionStatusReceiver
     {
-        public Task ReceiveExecutionStartingAsync(PipelineComponentExecutionStartedInfo executionInfo)
+        public Task ReceiveExecutionStartingAsync(PipelineComponentExecutionStartingInfo executionInfo)
         {
             Console.WriteLine(
                 $"Component '{executionInfo.PipelineComponentName}' execution starting at {executionInfo.TimeStamp.ToShortTimeString()}");

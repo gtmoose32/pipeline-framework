@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace PipelineFramework
 {
     [ExcludeFromCodeCoverage]
-    public class PipelineComponentExecutionCompletedInfo : PipelineComponentExecutionStartedInfo
+    public class PipelineComponentExecutionCompletedInfo : PipelineComponentExecutionStartingInfo
     {
         public PipelineComponentExecutionCompletedInfo(string pipelineComponentName, TimeSpan executionTime, Exception exception = null) 
             : base(pipelineComponentName)

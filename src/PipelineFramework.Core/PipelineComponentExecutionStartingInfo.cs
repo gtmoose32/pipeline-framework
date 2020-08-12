@@ -4,9 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 namespace PipelineFramework
 {
     [ExcludeFromCodeCoverage]
-    public class PipelineComponentExecutionStartedInfo
+    public class PipelineComponentExecutionStartingInfo
     {
-        public PipelineComponentExecutionStartedInfo(string pipelineComponentName)
+        public PipelineComponentExecutionStartingInfo(string pipelineComponentName)
         {
             PipelineComponentName = pipelineComponentName ?? throw new ArgumentNullException(nameof(pipelineComponentName));
             TimeStamp = DateTime.UtcNow;

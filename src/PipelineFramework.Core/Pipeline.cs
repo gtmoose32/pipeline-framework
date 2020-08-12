@@ -75,7 +75,7 @@ namespace PipelineFramework
             if (_componentExecutionStatusReceiver == null)
                 return component.Execute(payload, cancellationToken);
 
-            _componentExecutionStatusReceiver.ReceiveExecutionStarting(new PipelineComponentExecutionStartedInfo(component.Name));
+            _componentExecutionStatusReceiver.ReceiveExecutionStarting(new PipelineComponentExecutionStartingInfo(component.Name));
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             try

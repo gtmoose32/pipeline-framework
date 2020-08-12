@@ -2,7 +2,7 @@
 {
     public interface IPipelineComponentExecutionStatusReceiver
     {
-        void ReceiveExecutionStarting(PipelineComponentExecutionStartedInfo executionInfo);
+        void ReceiveExecutionStarting(PipelineComponentExecutionStartingInfo executionInfo);
 
         void ReceiveExecutionCompleted(PipelineComponentExecutionCompletedInfo executionInfo);
     }

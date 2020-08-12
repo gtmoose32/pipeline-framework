@@ -78,7 +78,7 @@ namespace PipelineFramework
             if (_componentExecutionStatusReceiver == null)
                 return await component.ExecuteAsync(payload, cancellationToken).ConfigureAwait(false);
 
-            await _componentExecutionStatusReceiver.ReceiveExecutionStartingAsync(new PipelineComponentExecutionStartedInfo(component.Name))
+            await _componentExecutionStatusReceiver.ReceiveExecutionStartingAsync(new PipelineComponentExecutionStartingInfo(component.Name))
                 .ConfigureAwait(false);
 
             var stopwatch = new Stopwatch();

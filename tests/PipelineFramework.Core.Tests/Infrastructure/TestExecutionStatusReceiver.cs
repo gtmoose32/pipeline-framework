@@ -7,7 +7,7 @@ namespace PipelineFramework.Core.Tests.Infrastructure
     [ExcludeFromCodeCoverage]
     public class TestExecutionStatusReceiver : IAsyncPipelineComponentExecutionStatusReceiver, IPipelineComponentExecutionStatusReceiver
     {
-        public Task ReceiveExecutionStartingAsync(PipelineComponentExecutionStartedInfo executionInfo)
+        public Task ReceiveExecutionStartingAsync(PipelineComponentExecutionStartingInfo executionInfo)
         {
             throw new System.NotImplementedException();
         }
@@ -17,7 +17,7 @@ namespace PipelineFramework.Core.Tests.Infrastructure
             throw new System.NotImplementedException();
         }
 
-        public void ReceiveExecutionStarting(PipelineComponentExecutionStartedInfo executionInfo)
+        public void ReceiveExecutionStarting(PipelineComponentExecutionStartingInfo executionInfo)
         {
             throw new System.NotImplementedException();
         }
