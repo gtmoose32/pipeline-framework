@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PipelineFramework.Abstractions;
+using PipelineFramework.Abstractions.Builder;
+using PipelineFramework.Builder;
 using PipelineFramework.Extensions.Microsoft.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -112,6 +115,139 @@ namespace PipelineFramework
             //Local functions
             static bool IsAsyncPipelineComponent(Type i) => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAsyncPipelineComponent<>);
             static bool IsPipelineComponent(Type i) => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPipelineComponent<>);
+        }
+
+        /// <summary>
+        /// Add Pipeline Framework support to project
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddPipelineFramework(this IServiceCollection services)
+        {
+            services.AddPipelineComponentResolver();
+            return services;
+        }
+
+        /// <summary>
+        /// Adds an <see cref="IAsyncPipeline{T}"/> with a specified <see cref="IAsyncPipelineComponentExecutionStatusReceiver"/>
+        /// </summary>
+        /// <typeparam name="TPayload">The payload type that the pipeline supports</typeparam>
+        /// <typeparam name="TStatusReceiver">The type of <see cref="IAsyncPipelineComponentExecutionStatusReceiver"/></typeparam>
+        /// <param name="services"></param>
+        /// <param name="configAction"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddAsyncPipeline<TPayload, TStatusReceiver>(this IServiceCollection services,
+            Action<AsyncPipelineComponentConfiguration<TPayload>> configAction,
+            IDictionary<string, IDictionary<string, string>> settings = null) where TStatusReceiver : class, IAsyncPipelineComponentExecutionStatusReceiver
+        {
+            return services.AddAsyncPipelineInternal(configAction, settings, typeof(TStatusReceiver));
+        }
+
+        /// <summary>
+        /// Adds an <see cref="IAsyncPipeline{T}"/>
+        /// </summary>
+        /// <typeparam name="TPayload">The payload type that the pipeline supports</typeparam>
+        /// <param name="services"></param>
+        /// <param name="configAction"></param>
+        /// <param name="settings">Optional pipeline settings to apply</param>
+        /// <returns></returns>
+        public static IServiceCollection AddAsyncPipeline<TPayload>(this IServiceCollection services,
+            Action<AsyncPipelineComponentConfiguration<TPayload>> configAction,
+            IDictionary<string, IDictionary<string, string>> settings = null)
+        {
+            return services.AddAsyncPipelineInternal(configAction, settings);
+        }
+
+        public static IServiceCollection AddPipeline<TPayload, TStatusReceiver>(this IServiceCollection services,
+            Action<PipelineComponentConfiguration<TPayload>> configAction,
+            IDictionary<string, IDictionary<string, string>> settings = null) where TStatusReceiver : class, IPipelineComponentExecutionStatusReceiver
+        {
+            return services.AddPipelineInternal(configAction, settings, typeof(TStatusReceiver));
+        }
+
+        public static IServiceCollection AddPipeline<TPayload>(this IServiceCollection services,
+            Action<PipelineComponentConfiguration<TPayload>> configAction,
+            IDictionary<string, IDictionary<string, string>> settings = null)
+        {
+            return services.AddPipelineInternal(configAction, settings);
+        }
+
+        private static IServiceCollection AddAsyncPipelineInternal<TPayload>(this IServiceCollection services, 
+            Action<AsyncPipelineComponentConfiguration<TPayload>> configAction,
+            IDictionary<string, IDictionary<string, string>> settings = null,
+            Type statusReceiverType = null)
+        {
+            var config = new AsyncPipelineComponentConfiguration<TPayload>();
+            configAction(config);
+            config.Validate();
+
+            if (statusReceiverType != null)
+            {
+                services.AddSingleton(typeof(IAsyncPipelineComponentExecutionStatusReceiver), statusReceiverType);
+            }
+
+            foreach (var component in config.Components)
+            {
+                services.AddSingleton(typeof(IAsyncPipelineComponent<TPayload>), component);
+            }
+
+            services.AddSingleton(provider =>
+            {
+                var initialBuilder =
+                    (IAdditionalPipelineComponentHolder<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload>)
+                        PipelineBuilder<TPayload>.InitializeAsyncPipeline(
+                            provider.GetService<IAsyncPipelineComponentExecutionStatusReceiver>());
+
+                initialBuilder = config.Components.Aggregate(initialBuilder, (current, component) => current.WithComponent(component));
+
+                var settingsHolder = initialBuilder.WithComponentResolver(provider.GetService<IPipelineComponentResolver>());
+                var builder = settings != null
+                    ? settingsHolder.WithSettings(settings)
+                    : settingsHolder.WithoutSettings();
+                return builder.Build();
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection AddPipelineInternal<TPayload>(this IServiceCollection services,
+            Action<PipelineComponentConfiguration<TPayload>> configAction,
+            IDictionary<string, IDictionary<string, string>> settings = null,
+            Type statusReceiverType = null)
+        {
+            var config = new PipelineComponentConfiguration<TPayload>();
+            configAction(config);
+            config.Validate();
+
+            if (statusReceiverType != null)
+            {
+                services.AddSingleton(typeof(IPipelineComponentExecutionStatusReceiver), statusReceiverType);
+            }
+
+            foreach (var component in config.Components)
+            {
+
+                services.AddSingleton(typeof(IPipelineComponent<TPayload>), component);
+            }
+
+            services.AddSingleton(provider =>
+            {
+                var initialBuilder =
+                    (IAdditionalPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload>)
+                    PipelineBuilder<TPayload>.InitializePipeline(
+                        provider.GetService<IPipelineComponentExecutionStatusReceiver>());
+
+                initialBuilder = config.Components.Aggregate(initialBuilder, (current, component) => current.WithComponent(component));
+
+                var settingsHolder = initialBuilder.WithComponentResolver(provider.GetService<IPipelineComponentResolver>());
+                var builder = settings != null
+                    ? settingsHolder.WithSettings(settings)
+                    : settingsHolder.WithoutSettings();
+                return builder.Build();
+            });
+
+            return services;
         }
     }
 }

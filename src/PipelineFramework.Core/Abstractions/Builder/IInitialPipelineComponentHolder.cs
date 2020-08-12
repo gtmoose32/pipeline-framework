@@ -1,4 +1,6 @@
-﻿namespace PipelineFramework.Abstractions.Builder
+﻿using System;
+
+namespace PipelineFramework.Abstractions.Builder
 {
     /// <summary>
     /// Defines a pipeline component holder for a pipeline builder.
@@ -16,5 +18,6 @@
         /// <typeparam name="TComponent">The type to add to the pipeline component holder.</typeparam>
         /// <returns>Additional pipeline component holder.</returns>
         IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent<TComponent>() where TComponent : TComponentBase;
+        IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent(Type componentType);
     }
 }

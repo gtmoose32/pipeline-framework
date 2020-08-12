@@ -126,5 +126,62 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
             result.Should().NotBeNull();
             result.Length.Should().Be(7); 
         }
+
+        [TestMethod]
+        public void AddAsyncPipeline()
+        {
+            // Arrange
+            _services.AddPipelineFramework();
+            _services.AddAsyncPipeline<TestPayload, TestExecutionStatusReceiver>(
+                cfg => cfg
+                    .WithComponent<FooComponent>()
+                    .WithComponent<BarComponent>());
+
+            var sut = _services.BuildServiceProvider();
+
+            // Act and assert
+            sut.GetService<IPipelineComponentResolver>()
+                .Should().NotBeNull()
+                .And.BeOfType<ServiceProviderPipelineComponentResolver>();
+
+            sut.GetService<IAsyncPipeline<TestPayload>>()
+                .Should().NotBeNull();
+
+            sut.GetServices<IAsyncPipelineComponent<TestPayload>>()
+                .Should().HaveCount(2);
+
+            sut.GetService<IAsyncPipelineComponentExecutionStatusReceiver>()
+                .Should().NotBeNull()
+                .And.BeOfType<TestExecutionStatusReceiver>();
+        }
+
+        [TestMethod]
+        public void AddPipeline()
+        {
+            // Arrange
+            _services
+                .AddPipelineFramework()
+                .AddPipeline<TestPayload, TestExecutionStatusReceiver>(
+                    cfg => cfg
+                        .WithComponent<FooComponent>()
+                        .WithComponent<BarComponent>());
+
+            var sut = _services.BuildServiceProvider();
+
+            // Act and assert
+            sut.GetService<IPipelineComponentResolver>()
+                .Should().NotBeNull()
+                .And.BeOfType<ServiceProviderPipelineComponentResolver>();
+
+            sut.GetService<IPipeline<TestPayload>>()
+                .Should().NotBeNull();
+
+            sut.GetServices<IPipelineComponent<TestPayload>>()
+                .Should().HaveCount(2);
+
+            sut.GetService<IPipelineComponentExecutionStatusReceiver>()
+                .Should().NotBeNull()
+                .And.BeOfType<TestExecutionStatusReceiver>();
+        }
     }
 }
