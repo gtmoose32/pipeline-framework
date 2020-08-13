@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Marty Mathis, Andrew Moreno</Authors>
+    <Owners>Marty Mathis</Owners>
+    <PackageTags>pipeline linear workflow component extensions microsoft dependencyinjection</PackageTags>
+    <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
+    <PackageId>PipelineFramework.Extensions.Microsoft.DependencyInjection</PackageId>
+    <Product>PipelineFramework.Extensions.Microsoft.DependencyInjection</Product>
+    <Version>1.0.0-preview2</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Description>Microsoft Dependency Injection extensions for PipelineFramework.</Description>
+    <LangVersion>latest</LangVersion>
+    <PackageReleaseNotes>
+      Changes in v1.0.0-preview1
+      * Added support for Microsoft depedency injection including a set of registration extension methods for IServiceCollection.
+    </PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PipelineFramework.Core\PipelineFramework.Core.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
+  </ItemGroup>
+
+</Project>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\PipelineFramework.Core\PipelineFramework.Core.csproj" />
+    <ProjectReference Include="..\..\src\PipelineFramework.Extensions.Microsoft.DependencyInjection\PipelineFramework.Extensions.Microsoft.DependencyInjection.csproj" />
     <ProjectReference Include="..\PipelineFramework.TestInfrastructure\PipelineFramework.TestInfrastructure.csproj" />
   </ItemGroup>
 

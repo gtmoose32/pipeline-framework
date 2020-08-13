@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PipelineFramework.Core.Tests.Infrastructure
+namespace PipelineFramework.TestInfrastructure
 {
     [ExcludeFromCodeCoverage]
     public class AsyncTestComponent : AsyncPipelineComponentBase<TestPayload>
@@ -24,9 +24,18 @@ namespace PipelineFramework.Core.Tests.Infrastructure
     [ExcludeFromCodeCoverage]
     public class ConfigurableComponent : PipelineComponentBase<TestPayload>, IAsyncPipelineComponent<TestPayload>
     {
+        private bool _useFoo;
+
+        public override void Initialize(IDictionary<string, string> settings)
+        {
+            base.Initialize(settings);
+
+            _useFoo = Settings.GetSettingValue<bool>("UseFoo");
+        }
+
         public override TestPayload Execute(TestPayload payload, CancellationToken cancellationToken)
         {
-            if (bool.Parse(Settings["UseFoo"]))
+            if (_useFoo)
                 payload.FooStatus = Settings["TestValue"];
             else
                 payload.BarStatus = Settings["TestValue"];
@@ -128,6 +137,4 @@ namespace PipelineFramework.Core.Tests.Infrastructure
             return Task.FromResult(Execute(payload, cancellationToken));
         }
     }
-
-
 }

@@ -1,14 +1,17 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PipelineFramework.Core.Tests.Infrastructure;
+using NSubstitute;
+using PipelineFramework.Abstractions;
+using PipelineFramework.Builder;
 using PipelineFramework.Exceptions;
+using PipelineFramework.TestInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using PipelineFramework.Abstractions;
+
 // ReSharper disable ObjectCreationAsStatement
 
 namespace PipelineFramework.Core.Tests
@@ -20,7 +23,7 @@ namespace PipelineFramework.Core.Tests
         [TestMethod]
         public void AsyncPipeline_NullResolver_Test()
         {
-            Action act = () => new AsyncPipeline<TestPayload>(null, new List<Type>());
+            Action act = () => new AsyncPipeline<TestPayload>(null, new List<Type>(), null, null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -29,8 +32,8 @@ namespace PipelineFramework.Core.Tests
         public void AsyncPipeline_NullTypeList_Test()
         {
             Action act = () => new AsyncPipeline<TestPayload>(
-                new DictionaryPipelineComponentResolver(new Dictionary<string, IPipelineComponent>()),  
-                null as IEnumerable<Type>);
+                new DictionaryPipelineComponentResolver(),
+                null as IEnumerable<Type>, null, null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -38,108 +41,126 @@ namespace PipelineFramework.Core.Tests
         [TestMethod]
         public void AsyncPipelineComponent_Initialize_Test()
         {
-            const string name = "myname";
             var target = new AsyncTestComponent();
-            target.Initialize(name, new Dictionary<string, string> {{"test", "value"}});
+            target.Initialize(new Dictionary<string, string> { { "test", "value" } });
 
-            target.Name.Should().Be(name);
             target.TestSettings.Count.Should().Be(1);
         }
 
         [TestMethod]
         public void AsyncPipelineComponent_Initialize_NullSettings_Test()
         {
-            const string name = "myname";
             var target = new AsyncTestComponent();
-            target.Initialize(name, null);
+            target.Initialize(null);
 
-            target.Name.Should().Be(name);
             target.TestSettings.Count.Should().Be(0);
-        }
-
-        [TestMethod]
-        public async Task AsyncPipeline_DuplicateComponentsConfiguredDifferently_Test()
-        {
-            var settings = new Dictionary<string, IDictionary<string, string>>
-            {
-                {"Component1", new Dictionary<string, string> {{"TestValue", "Component1Value"}, {"UseFoo", "true"}}},
-                {"Component2", new Dictionary<string, string> {{"TestValue", "Component2Value"}, {"UseFoo", "false"}}}
-            };
-
-            var payload = new TestPayload();
-            var target = new AsyncPipeline<TestPayload>(
-                PipelineComponentResolver, new List<string> { "Component1", "Component2" }, settings);
-
-            var result = await target.ExecuteAsync(payload);
-
-            result.Should().NotBeNull();
-            result.Should().Be(payload);
-            result.FooStatus.Should().Be("Component1Value");
-            payload.BarStatus.Should().Be("Component2Value");
         }
 
         [TestMethod]
         public void AsyncPipeline_Execution_Cancellation_Test()
         {
-            var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
+            //Arrange
+            PipelineComponentResolver.AddAsync(new DelayComponent(), new BarComponent());
 
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> { { "test", "value" } });
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+
+            //Act
             Func<Task<TestPayload>> act = () => target.ExecuteAsync(new TestPayload(), cts.Token);
 
+            //Assert
             act.Should().Throw<OperationCanceledException>();
         }
 
         [TestMethod]
         public async Task AsyncPipeline_Execution_Test()
         {
+            //Arrange
+            PipelineComponentResolver.AddAsync(new FooComponent(), new BarComponent());
+
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
             var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
                 t => t.Name,
                 t => new Dictionary<string, string> { { "test", "value" } });
 
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+
+            //Act
             var result = await target.ExecuteAsync(new TestPayload());
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
+            //Assert
+            result.Should().NotBeNull();
+            result.Count.Should().Be(2);
+            result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
+            result.BarStatus.Should().Be($"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
-        public async Task AsyncPipeline_Execution_NullSettings_Test()
+        public void AsyncPipeline_ExecutionStatusNotification_Test()
         {
-            var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
+            //Arrange
+            PipelineComponentResolver.AddAsync(new FooComponent(), new BarExceptionComponent());
+            var receiver = Substitute.For<IAsyncPipelineComponentExecutionStatusReceiver>();
 
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, null);
-            var result = await target.ExecuteAsync(new TestPayload());
+            var sut = PipelineBuilder<TestPayload>.InitializeAsyncPipeline(receiver)
+                .WithComponent<FooComponent>()
+                .WithComponent<BarExceptionComponent>()
+                .WithComponentResolver(PipelineComponentResolver)
+                .WithoutSettings()
+                .Build();
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
+            //Act
+            Func<Task> act = () => sut.ExecuteAsync(new TestPayload());
+
+            //Assert
+            act.Should()
+                .ThrowExactly<PipelineExecutionException>()
+                .WithInnerExceptionExactly<NotImplementedException>();
+
+            receiver.Received(2)
+                .ReceiveExecutionStartingAsync(Arg.Is<PipelineComponentExecutionStartingInfo>(info => 
+                    info.PipelineComponentName == nameof(FooComponent) || 
+                    info.PipelineComponentName == nameof(BarExceptionComponent)));
+
+            receiver.Received()
+                .ReceiveExecutionCompletedAsync(
+                    Arg.Is<PipelineComponentExecutionCompletedInfo>(info => 
+                        info.PipelineComponentName == nameof(FooComponent) && 
+                        info.ExecutionTime != TimeSpan.Zero &&
+                        info.Exception == null));
+
+            receiver.Received()
+                .ReceiveExecutionCompletedAsync(
+                    Arg.Is<PipelineComponentExecutionCompletedInfo>(info => 
+                        info.PipelineComponentName == nameof(BarExceptionComponent) && 
+                        info.ExecutionTime != TimeSpan.Zero &&
+                        info.Exception is NotImplementedException));
         }
 
         [TestMethod]
         public void AsyncPipelineComponent_Exception_Test()
         {
+            //Arrange
+            PipelineComponentResolver.AddAsync(new FooComponent(), new BarExceptionComponent());
+
             var types = new List<Type> { typeof(FooComponent), typeof(BarExceptionComponent) };
             var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
                 t => t.Name,
                 t => new Dictionary<string, string> { { "test", "value" } });
 
 
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+
+            //Act
             Func<Task<TestPayload>> act = () => target.ExecuteAsync(new TestPayload());
 
+            //Assert
             act.Should().ThrowExactly<PipelineExecutionException>()
                 .And.InnerException.Should().BeOfType<NotImplementedException>();
         }
@@ -147,24 +168,30 @@ namespace PipelineFramework.Core.Tests
         [TestMethod]
         public void AsyncPipelineComponent_SettingNotFoundException_Test()
         {
+            //Arrange
+            PipelineComponentResolver.AddAsync(new FooSettingNotFoundComponent());
+            
             var types = new List<Type> { typeof(FooSettingNotFoundComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> { { "test", "value" } });
 
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config, null);
 
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            //Act
             Func<Task<TestPayload>> act = () => target.ExecuteAsync(new TestPayload());
 
+            //Assert
             act.Should().ThrowExactly<PipelineExecutionException>()
                 .And.InnerException.Should().BeOfType<PipelineComponentSettingNotFoundException>();
         }
 
         [TestMethod]
-        public async Task Pipeline_AsyncFilterExecution_Test()
+        public async Task AsyncPipeline_TerminateExecution_Test()
         {
+            //Arrange
+            PipelineComponentResolver.AddAsync(new FooComponent(), new PipelineExecutionTerminatingComponent(), new BarComponent());
+
             var types = new List<Type>
             {
                 typeof(FooComponent),
@@ -172,19 +199,49 @@ namespace PipelineFramework.Core.Tests
                 typeof(BarComponent)
             };
 
-            var config = new Dictionary<string, IDictionary<string, string>>();
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> { { "test", "value" } });
 
-            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+
+            //Act
             var result = await target.ExecuteAsync(new TestPayload());
 
+            //Assert
             result.Should().NotBeNull();
             result.Count.Should().Be(2);
             result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
             result.BarStatus.Should().BeNull();
+        }
+
+        [TestMethod]
+        public async Task AsyncPipeline_Dispose_Test()
+        {
+            //Arrange
+            var component1 = Substitute.For<IDisposableAsyncPipelineComponent>();
+            var component2 = Substitute.For<IAsyncPipelineComponent<TestPayload>>();
+
+            var components = new[] { component1, component2};
+
+            var resolver = new DictionaryPipelineComponentResolver();
+            resolver.AddAsync(components);
+
+            var payload = new TestPayload();
+            component1.ExecuteAsync(Arg.Any<TestPayload>(), Arg.Any<CancellationToken>()).Returns(payload);
+            component2.ExecuteAsync(Arg.Any<TestPayload>(), Arg.Any<CancellationToken>()).Returns(payload);
+
+            TestPayload result;
+
+            //Act
+            using (var sut = new AsyncPipeline<TestPayload>(resolver, components.Select(c => c.GetType()), null, null))
+            {
+                result = await sut.ExecuteAsync(payload, CancellationToken.None).ConfigureAwait(false);
+            }
+            
+            //Assert
+            result.Should().NotBeNull();
+            component1.Received().Dispose();
         }
     }
 }

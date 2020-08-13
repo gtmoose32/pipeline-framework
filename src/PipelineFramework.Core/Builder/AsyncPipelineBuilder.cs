@@ -3,22 +3,22 @@ using PipelineFramework.Abstractions.Builder;
 
 namespace PipelineFramework.Builder
 {
-    /// <summary>
-    /// Builder to assist in correctly creating <see cref="IAsyncPipeline{T}"/> instances.
-    /// </summary>
-    /// <typeparam name="TPayload"></typeparam>
     internal class AsyncPipelineBuilder<TPayload> : PipelineBuilderBase<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload>
     {
-        private AsyncPipelineBuilder()
+        private AsyncPipelineBuilder(IAsyncPipelineComponentExecutionStatusReceiver executionStatusReceiver = null)
+            : base(executionStatusReceiver)
         {
         }
 
-        public static IInitialPipelineComponentHolder<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> Initialize()
-            => new AsyncPipelineBuilder<TPayload>();
+        public static IInitialPipelineComponentHolder<IAsyncPipeline<TPayload>, IAsyncPipelineComponent<TPayload>, TPayload> Initialize(
+            IAsyncPipelineComponentExecutionStatusReceiver executionStatusReceiver) => 
+                new AsyncPipelineBuilder<TPayload>(executionStatusReceiver);
 
-        public override IAsyncPipeline<TPayload> Build()
-            => State.UseNoSettings
-                ? new AsyncPipeline<TPayload>(State.ComponentResolver, State.ComponentNames)
-                : new AsyncPipeline<TPayload>(State.ComponentResolver, State.ComponentNames, State.Settings);
+        public override IAsyncPipeline<TPayload> Build() 
+            => new AsyncPipeline<TPayload>(
+                State.ComponentResolver, 
+                State.ComponentNames, 
+                State.Settings, 
+                State.AsyncPipelineComponentExecutionStatusReceiver);
     }
 }

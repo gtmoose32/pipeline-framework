@@ -7,8 +7,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace PipelineFramework
 {
     /// <summary>
-    /// This class is merely a wrapper around <see cref="IDictionary{String, String}"/> that provides a detailed exception when 
-    /// a specified setting is not found.
+    /// This class is a decorator for <see cref="Dictionary{String, String}"/> that provides a detailed exception when 
+    /// a specified setting key is request but not found.
     /// </summary>
     internal class Settings : IDictionary<string, string>
     {

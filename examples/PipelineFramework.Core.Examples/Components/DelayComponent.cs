@@ -12,11 +12,11 @@ namespace PipelineFramework.Core.Examples.Components
     {
         private TimeSpan _delay;
 
-        public override void Initialize(string name, IDictionary<string, string> settings)
+        public override void Initialize(IDictionary<string, string> settings)
         {
-            base.Initialize(name, settings);
+            base.Initialize(settings);
 
-            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5), false);
+            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5));
         }
 
         public override async Task<ExamplePipelinePayload> ExecuteAsync(ExamplePipelinePayload payload, CancellationToken cancellationToken)
@@ -34,11 +34,11 @@ namespace PipelineFramework.Core.Examples.Components
     {
         private TimeSpan _delay;
 
-        public override void Initialize(string name, IDictionary<string, string> settings)
+        public override void Initialize(IDictionary<string, string> settings)
         {
-            base.Initialize(name, settings);
+            base.Initialize(settings);
 
-            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5), false);
+            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5));
         }
 
         public override ExamplePipelinePayload Execute(ExamplePipelinePayload payload, CancellationToken cancellationToken)

@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
+using PipelineFramework.TestInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -16,7 +16,7 @@ namespace PipelineFramework.Core.Tests.Exceptions
         public void PipelineExecutionException_Properties_Test()
         {
             var component =  new FooComponent();
-            component.Initialize(component.GetType().Name, new Dictionary<string, string>());
+            component.Initialize(new Dictionary<string, string>());
 
             var exception = new ArgumentException("TestException");
             var target = new PipelineExecutionException(component, exception);
@@ -33,7 +33,7 @@ namespace PipelineFramework.Core.Tests.Exceptions
         {
             const string setting = "TestSetting";
             var component = new FooComponent();
-            component.Initialize(component.GetType().Name, new Dictionary<string, string>());
+            component.Initialize(new Dictionary<string, string>());
 
             var target = new PipelineComponentSettingNotFoundException(component, setting);
 

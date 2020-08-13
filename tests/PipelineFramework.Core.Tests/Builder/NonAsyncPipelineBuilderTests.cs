@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
-using PipelineFramework.Core.Tests.Infrastructure;
+using PipelineFramework.TestInfrastructure;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -15,12 +15,15 @@ namespace PipelineFramework.Core.Tests.Builder
         public void TestBuilderByComponentType()
         {
             // Arrange
+            PipelineComponentResolver.Add(new FooComponent());
+            PipelineComponentResolver.Add(new BarComponent());
+
             var pipeline = NonAsyncPipelineBuilder<TestPayload>
-                .Initialize()
+                .Initialize(null)
                 .WithComponent<FooComponent>()
                 .WithComponent<BarComponent>()
                 .WithComponentResolver(PipelineComponentResolver)
-                .WithNoSettings()
+                .WithoutSettings()
                 .Build();
 
             var payload = new TestPayload();
@@ -32,56 +35,6 @@ namespace PipelineFramework.Core.Tests.Builder
 
             // Assert
             result.Count.Should().Be(2);
-            result.Count.Should().Be(2);
-            result.FooWasCalled.Should().BeTrue();
-            result.BarWasCalled.Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void TestBuilderByComponentName()
-        {
-            // Arrange
-            var pipeline = NonAsyncPipelineBuilder<TestPayload>
-                .Initialize()
-                .WithComponent("FooComponent")
-                .WithComponent("BarComponent")
-                .WithComponentResolver(PipelineComponentResolver)
-                .WithNoSettings()
-                .Build();
-
-            var payload = new TestPayload();
-
-            // Act
-            payload.FooWasCalled.Should().BeFalse();
-            payload.BarWasCalled.Should().BeFalse();
-            var result = pipeline.Execute(payload);
-
-            // Assert
-            result.Count.Should().Be(2);
-            result.FooWasCalled.Should().BeTrue();
-            result.BarWasCalled.Should().BeTrue();
-        }
-
-        [TestMethod]
-        public void TestBuilderMixAndMatchComponents()
-        {
-            // Arrange
-            var pipeline = NonAsyncPipelineBuilder<TestPayload>
-                .Initialize()
-                .WithComponent<FooComponent>()
-                .WithComponent("BarComponent")
-                .WithComponentResolver(PipelineComponentResolver)
-                .WithNoSettings()
-                .Build();
-
-            var payload = new TestPayload();
-
-            // Act
-            payload.FooWasCalled.Should().BeFalse();
-            payload.BarWasCalled.Should().BeFalse();
-            var result = pipeline.Execute(payload);
-
-            // Assert
             result.Count.Should().Be(2);
             result.FooWasCalled.Should().BeTrue();
             result.BarWasCalled.Should().BeTrue();
@@ -91,22 +44,16 @@ namespace PipelineFramework.Core.Tests.Builder
         public void TestBuilderWithSettings()
         {
             // Arrange
+            PipelineComponentResolver.Add(new ConfigurableComponent());
+
             var pipeline = NonAsyncPipelineBuilder<TestPayload>
-                .Initialize()
-                .WithComponent("Component1")
-                .WithComponent("Component2")
+                .Initialize(null)
+                .WithComponent<ConfigurableComponent>()
                 .WithComponentResolver(PipelineComponentResolver)
                 .WithSettings(new Dictionary<string, IDictionary<string, string>>
                 {
                     {
-                        "Component1", new Dictionary<string, string>
-                        {
-                            {"UseFoo", "true"},
-                            {"TestValue", "MyFooTestValue"}
-                        }
-                    },
-                    {
-                        "Component2", new Dictionary<string, string>
+                        "ConfigurableComponent", new Dictionary<string, string>
                         {
                             {"UseFoo", "false"},
                             {"TestValue", "MyBarTestValue"}
@@ -118,12 +65,10 @@ namespace PipelineFramework.Core.Tests.Builder
             var payload = new TestPayload();
 
             // Act
-            payload.FooStatus.Should().BeNull();
-            payload.BarStatus.Should().BeNull();
             var result = pipeline.Execute(payload);
 
             // Assert
-            result.FooStatus.Should().Be("MyFooTestValue");
+            payload.FooStatus.Should().BeNull();
             result.BarStatus.Should().Be("MyBarTestValue");
         }
     }

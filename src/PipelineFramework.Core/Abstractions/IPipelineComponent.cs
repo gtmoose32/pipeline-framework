@@ -14,11 +14,10 @@ namespace PipelineFramework.Abstractions
         string Name { get; }
 
         /// <summary>
-        /// Initializes the component with name and configuration settings.
+        /// Initializes the component with configuration settings.
         /// </summary>
-        /// <param name="name">Name of the component.</param>
         /// <param name="settings">Configuration settings.</param>
-        void Initialize(string name, IDictionary<string, string> settings);
+        void Initialize(IDictionary<string, string> settings);
     }
 
     /// <summary>

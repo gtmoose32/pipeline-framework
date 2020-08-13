@@ -1,37 +1,34 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
-using PipelineFramework.Core.Tests.Infrastructure;
 using PipelineFramework.Exceptions;
+using PipelineFramework.TestInfrastructure;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PipelineFramework.Core.Tests
+namespace PipelineFramework.Core.Tests.PipelineComponentResolvers
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
     public class DictionaryPipelineComponentResolverTests
     {
-        private IPipelineComponentResolver _target;
-        private IDictionary<string, IPipelineComponent> _components;
+        private DictionaryPipelineComponentResolver _sut;
 
         [TestInitialize]
         public void Init()
         {
-            _components = new Dictionary<string, IPipelineComponent>();
-            _target = new DictionaryPipelineComponentResolver(_components);
+            _sut = new DictionaryPipelineComponentResolver();
         }
 
         [TestMethod]
         public void GetInstance()
         {
             //Arrange
-            var name = typeof(FooComponent).Name;
-            _components.Add(name, new FooComponent());
+            const string name = nameof(FooComponent);
+            _sut.AddAsync(new FooComponent());
 
             //Act
-            var result = _target.GetInstance<IAsyncPipelineComponent<TestPayload>>(name);
+            var result = _sut.GetInstance<IAsyncPipelineComponent<TestPayload>>(name);
 
             //Assert
             result.Should().NotBeNull();
@@ -42,13 +39,25 @@ namespace PipelineFramework.Core.Tests
         public void GetInstance_ComponentNotFound()
         {
             //Arrange
-            var name = typeof(FooComponent).Name;
+            var name = nameof(FooComponent);
 
             //Act
-            Action act = () => _target.GetInstance<IAsyncPipelineComponent<TestPayload>>(name);
+            Action act = () => _sut.GetInstance<IAsyncPipelineComponent<TestPayload>>(name);
 
             //Assert
             act.Should().ThrowExactly<PipelineComponentNotFoundException>();
+        }
+
+        [TestMethod]
+        public void Add_DuplicateComponent_Test()
+        {
+            //Arrange
+
+            //Act
+            Action act = () => _sut.Add(new FooComponent(), new FooComponent());
+
+            //Assert
+            act.Should().ThrowExactly<InvalidOperationException>();
         }
     }
 }

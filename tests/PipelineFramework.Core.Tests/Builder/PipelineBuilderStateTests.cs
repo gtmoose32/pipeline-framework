@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
-using PipelineFramework.Core.Tests.Infrastructure;
+using PipelineFramework.TestInfrastructure;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -12,19 +12,6 @@ namespace PipelineFramework.Core.Tests.Builder
     public class PipelineBuilderStateTests
     {
         private const string ComponentName = "FooComponent";
-
-        [TestMethod]
-        public void TestAddComponentTypeByName()
-        {
-            // Arrange
-            var state = new PipelineBuilderState();
-
-            // Act
-            state.AddComponent(ComponentName);
-
-            // Assert
-            state.ComponentNames.Should().Contain(ComponentName);
-        }
 
         [TestMethod]
         public void TestAddComponentTypeByType()
@@ -48,18 +35,7 @@ namespace PipelineFramework.Core.Tests.Builder
 
             // Act
             state.AddComponent(typeof(FooComponent));
-            state.AddComponent(ComponentName);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestAddEmptyNameThrowsArgumentNullException()
-        {
-            // Arrange
-            var state = new PipelineBuilderState();
-
-            // Act
-            state.AddComponent("   ");
+            state.AddComponent(typeof(FooComponent));
         }
     }
 }

@@ -6,8 +6,7 @@ using System.Runtime.Serialization;
 namespace PipelineFramework.Exceptions
 {
     /// <summary>
-    /// This exception is thrown when any underlying <see cref="IPipelineComponent"/> raises an unhandled exception during 
-    /// pipeline execution.
+    /// This exception is automatically thrown by both <see cref="Pipeline{T}"/> and <see cref="AsyncPipeline{T}"/> when a <see cref="IPipelineComponent"/> throws an unhandled exception during pipeline execution.
     /// </summary>
     [Serializable]
     public class PipelineExecutionException : PipelineComponentExceptionBase
@@ -15,17 +14,16 @@ namespace PipelineFramework.Exceptions
         private const string ErrorMessage = "Pipeline execution halted!  Pipeline component named '{0}' has thrown an exception.  See inner exception for details.";
 
         #region ctor
-        /// <summary>
-        /// Creates a new instance.
-        /// </summary>
-        /// <param name="component">Type of <see cref="IPipelineComponent"/> that threw the exception.</param>
-        /// <param name="componentException">The exception that was unhandled by <see cref="IPipelineComponent"/>.</param>
-        // ReSharper disable once UnusedParameter.Local
-        public PipelineExecutionException(
+        internal PipelineExecutionException(
             IPipelineComponent component, Exception componentException)
             : base(component, componentException)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PipelineExecutionException"/> with serialized data.
+        /// </summary>
+        /// <param name="info">The <see cref="SerializationInfo"/> that holds the serialized object data of the exception being thrown.</param>
+        /// <param name="context">The <see cref="StreamingContext"/> that contains the contextual information about the source or the destination.</param>
         [ExcludeFromCodeCoverage]
         protected PipelineExecutionException(
             SerializationInfo info,

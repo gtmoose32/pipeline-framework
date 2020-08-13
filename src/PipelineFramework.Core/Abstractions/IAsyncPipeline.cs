@@ -13,8 +13,15 @@ namespace PipelineFramework.Abstractions
         /// Executes linear work flow asynchronously.
         /// </summary>
         /// <param name="payload">Type of payload passed through the pipeline during execution.</param>
+        /// <returns><see cref="Task{T}"/></returns>
+        Task<T> ExecuteAsync(T payload);
+
+        /// <summary>
+        /// Executes linear work flow asynchronously.
+        /// </summary>
+        /// <param name="payload">Type of payload passed through the pipeline during execution.</param>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> used to cancel pipeline execution prematurely.</param>
         /// <returns><see cref="Task{T}"/></returns>
-        Task<T> ExecuteAsync(T payload, CancellationToken cancellationToken = default);
+        Task<T> ExecuteAsync(T payload, CancellationToken cancellationToken);
     }
 }

@@ -1,22 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <RootNamespace>PipelineFramework</RootNamespace>
     <Authors>Marty Mathis</Authors>
+    <Owners>Marty Mathis</Owners>
     <PackageTags>pipeline linear workflow component servicefabric</PackageTags>
     <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
-    <Version>4.0.0</Version>
+    <Version>5.0.0-preview2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>PipelineFramework allows to easily compose and execute linear workflows using pipeline components.</Description>
+    <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\Release\netstandard2.1\PipelineFramework.Core.xml</DocumentationFile>
     <PackageId>PipelineFramework.Core</PackageId>
     <Product>PipelineFramework.Core</Product>
     <LangVersion>latest</LangVersion>
-    <PackageReleaseNotes />
+    <PackageReleaseNotes>
+Changes in v5.0.0
+* BREAKING: Removed name paramter from Initialize method on IPipelineComponent interface.
+* BREAKING: Removed ability to add component by name through builder.
+* BREAKING: All pipeline ctors are now internal only.  Creation only allowed through builder.
+* Added support for disposable pipelines.
+* Removed conditional CancellationToken parameters from pipeline interfaces in favor of overload methods intead.
+* Added component execution status updates.
+    </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
 </Project>

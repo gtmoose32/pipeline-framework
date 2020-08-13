@@ -1,6 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using PipelineFramework.Core.Tests.Infrastructure;
+﻿using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using PipelineFramework.Abstractions;
+using PipelineFramework.Builder;
 using PipelineFramework.Exceptions;
+using PipelineFramework.TestInfrastructure;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -14,168 +18,210 @@ namespace PipelineFramework.Core.Tests
     public class PipelineTests : PipelineTestsBase
     {
         [TestMethod]
-        public void Pipeline_DuplicateComponentsConfiguredDifferently_Test()
-        {
-            var settings = new Dictionary<string, IDictionary<string, string>>
-            {
-                {"Component1", new Dictionary<string, string> {{"TestValue", "Component1Value"}, {"UseFoo", "true"}}},
-                {"Component2", new Dictionary<string, string> {{"TestValue", "Component2Value"}, {"UseFoo", "false"}}}
-            };
-
-            var payload = new TestPayload();
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, new List<string> { "Component1", "Component2" }, settings);
-            var actual = target.Execute(payload);
-
-            Assert.IsNotNull(actual);
-            Assert.AreSame(actual, payload);
-            Assert.AreEqual("Component1Value", actual.FooStatus);
-            Assert.AreEqual("Component2Value", payload.BarStatus);
-        }
-
-        [ExpectedException(typeof(OperationCanceledException), AllowDerivedTypes = true)]
-        [TestMethod]
         public void Pipeline_Execution_Cancellation_Test()
         {
+            //Arrange
+            PipelineComponentResolver.Add(new DelayComponent(), new BarComponent());
+            
             var types = new List<Type> { typeof(DelayComponent), typeof(BarComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
-
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> {{"test", "value"}});
 
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(2));
 
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
-            target.Execute(new TestPayload(), cts.Token);
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+            
+            //Act
+            Action act = () => target.Execute(new TestPayload(), cts.Token);
+
+            //Assert
+            act.Should().Throw<OperationCanceledException>();
         }
 
         [TestMethod]
         public void Pipeline_Execution_Test()
         {
+            //Arrange
+            PipelineComponentResolver.Add(new FooComponent(), new BarComponent());
+
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
             var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
                 t => t.Name,
                 t => new Dictionary<string, string> {{"test", "value"}});
 
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+
+            //Act
             var result = target.Execute(new TestPayload());
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
+            //Assert
+            result.Should().NotBeNull();
+            result.Count.Should().Be(2);
+            result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
+            result.BarStatus.Should().Be($"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
         public void Pipeline_Execution_ComponentNames_NullSettings_Test()
         {
-            var types = new List<string> { typeof(FooComponent).Name, typeof(BarComponent).Name };
+            //Arrange
+            PipelineComponentResolver.Add(new FooComponent(), new BarComponent());
+            var types = new List<string> { nameof(FooComponent), nameof(BarComponent) };
 
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, null);
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, null, null);
+
+            //Act
             var result = target.Execute(new TestPayload());
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
+            //Assert
+            result.Should().NotBeNull();
+            result.Count.Should().Be(2);
+            result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
+            result.BarStatus.Should().Be($"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
         public void Pipeline_Execution_ComponentNames_EmptySettings_Test()
         {
-            var types = new List<string> { typeof(FooComponent).Name, typeof(BarComponent).Name };
-
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, new Dictionary<string, IDictionary<string, string>>());
+            //Arrange
+            PipelineComponentResolver.Add(new FooComponent(), new BarComponent());
+            var types = new List<string> { nameof(FooComponent), nameof(BarComponent) };
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, new Dictionary<string, IDictionary<string, string>>(), null);
+            
+            //Act
             var result = target.Execute(new TestPayload());
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
-        }
-
-        [TestMethod]
-        public void Pipeline_Execution_NullSettings_Test()
-        {
-            var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
-
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, null);
-            var result = target.Execute(new TestPayload());
-
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
+            //Assert
+            result.Should().NotBeNull();
+            result.Count.Should().Be(2);
+            result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
+            result.BarStatus.Should().Be($"{nameof(BarComponent)} executed!");
         }
 
         [TestMethod]
         public void Pipeline_Execution_EmptySettings_Test()
         {
+            //Arrange
+            PipelineComponentResolver.Add(new FooComponent(), new BarComponent());
             var types = new List<Type> { typeof(FooComponent), typeof(BarComponent) };
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, new Dictionary<string, IDictionary<string, string>>(), null);
 
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, new Dictionary<string, IDictionary<string, string>>());
+            //Act
             var result = target.Execute(new TestPayload());
 
-            Assert.IsNotNull(result);
-            Assert.IsTrue(result.Count == 2);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsTrue(result.BarStatus == $"{nameof(BarComponent)} executed!");
+            //Assert
+            result.Should().NotBeNull();
+            result.Count.Should().Be(2);
+            result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
+            result.BarStatus.Should().Be($"{nameof(BarComponent)} executed!");
         }
 
-        [ExpectedException(typeof(PipelineExecutionException))]
         [TestMethod]
         public void PipelineComponent_Exception_Test()
         {
+            //Arrange
+            PipelineComponentResolver.Add(new FooComponent(), new BarExceptionComponent());
             var types = new List<Type> { typeof(FooComponent), typeof(BarExceptionComponent) };
             var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
                 t => t.Name,
                 t => new Dictionary<string, string> { { "test", "value" } });
 
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
-            target.Execute(new TestPayload());
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+            
+            //Act
+            Action act = () => target.Execute(new TestPayload());
+
+            //Assert
+            act.Should()
+                .ThrowExactly<PipelineExecutionException>()
+                .WithInnerExceptionExactly<NotImplementedException>();
         }
 
         [TestMethod]
         public void PipelineComponent_SettingNotFoundException_Test()
         {
+            //Arrange
+            PipelineComponentResolver.Add(new FooSettingNotFoundComponent());
             var types = new List<Type> { typeof(FooSettingNotFoundComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> {{"test", "value"}});
 
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
-
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
-            try
-            {
-                target.Execute(new TestPayload());
-            }
-            catch (PipelineExecutionException ex)
-            {
-                Assert.IsInstanceOfType(ex.InnerException, typeof(PipelineComponentSettingNotFoundException));
-            }
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+            
+            //Act
+            Action act = () => target.Execute(new TestPayload());
+            
+            //Assert
+            act.Should().ThrowExactly<PipelineExecutionException>()
+                .WithInnerExceptionExactly<PipelineComponentSettingNotFoundException>();
         }
 
         [TestMethod]
-        public void Pipeline_FilterExecution_Test()
+        public void Pipeline_TerminateExecution_Test()
         {
+            //Arrange
+            PipelineComponentResolver.Add(new FooComponent(), new PipelineExecutionTerminatingComponent(), new BarComponent());
             var types = new List<Type> { typeof(FooComponent), typeof(PipelineExecutionTerminatingComponent), typeof(BarComponent) };
-            var config = new Dictionary<string, IDictionary<string, string>>();
+            var config = types.ToDictionary<Type, string, IDictionary<string, string>>(
+                t => t.Name,
+                t => new Dictionary<string, string> {{"test", "value"}});
 
-            foreach (var t in types)
-            {
-                config.Add(t.Name, new Dictionary<string, string> { { "test", "value" } });
-            }
-
-            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config);
+            var target = new Pipeline<TestPayload>(PipelineComponentResolver, types, config, null);
+            
+            //Act
             var result = target.Execute(new TestPayload());
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(2, result.Count);
-            Assert.IsTrue(result.FooStatus == $"{nameof(FooComponent)} executed!");
-            Assert.IsNull(result.BarStatus);
+            //Assert
+            result.Should().NotBeNull();
+            result.Count.Should().Be(2);
+            result.FooStatus.Should().Be($"{nameof(FooComponent)} executed!");
+            result.BarStatus.Should().BeNull();
+        }
+
+        [TestMethod]
+        public void Pipeline_ExecutionStatusNotification_Test()
+        {
+            //Arrange
+            PipelineComponentResolver.Add(new FooComponent(), new BarExceptionComponent());
+
+            var receiver = Substitute.For<IPipelineComponentExecutionStatusReceiver>();
+
+            var sut = PipelineBuilder<TestPayload>.InitializePipeline(receiver)
+                .WithComponent<FooComponent>()
+                .WithComponent<BarExceptionComponent>()
+                .WithComponentResolver(PipelineComponentResolver)
+                .WithoutSettings()
+                .Build();
+
+            //Act
+            Action act = () => sut.Execute(new TestPayload());
+
+            //Assert
+            act.Should()
+                .ThrowExactly<PipelineExecutionException>()
+                .WithInnerExceptionExactly<NotImplementedException>();
+
+            receiver.Received(2)
+                .ReceiveExecutionStarting(Arg.Is<PipelineComponentExecutionStartingInfo>(info => 
+                    info.PipelineComponentName == nameof(FooComponent) || 
+                    info.PipelineComponentName == nameof(BarExceptionComponent)));
+
+            receiver.Received()
+                .ReceiveExecutionCompleted(
+                    Arg.Is<PipelineComponentExecutionCompletedInfo>(info => 
+                        info.PipelineComponentName == nameof(FooComponent) && 
+                        info.ExecutionTime != TimeSpan.Zero &&
+                        info.Exception == null));
+
+            receiver.Received()
+                .ReceiveExecutionCompleted(
+                    Arg.Is<PipelineComponentExecutionCompletedInfo>(info => 
+                        info.PipelineComponentName == nameof(BarExceptionComponent) && 
+                        info.ExecutionTime != TimeSpan.Zero &&
+                        info.Exception is NotImplementedException));
+
         }
     }
 }
