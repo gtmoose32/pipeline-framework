@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PipelineFramework.PipelineComponentResolvers
+namespace PipelineFramework
 {
     /// <summary>
     /// A pipeline component resolver that uses an <see cref="IDictionary{TKey,TValue}"/> internally to store and resolve any pipeline component instance requests.

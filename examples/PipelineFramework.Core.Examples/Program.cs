@@ -2,7 +2,6 @@
 using PipelineFramework.Abstractions;
 using PipelineFramework.Builder;
 using PipelineFramework.Core.Examples.Components;
-using PipelineFramework.PipelineComponentResolvers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;

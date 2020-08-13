@@ -4,7 +4,6 @@ using NSubstitute;
 using PipelineFramework.Abstractions;
 using PipelineFramework.Builder;
 using PipelineFramework.Exceptions;
-using PipelineFramework.PipelineComponentResolvers;
 using PipelineFramework.TestInfrastructure;
 using System;
 using System.Collections.Generic;

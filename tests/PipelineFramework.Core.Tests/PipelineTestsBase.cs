@@ -1,5 +1,4 @@
-﻿using PipelineFramework.PipelineComponentResolvers;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework.Core.Tests
 {
