@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
-    <Version>5.0.0-preview2</Version>
+    <Version>5.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
