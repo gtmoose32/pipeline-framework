@@ -78,7 +78,8 @@ namespace PipelineFramework
             if (_componentExecutionStatusReceiver == null)
                 return await component.ExecuteAsync(payload, cancellationToken).ConfigureAwait(false);
 
-            await _componentExecutionStatusReceiver.ReceiveExecutionStartingAsync(new PipelineComponentExecutionStartingInfo(component.Name))
+            await _componentExecutionStatusReceiver.ReceiveExecutionStartingAsync(
+                    new PipelineComponentExecutionStartingInfo(component.Name, payload))
                 .ConfigureAwait(false);
 
             var stopwatch = new Stopwatch();
@@ -87,7 +88,8 @@ namespace PipelineFramework
             {
                 var result = await component.ExecuteAsync(payload, cancellationToken).ConfigureAwait(false);
                 stopwatch.Stop();
-                await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(new PipelineComponentExecutionCompletedInfo(component.Name, stopwatch.Elapsed))
+                await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(
+                        new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed))
                     .ConfigureAwait(false);
 
                 return result;
@@ -95,7 +97,8 @@ namespace PipelineFramework
             catch (Exception e)
             {
                 stopwatch.Stop();
-                await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(new PipelineComponentExecutionCompletedInfo(component.Name, stopwatch.Elapsed, e))
+                await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(
+                        new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed, e))
                     .ConfigureAwait(false);
 
                 throw;

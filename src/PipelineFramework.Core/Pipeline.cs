@@ -75,20 +75,23 @@ namespace PipelineFramework
             if (_componentExecutionStatusReceiver == null)
                 return component.Execute(payload, cancellationToken);
 
-            _componentExecutionStatusReceiver.ReceiveExecutionStarting(new PipelineComponentExecutionStartingInfo(component.Name));
+            _componentExecutionStatusReceiver.ReceiveExecutionStarting(
+                new PipelineComponentExecutionStartingInfo(component.Name, payload));
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             try
             {
                 var result = component.Execute(payload, cancellationToken);
                 stopwatch.Stop();
-                _componentExecutionStatusReceiver.ReceiveExecutionCompleted(new PipelineComponentExecutionCompletedInfo(component.Name, stopwatch.Elapsed));
+                _componentExecutionStatusReceiver.ReceiveExecutionCompleted(
+                    new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed));
                 return result;
             }
             catch (Exception e)
             {
                 stopwatch.Stop();
-                _componentExecutionStatusReceiver.ReceiveExecutionCompleted(new PipelineComponentExecutionCompletedInfo(component.Name, stopwatch.Elapsed, e));
+                _componentExecutionStatusReceiver.ReceiveExecutionCompleted(
+                    new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed, e));
                 throw;
             }
         }
