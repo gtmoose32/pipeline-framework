@@ -204,8 +204,8 @@ namespace PipelineFramework
             var serviceType = typeof(TComponent);
             foreach (var component in config.Components)
             {
-                services.Add(config.CustomRegistrations.ContainsKey(component)
-                    ? new ServiceDescriptor(serviceType, config.CustomRegistrations[component], lifetime)
+                services.Add(config.CustomComponentFactories.ContainsKey(component)
+                    ? new ServiceDescriptor(serviceType, config.CustomComponentFactories[component], lifetime)
                     : new ServiceDescriptor(serviceType, component, lifetime));
             }
         }

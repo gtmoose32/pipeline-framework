@@ -3,10 +3,16 @@ using System;
 
 namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
 {
+    /// <inheritdoc />
     public class AsyncPipelineComponentConfiguration<TPayload> : PipelineComponentConfigurationBase
     {
         internal AsyncPipelineComponentConfiguration() { }
 
+        /// <summary>
+        /// Adds an <see cref="IAsyncPipelineComponent{T}"/> to the <see cref="IAsyncPipeline{T}"/> configuration.
+        /// </summary>
+        /// <typeparam name="TComponent">Type that implements <see cref="IAsyncPipelineComponent{T}"/></typeparam>
+        /// <returns><see cref="AsyncPipelineComponentConfiguration{TPayload}"/></returns>
         public AsyncPipelineComponentConfiguration<TPayload> WithComponent<TComponent>() 
             where TComponent : class, IAsyncPipelineComponent<TPayload>
         {
@@ -14,6 +20,12 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
             return this;
         }
 
+        /// <summary>
+        /// Adds an <see cref="IAsyncPipelineComponent{T}"/> to the <see cref="IAsyncPipeline{T}"/> configuration.
+        /// </summary>
+        /// <param name="componentFactory">Factory used to provide new instances of the specified type param.</param>
+        /// <typeparam name="TComponent">Type that implements <see cref="IAsyncPipelineComponent{T}"/></typeparam>
+        /// <returns><see cref="AsyncPipelineComponentConfiguration{TPayload}"/></returns>
         public AsyncPipelineComponentConfiguration<TPayload> WithComponent<TComponent>(Func<IServiceProvider, TComponent> componentFactory) 
             where TComponent : class, IAsyncPipelineComponent<TPayload>
         {
