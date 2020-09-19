@@ -2,7 +2,6 @@
 using PipelineFramework.Abstractions;
 using PipelineFramework.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
@@ -26,8 +25,8 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
         /// <inheritdoc />
         public T GetInstance<T>(string name) where T : class, IPipelineComponent
         {
-            var components = _serviceProvider.GetService<IEnumerable<T>>();
-            
+            var components = _serviceProvider.GetServices<T>();
+
             var component = components.FirstOrDefault(c => c.Name == name);
             if (component == null) 
                 throw new PipelineComponentNotFoundException($"PipelineComponent named '{name}' could not be located.");

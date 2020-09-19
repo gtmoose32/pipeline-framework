@@ -213,9 +213,12 @@ namespace PipelineFramework
                 services.Add(new ServiceDescriptor(typeof(IAsyncPipelineComponentExecutionStatusReceiver), statusReceiverType, lifetime));
             }
 
+            var serviceType = typeof(IAsyncPipelineComponent<TPayload>);
             foreach (var component in config.Components)
             {
-                services.Add(new ServiceDescriptor(typeof(IAsyncPipelineComponent<TPayload>), component, lifetime));
+                services.Add(config.CustomRegistrations.ContainsKey(component)
+                    ? new ServiceDescriptor(serviceType, config.CustomRegistrations[component], lifetime)
+                    : new ServiceDescriptor(serviceType, component, lifetime));
             }
 
             services.Add(new ServiceDescriptor(

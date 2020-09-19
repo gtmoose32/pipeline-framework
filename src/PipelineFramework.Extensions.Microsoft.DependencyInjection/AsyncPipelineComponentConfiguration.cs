@@ -1,4 +1,5 @@
 ﻿using PipelineFramework.Abstractions;
+using System;
 
 namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
 {
@@ -9,6 +10,12 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
         public AsyncPipelineComponentConfiguration<TPayload> WithComponent<TComponent>() where TComponent : class, IAsyncPipelineComponent<TPayload>
         {
             AddComponent<TComponent>();
+            return this;
+        }
+
+        public AsyncPipelineComponentConfiguration<TPayload> WithComponent<TComponent>(Func<IServiceProvider, TComponent> createInstance) where TComponent : class, IAsyncPipelineComponent<TPayload>
+        {
+            AddComponent(createInstance);
             return this;
         }
     }
