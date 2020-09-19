@@ -7,16 +7,17 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
     {
         internal PipelineComponentConfiguration() { }
 
-        public PipelineComponentConfiguration<TPayload> WithComponent<TComponent>() where TComponent : class, IPipelineComponent<TPayload>
+        public PipelineComponentConfiguration<TPayload> WithComponent<TComponent>()
+            where TComponent : class, IPipelineComponent<TPayload>
         {
             AddComponent<TComponent>();
             return this;
         }
 
-        public PipelineComponentConfiguration<TPayload> WithComponent<TComponent>(Func<IServiceProvider, TComponent> createInstance) 
+        public PipelineComponentConfiguration<TPayload> WithComponent<TComponent>(Func<IServiceProvider, TComponent> componentFactory) 
             where TComponent : class, IAsyncPipelineComponent<TPayload>
         {
-            AddComponent(createInstance);
+            AddComponent(componentFactory);
             return this;
         }
     }

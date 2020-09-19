@@ -198,6 +198,18 @@ namespace PipelineFramework
             return services.AddPipelineInternal(configAction, settings, null, lifetime);
         }
 
+        private static void AddComponentServices<TComponent>(this IServiceCollection services,  PipelineComponentConfigurationBase config,  ServiceLifetime lifetime)
+            where TComponent : IPipelineComponent
+        {
+            var serviceType = typeof(TComponent);
+            foreach (var component in config.Components)
+            {
+                services.Add(config.CustomRegistrations.ContainsKey(component)
+                    ? new ServiceDescriptor(serviceType, config.CustomRegistrations[component], lifetime)
+                    : new ServiceDescriptor(serviceType, component, lifetime));
+            }
+        }
+
         private static IServiceCollection AddAsyncPipelineInternal<TPayload>(this IServiceCollection services, 
             Action<AsyncPipelineComponentConfiguration<TPayload>> configAction,
             IDictionary<string, IDictionary<string, string>> settings,
@@ -213,14 +225,7 @@ namespace PipelineFramework
                 services.Add(new ServiceDescriptor(typeof(IAsyncPipelineComponentExecutionStatusReceiver), statusReceiverType, lifetime));
             }
 
-            var serviceType = typeof(IAsyncPipelineComponent<TPayload>);
-            foreach (var component in config.Components)
-            {
-                services.Add(config.CustomRegistrations.ContainsKey(component)
-                    ? new ServiceDescriptor(serviceType, config.CustomRegistrations[component], lifetime)
-                    : new ServiceDescriptor(serviceType, component, lifetime));
-            }
-
+            services.AddComponentServices<IAsyncPipelineComponent<TPayload>>(config, lifetime);
             services.Add(new ServiceDescriptor(
                 typeof(IAsyncPipeline<TPayload>), 
                 provider => BuildAsyncPipeline(provider, settings), 
@@ -262,11 +267,7 @@ namespace PipelineFramework
                 services.Add(new ServiceDescriptor(typeof(IPipelineComponentExecutionStatusReceiver), statusReceiverType, lifetime));
             }
 
-            foreach (var component in config.Components)
-            {
-                services.Add(new ServiceDescriptor(typeof(IPipelineComponent<TPayload>), component, lifetime));
-            }
-
+            services.AddComponentServices<IPipelineComponent<TPayload>>(config, lifetime);
             services.Add(new ServiceDescriptor(
                 typeof(IPipeline<TPayload>), 
                 provider => BuildPipeline(provider, settings), 

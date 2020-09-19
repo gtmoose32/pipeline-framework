@@ -20,11 +20,12 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
             _components.Add(typeof(TComponent));
         }
 
-        protected void AddComponent<TComponent>(Func<IServiceProvider, TComponent> createInstance) where TComponent : class
+        protected void AddComponent<TComponent>(Func<IServiceProvider, TComponent> componentFactory) 
+            where TComponent : class
         {
             var type = typeof(TComponent);
             _components.Add(type);
-            CustomRegistrations.Add(type, createInstance);
+            CustomRegistrations.Add(type, componentFactory);
         }
         
         public void Validate()
