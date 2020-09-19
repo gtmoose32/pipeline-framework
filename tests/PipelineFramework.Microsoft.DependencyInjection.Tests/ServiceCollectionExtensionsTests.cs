@@ -7,6 +7,8 @@ using PipelineFramework.TestInfrastructure;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace PipelineFramework.Microsoft.DependencyInjection.Tests
 {
@@ -276,6 +278,48 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
             pipeline1.Should().NotBeSameAs(pipeline2);
         }
 
+        [TestMethod]
+        public void AsyncPipeline_WithComponentFactory_Test()
+        {
+            // Arrange
+            _services
+                .AddPipelineFramework()
+                .AddAsyncPipeline<TestPayload>(
+                    cfg => cfg
+                        .WithComponent<FooComponent>()
+                        .WithComponent<BarComponent>()
+                        .WithComponent(provider => new ComponentFactoryTestComponent("I am foo!", "I am bar!")));
+
+            var sut = _services.BuildServiceProvider();
+
+            // Act
+            var pipeline = sut.GetService<IAsyncPipeline<TestPayload>>();
+
+            // Assert
+            pipeline.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void Pipeline_WithComponentFactory_Test()
+        {
+            // Arrange
+            _services
+                .AddPipelineFramework()
+                .AddPipeline<TestPayload>(
+                    cfg => cfg
+                        .WithComponent<FooComponent>()
+                        .WithComponent<BarComponent>()
+                        .WithComponent(provider => new ComponentFactoryTestComponent("I am foo!", "I am bar!")));
+
+            var sut = _services.BuildServiceProvider();
+
+            // Act
+            var pipeline = sut.GetService<IPipeline<TestPayload>>();
+
+            // Assert
+            pipeline.Should().NotBeNull();
+        }
+
         private void RegisterDefaultPipeline(ServiceLifetime lifetime)
         {
             _services
@@ -284,6 +328,31 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
                     cfg => cfg
                         .WithComponent<FooComponent>()
                         .WithComponent<BarComponent>(), lifetime: lifetime);
+        }
+    }
+    
+    [ExcludeFromCodeCoverage]
+    public class ComponentFactoryTestComponent : PipelineComponentBase<TestPayload>, IAsyncPipelineComponent<TestPayload>
+    {
+        private readonly string _fooStatus;
+        private readonly string _barStatus;
+
+        public ComponentFactoryTestComponent(string fooStatus, string barStatus)
+        {
+            _fooStatus = fooStatus;
+            _barStatus = barStatus;
+        }
+
+        public override TestPayload Execute(TestPayload payload, CancellationToken cancellationToken)
+        {
+            payload.FooStatus = _fooStatus;
+            payload.BarStatus = _barStatus;
+            return payload;
+        }
+
+        public Task<TestPayload> ExecuteAsync(TestPayload payload, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(Execute(payload, cancellationToken));
         }
     }
 }
