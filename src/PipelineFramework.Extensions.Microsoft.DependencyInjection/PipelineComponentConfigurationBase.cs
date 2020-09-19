@@ -48,7 +48,7 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
         {
             var type = typeof(TComponent);
             _components.Add(type);
-            CustomComponentFactories.Add(type, componentFactory);
+            CustomComponentFactories[type] = componentFactory;
         }
         
         /// <summary>
