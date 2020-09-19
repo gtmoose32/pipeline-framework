@@ -15,7 +15,7 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
         }
 
         public PipelineComponentConfiguration<TPayload> WithComponent<TComponent>(Func<IServiceProvider, TComponent> componentFactory) 
-            where TComponent : class, IAsyncPipelineComponent<TPayload>
+            where TComponent : class, IPipelineComponent<TPayload>
         {
             AddComponent(componentFactory);
             return this;
