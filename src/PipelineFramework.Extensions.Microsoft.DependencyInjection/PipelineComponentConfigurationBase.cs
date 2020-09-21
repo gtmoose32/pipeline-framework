@@ -32,15 +32,6 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
         /// <summary>
         /// Adds an <see cref="IPipelineComponent{T}"/> to the <see cref="IPipeline{T}"/> configuration.
         /// </summary>
-        /// <typeparam name="TComponent">Type that implements <see cref="IPipelineComponent{T}"/></typeparam>
-        protected void AddComponent<TComponent>() where TComponent : class
-        {
-            _components.Add(typeof(TComponent));
-        }
-
-        /// <summary>
-        /// Adds an <see cref="IPipelineComponent{T}"/> to the <see cref="IPipeline{T}"/> configuration.
-        /// </summary>
         /// <param name="componentFactory">Factory used to provide new instances of the specified type param.</param>
         /// <typeparam name="TComponent">Type that implements <see cref="IPipelineComponent{T}"/></typeparam>
         protected void AddComponent<TComponent>(Func<IServiceProvider, TComponent> componentFactory) 
@@ -48,7 +39,9 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
         {
             var type = typeof(TComponent);
             _components.Add(type);
-            CustomComponentFactories[type] = componentFactory;
+
+            if (componentFactory != null)
+                CustomComponentFactories[type] = componentFactory;
         }
         
         /// <summary>
@@ -59,7 +52,7 @@ namespace PipelineFramework.Extensions.Microsoft.DependencyInjection
         {
             if (_components.Count == 0)
             {
-                throw new InvalidOperationException("PipelineConfigurationException! At least one component must be initialized");
+                throw new InvalidOperationException("PipelineConfigurationException! At least one component must be initialized.");
             }
         }
     }
