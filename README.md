@@ -11,3 +11,15 @@ For more information please visit the [wiki](https://github.com/gtmoose32/pipeli
 ```
 dotnet add package PipelineFramework.Core
 ```
+
+## PipelineFramework.Extensions.Microsoft.DependencyInjection
+
+[![nuget](https://img.shields.io/nuget/v/PipelineFramework.Extensions.Microsoft.DependencyInjection.svg)](https://www.nuget.org/packages/PipelineFramework.Extensions.Microsoft.DependencyInjection/)
+
+Support for Microsoft Dependency Injection has been added to Pipeline Framework! Install the package using the dotnet cli command below.
+
+```
+dotnet add package PipelineFramework.Extensions.Microsoft.DependencyInjection
+```
+
+

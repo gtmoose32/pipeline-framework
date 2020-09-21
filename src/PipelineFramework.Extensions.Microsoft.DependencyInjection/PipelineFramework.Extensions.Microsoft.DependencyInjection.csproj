@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
@@ -10,20 +10,23 @@
     <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
     <PackageId>PipelineFramework.Extensions.Microsoft.DependencyInjection</PackageId>
     <Product>PipelineFramework.Extensions.Microsoft.DependencyInjection</Product>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
     <Description>Microsoft Dependency Injection extensions for PipelineFramework.</Description>
+    <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\Release\netstandard2.1\PipelineFramework.Extensions.Microsoft.DependencyInjection.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
     <PackageReleaseNotes>
+Changes in v1.1.0
+* Added support for custom component factories to be used by the depedency injection container.
+* Added optional parameters to several extensions methods for IServiceCollection to provide more customization for registering services.
 Changes in v1.0.1
 * Upgraded Pipeline Framework pacakge dependency to v5.0.1
 Changes in v1.0.0
 * Added support for Microsoft depedency injection including a set of registration extension methods for IServiceCollection.
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>

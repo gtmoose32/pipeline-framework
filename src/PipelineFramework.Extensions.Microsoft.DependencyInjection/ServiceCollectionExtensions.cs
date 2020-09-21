@@ -21,20 +21,43 @@ namespace PipelineFramework
         /// </summary>
         /// <typeparam name="T">Type of status receiver to add.</typeparam>
         /// <param name="services">Services collection dependency injection container.</param>
+        /// <param name="statusReceiverFactory">Provides instances of <see cref="IAsyncPipelineComponentExecutionStatusReceiver"/>.</param>
+        /// <param name="lifetime">Specifies the lifetime of a service in an <see cref="IServiceCollection" />.</param>
         /// <returns><see cref="IServiceCollection"/></returns>
-        public static IServiceCollection AddAsyncPipelineComponentExecutionStatusReceiver<T>(this IServiceCollection services)
-            where T : class, IAsyncPipelineComponentExecutionStatusReceiver =>
-                services.AddSingleton<IAsyncPipelineComponentExecutionStatusReceiver, T>();
+        public static IServiceCollection AddAsyncPipelineComponentExecutionStatusReceiver<T>(this IServiceCollection services,
+            Func<IServiceProvider, T> statusReceiverFactory = null,
+            ServiceLifetime lifetime = ServiceLifetime.Singleton) where T : class, IAsyncPipelineComponentExecutionStatusReceiver
+        {
+            var serviceType = typeof(IAsyncPipelineComponentExecutionStatusReceiver);
+
+            services.Add(statusReceiverFactory == null
+                ? new ServiceDescriptor(serviceType, typeof(T), lifetime)
+                : new ServiceDescriptor(serviceType, statusReceiverFactory, lifetime));
+
+            return services;
+        }
 
         /// <summary>
-        /// Adds an instance of <see cref="IAsyncPipelineComponentExecutionStatusReceiver"/> to the services collection.
+        /// Adds an instance of <see cref="IPipelineComponentExecutionStatusReceiver"/> to the services collection.
         /// </summary>
         /// <typeparam name="T">Type of status receiver to add.</typeparam>
         /// <param name="services">Services collection dependency injection container.</param>
+        /// <param name="statusReceiverFactory">Provides instances of <see cref="IPipelineComponentExecutionStatusReceiver"/>.</param>
+        /// <param name="lifetime">Specifies the lifetime of a service in an <see cref="IServiceCollection" />.</param>
         /// <returns><see cref="IServiceCollection"/></returns>
-        public static IServiceCollection AddPipelineComponentExecutionStatusReceiver<T>(this IServiceCollection services)
-            where T : class, IPipelineComponentExecutionStatusReceiver =>
-            services.AddSingleton<IPipelineComponentExecutionStatusReceiver, T>();
+        public static IServiceCollection AddPipelineComponentExecutionStatusReceiver<T>(this IServiceCollection services,
+            Func<IServiceProvider, T> statusReceiverFactory = null,
+            ServiceLifetime lifetime = ServiceLifetime.Singleton)
+            where T : class, IPipelineComponentExecutionStatusReceiver
+        {
+            var serviceType = typeof(IPipelineComponentExecutionStatusReceiver);
+            
+            services.Add(statusReceiverFactory == null
+                ? new ServiceDescriptor(serviceType, typeof(T), lifetime)
+                : new ServiceDescriptor(serviceType, statusReceiverFactory, lifetime));
+
+            return services;
+        }
 
 
         /// <summary>
@@ -51,10 +74,21 @@ namespace PipelineFramework
         /// <typeparam name="TComponent">The component type to be added.</typeparam>
         /// <typeparam name="TPayload">The payload type the pipeline should use.</typeparam>
         /// <param name="services">Services collection used to add <see cref="IAsyncPipelineComponent{TPayload}"/> component instance.</param>
+        /// <param name="componentFactory">Provides instances of <see cref="IAsyncPipelineComponent{T}"/>.</param>
+        /// <param name="lifetime">Specifies the lifetime of a service in an <see cref="IServiceCollection" />.</param>
         /// <returns><see cref="IServiceCollection"/></returns>
-        public static IServiceCollection AddAsyncPipelineComponent<TComponent, TPayload>(this IServiceCollection services)
-            where TComponent : class, IAsyncPipelineComponent<TPayload>
-            => services.AddSingleton<IAsyncPipelineComponent<TPayload>, TComponent>();
+        public static IServiceCollection AddAsyncPipelineComponent<TComponent, TPayload>(this IServiceCollection services,
+            Func<IServiceProvider, TComponent> componentFactory = null,
+            ServiceLifetime lifetime = ServiceLifetime.Singleton) where TComponent : class, IAsyncPipelineComponent<TPayload>
+        {
+            var serviceType = typeof(IAsyncPipelineComponent<TPayload>);
+
+            services.Add(componentFactory == null
+                ? new ServiceDescriptor(serviceType, typeof(TComponent), lifetime)
+                : new ServiceDescriptor(serviceType, componentFactory, lifetime));
+
+            return services;
+        }
 
         /// <summary>
         /// Adds the specified pipeline component as an <see cref="IPipelineComponent{TPayload}"/> to the services collection.
@@ -62,10 +96,21 @@ namespace PipelineFramework
         /// <typeparam name="TComponent">The component type to be added.</typeparam>
         /// <typeparam name="TPayload">The payload type the pipeline should use.</typeparam>
         /// <param name="services">Services collection used to add <see cref="IPipelineComponent{TPayload}"/> component instance.</param>
+        /// <param name="componentFactory">Provides instances of <see cref="IPipelineComponent{T}"/>.</param>
+        /// <param name="lifetime">Specifies the lifetime of a service in an <see cref="IServiceCollection" />.</param>
         /// <returns><see cref="IServiceCollection"/></returns>
-        public static IServiceCollection AddPipelineComponent<TComponent, TPayload>(this IServiceCollection services)
-            where TComponent : class, IPipelineComponent<TPayload>
-            => services.AddSingleton<IPipelineComponent<TPayload>, TComponent>();
+        public static IServiceCollection AddPipelineComponent<TComponent, TPayload>(this IServiceCollection services,
+            Func<IServiceProvider, TComponent> componentFactory = null,
+            ServiceLifetime lifetime = ServiceLifetime.Singleton) where TComponent : class, IPipelineComponent<TPayload>
+        {
+            var serviceType = typeof(IPipelineComponent<TPayload>);
+
+            services.Add(componentFactory == null
+                ? new ServiceDescriptor(serviceType, typeof(TComponent), lifetime)
+                : new ServiceDescriptor(serviceType, componentFactory, lifetime));
+
+            return services;
+        }
 
         /// <summary>
         /// Scans the specified <see cref="Assembly"/> for any types that implement <see cref="IAsyncPipelineComponent{T}"/> and automatically adds those matching types to the services collection.
@@ -84,38 +129,6 @@ namespace PipelineFramework
         /// <returns><see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddPipelineComponentsFromAssembly(this IServiceCollection services, Assembly assembly)
             => AddComponentsFromAssembly(services, assembly);
-
-        private static IServiceCollection AddComponentsFromAssembly(this IServiceCollection services, Assembly assembly, bool useAsyncComponents = false)
-        {
-            Func<Type, bool> isComponent;
-            if (useAsyncComponents) isComponent = IsAsyncPipelineComponent;
-            else isComponent = IsPipelineComponent;
-
-            var components = from t in assembly.GetTypes()
-                let interfaces = t.GetInterfaces()
-                where !t.IsAbstract &&
-                      !t.IsInterface &&
-                      interfaces.Any(isComponent)
-                select new
-                {
-                    ImplementingType = t,
-                    PipelineComponentInterfaces = interfaces.Where(isComponent)
-                };
-
-            foreach (var component in components)
-            {
-                foreach (var interfaceType in component.PipelineComponentInterfaces)
-                {
-                    services.AddSingleton(interfaceType, component.ImplementingType);
-                }
-            }
-
-            return services;
-
-            //Local functions
-            static bool IsAsyncPipelineComponent(Type i) => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAsyncPipelineComponent<>);
-            static bool IsPipelineComponent(Type i) => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPipelineComponent<>);
-        }
 
         /// <summary>
         /// Add Pipeline Framework support to project
@@ -136,14 +149,18 @@ namespace PipelineFramework
         /// <param name="services">The services collection</param>
         /// <param name="configAction"></param>
         /// <param name="settings"></param>
+        /// <param name="statusReceiverFactory">Provides instances of <see cref="IAsyncPipelineComponentExecutionStatusReceiver"/>.</param>
         /// <param name="lifetime">The desired lifetime of the pipeline and associated component</param>
         /// <returns></returns>
         public static IServiceCollection AddAsyncPipeline<TPayload, TStatusReceiver>(this IServiceCollection services,
             Action<AsyncPipelineComponentConfiguration<TPayload>> configAction,
             IDictionary<string, IDictionary<string, string>> settings = null,
+            Func<IServiceProvider, TStatusReceiver> statusReceiverFactory = null,
             ServiceLifetime lifetime = ServiceLifetime.Singleton) where TStatusReceiver : class, IAsyncPipelineComponentExecutionStatusReceiver
         {
-            return services.AddAsyncPipelineInternal(configAction, settings, typeof(TStatusReceiver), lifetime);
+            return services
+                .AddAsyncPipelineComponentExecutionStatusReceiver(statusReceiverFactory, lifetime)
+                .AddAsyncPipelineInternal(configAction, settings, lifetime);
         }
 
         /// <summary>
@@ -160,7 +177,7 @@ namespace PipelineFramework
             IDictionary<string, IDictionary<string, string>> settings = null,
             ServiceLifetime lifetime = ServiceLifetime.Singleton)
         {
-            return services.AddAsyncPipelineInternal(configAction, settings, null, lifetime);
+            return services.AddAsyncPipelineInternal(configAction, settings, lifetime);
         }
 
         /// <summary>
@@ -171,14 +188,18 @@ namespace PipelineFramework
         /// <param name="services">The services collection</param>
         /// <param name="configAction">The component configuration action</param>
         /// <param name="settings">Optional pipeline settings to apply</param>
+        /// <param name="statusReceiverFactory">Provides instances of <see cref="IPipelineComponentExecutionStatusReceiver"/>.</param>
         /// <param name="lifetime">The desired lifetime of the pipeline and associated component</param>
         /// <returns></returns>
         public static IServiceCollection AddPipeline<TPayload, TStatusReceiver>(this IServiceCollection services,
             Action<PipelineComponentConfiguration<TPayload>> configAction,
             IDictionary<string, IDictionary<string, string>> settings = null,
+            Func<IServiceProvider, TStatusReceiver> statusReceiverFactory = null,
             ServiceLifetime lifetime = ServiceLifetime.Singleton) where TStatusReceiver : class, IPipelineComponentExecutionStatusReceiver
         {
-            return services.AddPipelineInternal(configAction, settings, typeof(TStatusReceiver), lifetime);
+            return services
+                .AddPipelineComponentExecutionStatusReceiver(statusReceiverFactory, lifetime)
+                .AddPipelineInternal(configAction, settings, lifetime);
         }
 
         /// <summary>
@@ -195,29 +216,31 @@ namespace PipelineFramework
             IDictionary<string, IDictionary<string, string>> settings = null,
             ServiceLifetime lifetime = ServiceLifetime.Singleton)
         {
-            return services.AddPipelineInternal(configAction, settings, null, lifetime);
+            return services.AddPipelineInternal(configAction, settings, lifetime);
+        }
+
+        private static void AddComponentServices<TComponent>(this IServiceCollection services,  PipelineComponentConfigurationBase config,  ServiceLifetime lifetime)
+            where TComponent : IPipelineComponent
+        {
+            var serviceType = typeof(TComponent);
+            foreach (var component in config.Components)
+            {
+                services.Add(config.CustomComponentFactories.ContainsKey(component)
+                    ? new ServiceDescriptor(serviceType, config.CustomComponentFactories[component], lifetime)
+                    : new ServiceDescriptor(serviceType, component, lifetime));
+            }
         }
 
         private static IServiceCollection AddAsyncPipelineInternal<TPayload>(this IServiceCollection services, 
             Action<AsyncPipelineComponentConfiguration<TPayload>> configAction,
             IDictionary<string, IDictionary<string, string>> settings,
-            Type statusReceiverType,
             ServiceLifetime lifetime)
         {
             var config = new AsyncPipelineComponentConfiguration<TPayload>();
             configAction(config);
             config.Validate();
 
-            if (statusReceiverType != null)
-            {
-                services.Add(new ServiceDescriptor(typeof(IAsyncPipelineComponentExecutionStatusReceiver), statusReceiverType, lifetime));
-            }
-
-            foreach (var component in config.Components)
-            {
-                services.Add(new ServiceDescriptor(typeof(IAsyncPipelineComponent<TPayload>), component, lifetime));
-            }
-
+            services.AddComponentServices<IAsyncPipelineComponent<TPayload>>(config, lifetime);
             services.Add(new ServiceDescriptor(
                 typeof(IAsyncPipeline<TPayload>), 
                 provider => BuildAsyncPipeline(provider, settings), 
@@ -247,23 +270,13 @@ namespace PipelineFramework
         private static IServiceCollection AddPipelineInternal<TPayload>(this IServiceCollection services,
             Action<PipelineComponentConfiguration<TPayload>> configAction,
             IDictionary<string, IDictionary<string, string>> settings,
-            Type statusReceiverType,
             ServiceLifetime lifetime)
         {
             var config = new PipelineComponentConfiguration<TPayload>();
             configAction(config);
             config.Validate();
 
-            if (statusReceiverType != null)
-            {
-                services.Add(new ServiceDescriptor(typeof(IPipelineComponentExecutionStatusReceiver), statusReceiverType, lifetime));
-            }
-
-            foreach (var component in config.Components)
-            {
-                services.Add(new ServiceDescriptor(typeof(IPipelineComponent<TPayload>), component, lifetime));
-            }
-
+            services.AddComponentServices<IPipelineComponent<TPayload>>(config, lifetime);
             services.Add(new ServiceDescriptor(
                 typeof(IPipeline<TPayload>), 
                 provider => BuildPipeline(provider, settings), 
@@ -290,6 +303,38 @@ namespace PipelineFramework
                     : settingsHolder.WithoutSettings();
                 return builder.Build();
             }
+        }
+
+        private static IServiceCollection AddComponentsFromAssembly(this IServiceCollection services, Assembly assembly, bool isAsync = false)
+        {
+            var isComponent = isAsync 
+                ? IsAsyncPipelineComponent 
+                : (Func<Type, bool>)IsPipelineComponent;
+
+            var components = from t in assembly.GetTypes()
+                let interfaces = t.GetInterfaces()
+                where !t.IsAbstract &&
+                      !t.IsInterface &&
+                      interfaces.Any(isComponent)
+                select new
+                {
+                    ImplementingType = t,
+                    PipelineComponentInterfaces = interfaces.Where(isComponent)
+                };
+
+            foreach (var component in components)
+            {
+                foreach (var interfaceType in component.PipelineComponentInterfaces)
+                {
+                    services.AddSingleton(interfaceType, component.ImplementingType);
+                }
+            }
+
+            return services;
+
+            //Local functions
+            static bool IsAsyncPipelineComponent(Type i) => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IAsyncPipelineComponent<>);
+            static bool IsPipelineComponent(Type i) => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPipelineComponent<>);
         }
     }
 }
