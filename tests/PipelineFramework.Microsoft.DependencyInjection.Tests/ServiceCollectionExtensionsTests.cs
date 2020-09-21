@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
@@ -297,6 +298,21 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
 
             // Assert
             pipeline.Should().NotBeNull();
+        }
+
+        [TestMethod]
+        public void AsyncPipeline_InvalidConfig_ThrowsInvalidOperationException()
+        {
+            // Arrange
+
+            // Act
+            Action act = () => _services.AddPipelineFramework()
+                .AddAsyncPipeline<TestPayload>(cfg => {  });
+            
+            // Assert
+            act.Should()
+                .ThrowExactly<InvalidOperationException>()
+                .WithMessage("PipelineConfigurationException! At least one component must be initialized.");
         }
 
         [TestMethod]
