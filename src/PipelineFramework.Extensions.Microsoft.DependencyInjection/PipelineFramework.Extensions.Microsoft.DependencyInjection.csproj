@@ -20,6 +20,7 @@
     <PackageReleaseNotes>
 Changes in v1.1.0
 * Added support for custom component factories to be used by the depedency injection container.
+* Added optional parameters to several extensions methods for IServiceCollection to provide more customization for registering services.
 Changes in v1.0.1
 * Upgraded Pipeline Framework pacakge dependency to v5.0.1
 Changes in v1.0.0
