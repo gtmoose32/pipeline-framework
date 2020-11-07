@@ -112,7 +112,7 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
 
             //Assert
             result.Should().NotBeNull();
-            result.Length.Should().Be(8);
+            result.Length.Should().Be(9);
         }
 
         [TestMethod]

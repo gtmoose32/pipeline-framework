@@ -137,4 +137,13 @@ namespace PipelineFramework.TestInfrastructure
             return Task.FromResult(Execute(payload, cancellationToken));
         }
     }
+
+    [ExcludeFromCodeCoverage]
+    public class NullTaskComponent : AsyncPipelineComponentBase<TestPayload>
+    {
+        public override Task<TestPayload> ExecuteAsync(TestPayload payload, CancellationToken cancellationToken)
+        {
+            return null;
+        }
+    }
 }

@@ -243,5 +243,28 @@ namespace PipelineFramework.Core.Tests
             result.Should().NotBeNull();
             component1.Received().Dispose();
         }
+
+        [TestMethod]
+        public void AsyncPipeline_ComponentReturnsNull_Test()
+        {
+            //Arrange
+            PipelineComponentResolver.AddAsync(new NullTaskComponent());
+
+            var types = new List<Type>
+            {
+                typeof(NullTaskComponent)
+            };
+
+            var target = new AsyncPipeline<TestPayload>(PipelineComponentResolver, types, null, null);
+
+            //Act
+            Func<Task> act = () => target.ExecuteAsync(new TestPayload());
+
+            //Assert
+            act.Should()
+                .ThrowExactly<PipelineExecutionException>()
+                .WithInnerExceptionExactly<InvalidOperationException>()
+                .WithMessage($"AsyncPipelineComponent named '{nameof(NullTaskComponent)}' returned a null task.");
+        }
     }
 }
