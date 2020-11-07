@@ -79,9 +79,8 @@ namespace PipelineFramework
         {
             if (_componentExecutionStatusReceiver == null)
             {
-                var task = component.ExecuteAsync(payload, cancellationToken)
-                    ?? throw new InvalidOperationException(string.Format(NullTaskExceptionMessage, component.Name));
-
+                var task = component.ExecuteAsync(payload, cancellationToken) 
+                           ?? throw new InvalidOperationException(string.Format(NullTaskExceptionMessage, component.Name));
                 return await task.ConfigureAwait(false);
             }
 
@@ -95,7 +94,6 @@ namespace PipelineFramework
             {
                 var task = component.ExecuteAsync(payload, cancellationToken) 
                            ?? throw new InvalidOperationException(string.Format(NullTaskExceptionMessage, component.Name));
-
                 var result = await task.ConfigureAwait(false);
 
                 stopwatch.Stop();
