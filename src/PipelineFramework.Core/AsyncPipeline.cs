@@ -73,10 +73,16 @@ namespace PipelineFramework
             }
         }
 
+        private const string NullTaskExceptionMessage = "AsyncPipelineComponent named '{0}' returned a null task.";
+
         private async Task<T> ExecuteComponentAsync(IAsyncPipelineComponent<T> component, T payload, CancellationToken cancellationToken)
         {
             if (_componentExecutionStatusReceiver == null)
-                return await component.ExecuteAsync(payload, cancellationToken).ConfigureAwait(false);
+            {
+                var task = component.ExecuteAsync(payload, cancellationToken) 
+                           ?? throw new InvalidOperationException(string.Format(NullTaskExceptionMessage, component.Name));
+                return await task.ConfigureAwait(false);
+            }
 
             await _componentExecutionStatusReceiver.ReceiveExecutionStartingAsync(
                     new PipelineComponentExecutionStartingInfo(component.Name, payload))
@@ -86,7 +92,10 @@ namespace PipelineFramework
             stopwatch.Start();
             try
             {
-                var result = await component.ExecuteAsync(payload, cancellationToken).ConfigureAwait(false);
+                var task = component.ExecuteAsync(payload, cancellationToken) 
+                           ?? throw new InvalidOperationException(string.Format(NullTaskExceptionMessage, component.Name));
+                var result = await task.ConfigureAwait(false);
+
                 stopwatch.Stop();
                 await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(
                         new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed))

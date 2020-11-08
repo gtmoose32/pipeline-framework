@@ -56,10 +56,8 @@ namespace PipelineFramework.Abstractions.Builder
         public IAdditionalPipelineComponentHolder<TPipeline, TComponentBase, TPayload> WithComponent(Type componentType)
         {
             if (!typeof(TComponentBase).IsAssignableFrom(componentType))
-            {
                 throw new InvalidOperationException($"{componentType.Name} does not derive from {nameof(TComponentBase)}");
-            }
-
+            
             State.AddComponent(componentType);
             return this;
         }

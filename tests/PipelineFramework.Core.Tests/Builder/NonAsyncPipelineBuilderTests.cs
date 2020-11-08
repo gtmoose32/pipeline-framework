@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
 using PipelineFramework.TestInfrastructure;
@@ -70,6 +71,23 @@ namespace PipelineFramework.Core.Tests.Builder
             // Assert
             payload.FooStatus.Should().BeNull();
             result.BarStatus.Should().Be("MyBarTestValue");
+        }
+
+        [TestMethod]
+        public void TestWithComponent_ThrowsInvalidOperationException()
+        {
+            // Arrange
+
+            // Act
+            Action act = () => NonAsyncPipelineBuilder<TestPayload>
+                .Initialize(null)
+                .WithComponent(typeof(string));
+
+
+            // Assert
+            act.Should()
+                .ThrowExactly<InvalidOperationException>()
+                .WithMessage("* does not derive from *");
         }
     }
 }
