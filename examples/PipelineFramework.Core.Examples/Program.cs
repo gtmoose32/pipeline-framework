@@ -33,16 +33,19 @@ namespace PipelineFramework.Core.Examples
 
             await InvokePipelineAsync(resolver, settings);
 
-            await InvokePipelineAsyncWithDependencyInjectionAndStatusReceiver(settings);
+            await InvokePipelineWithDependencyInjectionAndStatusReceiverAsync(settings);
+
+            await InvokeNamedPipelinesWithDependencyInjectionAndStatusReceiverAsync();
 
             Console.Write("\nPress any key to exit...");
             Console.Read();
         }
 
-        private static IServiceProvider AddAsyncPipelineToContainer(IDictionary<string, IDictionary<string, string>> settings)
+        private static void AddAsyncPipelineToContainer(
+            IServiceCollection services,
+            IDictionary<string, IDictionary<string, string>> settings = null, 
+            string pipelineName = null)
         {
-            var services = new ServiceCollection();
-
             services
                 .AddPipelineFramework()
                 .AddAsyncPipeline<ExamplePipelinePayload, ExecutionStatusReceiver>(
@@ -50,20 +53,22 @@ namespace PipelineFramework.Core.Examples
                         .WithComponent<FooComponent>()
                         .WithComponent<DelayComponent>()
                         .WithComponent<BarComponent>(),
-                    settings);
-
-            return services.BuildServiceProvider();
+                    settings, 
+                    pipelineName);
         }
 
-        private static async Task InvokePipelineAsyncWithDependencyInjectionAndStatusReceiver(IDictionary<string, IDictionary<string, string>> settings)
+        private static async Task InvokePipelineWithDependencyInjectionAndStatusReceiverAsync(IDictionary<string, IDictionary<string, string>> settings)
         {
             Console.WriteLine("Executing pipeline asynchronously with dependency injection and execution status receiver.\n");
 
             var payload = new ExamplePipelinePayload();
-            var serviceProvider = AddAsyncPipelineToContainer(settings);
+            var services = new ServiceCollection();
+            AddAsyncPipelineToContainer(services, settings);
+            var serviceProvider = services.BuildServiceProvider();
 
-            using (var pipeline = serviceProvider.GetService<IAsyncPipeline<ExamplePipelinePayload>>()) 
+            using (var pipeline = serviceProvider.GetService<IAsyncPipeline<ExamplePipelinePayload>>())
             {
+                if (pipeline == null) return;
                 payload = await pipeline.ExecuteAsync(payload);
             }
 
@@ -72,6 +77,32 @@ namespace PipelineFramework.Core.Examples
             payload.Messages.ForEach(Console.WriteLine);
             
             Console.WriteLine("\n");
+        }
+
+        private static async Task InvokeNamedPipelinesWithDependencyInjectionAndStatusReceiverAsync()
+        {
+            Console.WriteLine("Executing named pipelines asynchronously with dependency injection and execution status receiver.\n");
+
+            var services = new ServiceCollection();
+            AddAsyncPipelineToContainer(services, pipelineName: "pipeline-1");
+            AddAsyncPipelineToContainer(services, pipelineName: "pipeline-2");
+            var serviceProvider = services.BuildServiceProvider();
+
+            foreach (var pipeline in serviceProvider.GetServices<IAsyncPipeline<ExamplePipelinePayload>>())
+            {
+                var payload = new ExamplePipelinePayload();
+
+                Console.WriteLine("\n");
+
+                using (pipeline)
+                {
+                    if (pipeline == null) return;
+                    payload = await pipeline.ExecuteAsync(payload);
+                    payload.Messages.ForEach(msg => Console.WriteLine($"{pipeline.Name}:  {msg}"));
+                }
+                
+                Console.WriteLine("\n");
+            }
         }
 
         private static async Task InvokePipelineAsync(IPipelineComponentResolver resolver, IDictionary<string, IDictionary<string, string>> settings)
