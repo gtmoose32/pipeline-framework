@@ -1,8 +1,8 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Builder;
 using PipelineFramework.TestInfrastructure;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
@@ -16,6 +16,7 @@ namespace PipelineFramework.Core.Tests.Builder
         public void TestBuilderByComponentType()
         {
             // Arrange
+            const string name = "test-name";
             PipelineComponentResolver.Add(new FooComponent());
             PipelineComponentResolver.Add(new BarComponent());
 
@@ -25,7 +26,7 @@ namespace PipelineFramework.Core.Tests.Builder
                 .WithComponent<BarComponent>()
                 .WithComponentResolver(PipelineComponentResolver)
                 .WithoutSettings()
-                .Build();
+                .Build(name);
 
             var payload = new TestPayload();
 
@@ -35,6 +36,7 @@ namespace PipelineFramework.Core.Tests.Builder
             var result = pipeline.Execute(payload);
 
             // Assert
+            pipeline.Name.Should().Be(name);
             result.Count.Should().Be(2);
             result.Count.Should().Be(2);
             result.FooWasCalled.Should().BeTrue();
@@ -69,6 +71,7 @@ namespace PipelineFramework.Core.Tests.Builder
             var result = pipeline.Execute(payload);
 
             // Assert
+            pipeline.Name.StartsWith("Pipeline").Should().BeTrue();
             payload.FooStatus.Should().BeNull();
             result.BarStatus.Should().Be("MyBarTestValue");
         }

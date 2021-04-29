@@ -10,6 +10,6 @@
         /// Creates a new pipeline.
         /// </summary>
         /// <returns>Pipeline</returns>
-        TPipeline Build();
+        TPipeline Build(string pipelineName = null);
     }
 }

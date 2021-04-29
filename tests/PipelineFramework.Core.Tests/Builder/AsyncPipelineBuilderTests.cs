@@ -16,6 +16,7 @@ namespace PipelineFramework.Core.Tests.Builder
         public async Task TestBuilderByComponentType()
         {
             // Arrange
+            const string name = "test-name";
             PipelineComponentResolver.AddAsync(new FooComponent());
             PipelineComponentResolver.AddAsync(new BarComponent());
 
@@ -25,7 +26,7 @@ namespace PipelineFramework.Core.Tests.Builder
                 .WithComponent<BarComponent>()
                 .WithComponentResolver(PipelineComponentResolver)
                 .WithoutSettings()
-                .Build();
+                .Build(name);
 
             var payload = new TestPayload();
 
@@ -35,6 +36,7 @@ namespace PipelineFramework.Core.Tests.Builder
             var result = await pipeline.ExecuteAsync(payload);
 
             // Assert
+            pipeline.Name.Should().Be(name);
             result.Count.Should().Be(2);
             result.Count.Should().Be(2);
             result.FooWasCalled.Should().BeTrue();
@@ -71,6 +73,7 @@ namespace PipelineFramework.Core.Tests.Builder
             var result = await pipeline.ExecuteAsync(payload);
 
             // Assert
+            pipeline.Name.StartsWith("AsyncPipeline").Should().BeTrue();
             result.FooStatus.Should().Be("MyFooTestValue");
             payload.BarStatus.Should().BeNull();
         }
