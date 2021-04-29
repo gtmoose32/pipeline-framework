@@ -141,6 +141,9 @@ namespace PipelineFramework.TestInfrastructure
     [ExcludeFromCodeCoverage]
     public class NullTaskComponent : AsyncPipelineComponentBase<TestPayload>
     {
+        [SuppressMessage(
+            "Critical Bug", "S4586:Non-async \"Task/Task<T>\" methods should not return null", 
+            Justification = "This component is for unit testing purposes only.  It is not intended for use by end user.")]
         public override Task<TestPayload> ExecuteAsync(TestPayload payload, CancellationToken cancellationToken)
         {
             return null;
