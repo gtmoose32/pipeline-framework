@@ -41,6 +41,10 @@ namespace PipelineFramework
         }
         #endregion
 
+
+        /// <inheritdoc />
+        public string Name { get; set; }
+
         /// <inheritdoc />
         public Task<T> ExecuteAsync(T payload) => ExecuteAsync(payload, default);
 

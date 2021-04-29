@@ -39,6 +39,9 @@ namespace PipelineFramework
         #endregion
 
         /// <inheritdoc />
+        public string Name { get; set; }
+
+        /// <inheritdoc />
         public T Execute(T payload) => Execute(payload, default);
 
         /// <inheritdoc />

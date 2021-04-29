@@ -30,5 +30,9 @@ namespace PipelineFramework.Abstractions
     /// </summary>
     public interface IPipeline : IDisposable
     {
+        /// <summary>
+        /// The name of the pipeline.  This property can be used to differentiate same pipeline types within a DI container.
+        /// </summary>
+        string Name { get; }
     }
 }
