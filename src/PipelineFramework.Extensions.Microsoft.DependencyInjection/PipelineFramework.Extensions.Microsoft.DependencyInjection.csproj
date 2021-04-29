@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
     <PackageId>PipelineFramework.Extensions.Microsoft.DependencyInjection</PackageId>
     <Product>PipelineFramework.Extensions.Microsoft.DependencyInjection</Product>
-    <Version>1.1.1</Version>
+    <Version>2.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
@@ -18,15 +18,9 @@
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\Release\netstandard2.1\PipelineFramework.Extensions.Microsoft.DependencyInjection.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
     <PackageReleaseNotes>
-Changes in v1.1.1
-* Updated PipelineFramework package dependency version to latest.
-Changes in v1.1.0
-* Added support for custom component factories to be used by the depedency injection container.
-* Added optional parameters to several extensions methods for IServiceCollection to provide more customization for registering services.
-Changes in v1.0.1
-* Upgraded Pipeline Framework pacakge dependency to v5.0.1
-Changes in v1.0.0
-* Added support for Microsoft depedency injection including a set of registration extension methods for IServiceCollection.
+Changes in v2.0.0
+* Added IServiceCollection extension method support for named pipelines.
+* Updated package dependency Microsoft.Extensions.DependencyInjection to v5.
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -48,7 +42,7 @@ Changes in v1.0.0
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
   </ItemGroup>
 
 </Project>
