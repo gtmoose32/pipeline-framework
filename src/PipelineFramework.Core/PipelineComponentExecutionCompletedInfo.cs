@@ -10,26 +10,31 @@ namespace PipelineFramework
     public class PipelineComponentExecutionCompletedInfo : PipelineComponentExecutionStartingInfo
     {
         /// <summary>
-        /// Creates a new instance.
-        /// </summary>
-        /// <param name="pipelineComponentName">Name of the pipeline component that has executed.</param>
-        /// <param name="executionTime">Total amount of execution time for the pipeline component.</param>
-        /// <param name="exception">Exception that might have occurred during pipeline component execution.</param>
-        [Obsolete("Use ctor with 4 parameters instead.")]
-        public PipelineComponentExecutionCompletedInfo(string pipelineComponentName, TimeSpan executionTime, Exception exception = null) 
-            : this(pipelineComponentName, null, executionTime, exception)
-        {
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="pipelineComponentName"></param>
         /// <param name="payload"></param>
         /// <param name="executionTime"></param>
+        /// <param name="startTimeStamp"></param>
         /// <param name="exception"></param>
-        public PipelineComponentExecutionCompletedInfo(string pipelineComponentName, object payload, TimeSpan executionTime, Exception exception = null) 
-            : base(pipelineComponentName, payload)
+        public PipelineComponentExecutionCompletedInfo(string pipelineComponentName, object payload, TimeSpan executionTime, DateTime startTimeStamp, Exception exception = null) 
+            : base(pipelineComponentName, payload, startTimeStamp)
+        {
+            ExecutionTime = executionTime;
+            Exception = exception;
+        }
+
+        /// <summary>
+        /// Instantiate a new <see cref="PipelineComponentExecutionCompletedInfo"/> instance
+        /// </summary>
+        /// <param name="startingInfo"></param>
+        /// <param name="executionTime"></param>
+        /// <param name="exception"></param>
+        public PipelineComponentExecutionCompletedInfo(
+            PipelineComponentExecutionStartingInfo startingInfo, 
+            TimeSpan executionTime, 
+            Exception exception = null)
+            : base(startingInfo.PipelineComponentName, startingInfo.Payload, startingInfo.TimeStamp)
         {
             ExecutionTime = executionTime;
             Exception = exception;
