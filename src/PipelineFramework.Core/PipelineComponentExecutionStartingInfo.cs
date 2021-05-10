@@ -24,11 +24,16 @@ namespace PipelineFramework
         /// </summary>
         /// <param name="pipelineComponentName">Name of the pipeline component that has executed.</param>
         /// <param name="payload">Payload used by the executing pipeline.</param>
-        public PipelineComponentExecutionStartingInfo(string pipelineComponentName, object payload)
+        public PipelineComponentExecutionStartingInfo(string pipelineComponentName, object payload) 
+            : this(pipelineComponentName, payload, DateTime.UtcNow)
+        {
+        }
+
+        protected PipelineComponentExecutionStartingInfo(string pipelineComponentName, object payload, DateTime startTimeStamp)
         {
             PipelineComponentName = pipelineComponentName ?? throw new ArgumentNullException(nameof(pipelineComponentName));
             Payload = payload;
-            TimeStamp = DateTime.UtcNow;
+            TimeStamp = startTimeStamp;
         }
 
         /// <summary>
