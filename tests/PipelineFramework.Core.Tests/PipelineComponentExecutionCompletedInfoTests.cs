@@ -2,9 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.TestInfrastructure;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PipelineFramework.Core.Tests
 {
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class PipelineComponentExecutionCompletedInfoTests
     {

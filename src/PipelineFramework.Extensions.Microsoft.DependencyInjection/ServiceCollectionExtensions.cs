@@ -66,7 +66,7 @@ namespace PipelineFramework
         /// <param name="services">Services collection dependency injection container.</param>
         /// <returns><see cref="IServiceCollection"/></returns>
         public static IServiceCollection AddPipelineComponentResolver(this IServiceCollection services)
-            => services.AddSingleton<IPipelineComponentResolver>(provider => new ServiceProviderPipelineComponentResolver(provider));
+            => services.AddTransient<IPipelineComponentResolver>(provider => new ServiceProviderPipelineComponentResolver(provider));
 
         /// <summary>
         /// Adds the specified pipeline component as an <see cref="IAsyncPipelineComponent{TPayload}"/> to the services collection.
