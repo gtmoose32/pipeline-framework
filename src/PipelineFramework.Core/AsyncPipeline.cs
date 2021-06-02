@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-#pragma warning disable 4014
 
 namespace PipelineFramework
 {
