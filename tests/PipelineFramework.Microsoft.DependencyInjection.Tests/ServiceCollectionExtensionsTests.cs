@@ -1,15 +1,16 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PipelineFramework.Abstractions;
 using PipelineFramework.Extensions.Microsoft.DependencyInjection;
 using PipelineFramework.TestInfrastructure;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+// ReSharper disable AssignNullToNotNullAttribute
 
 namespace PipelineFramework.Microsoft.DependencyInjection.Tests
 {
@@ -134,11 +135,13 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
         public void AddAsyncPipeline()
         {
             // Arrange
+            const string name = "test-name";
             _services.AddPipelineFramework();
             _services.AddAsyncPipeline<TestPayload, TestExecutionStatusReceiver>(
                 cfg => cfg
                     .WithComponent<FooComponent>()
-                    .WithComponent<BarComponent>());
+                    .WithComponent<BarComponent>(), 
+                pipelineName: name);
 
             var sut = _services.BuildServiceProvider();
 
@@ -147,8 +150,10 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
                 .Should().NotBeNull()
                 .And.BeOfType<ServiceProviderPipelineComponentResolver>();
 
-            sut.GetService<IAsyncPipeline<TestPayload>>()
-                .Should().NotBeNull();
+            var pipeline = sut.GetService<IAsyncPipeline<TestPayload>>();
+            pipeline.Should().NotBeNull();
+            // ReSharper disable once PossibleNullReferenceException
+            pipeline.Name.Should().Be(name);
 
             sut.GetServices<IAsyncPipelineComponent<TestPayload>>()
                 .Should().HaveCount(2);
@@ -162,12 +167,14 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
         public void AddPipeline()
         {
             // Arrange
+            const string name = "test-name";
             _services
                 .AddPipelineFramework()
                 .AddPipeline<TestPayload, TestExecutionStatusReceiver>(
                     cfg => cfg
                         .WithComponent<FooComponent>()
-                        .WithComponent<BarComponent>());
+                        .WithComponent<BarComponent>(),
+                    pipelineName: name);
 
             var sut = _services.BuildServiceProvider();
 
@@ -176,8 +183,10 @@ namespace PipelineFramework.Microsoft.DependencyInjection.Tests
                 .Should().NotBeNull()
                 .And.BeOfType<ServiceProviderPipelineComponentResolver>();
 
-            sut.GetService<IPipeline<TestPayload>>()
-                .Should().NotBeNull();
+            var pipeline = sut.GetService<IPipeline<TestPayload>>();
+            pipeline.Should().NotBeNull();
+            // ReSharper disable once PossibleNullReferenceException
+            pipeline.Name.Should().Be(name);
 
             sut.GetServices<IPipelineComponent<TestPayload>>()
                 .Should().HaveCount(2);

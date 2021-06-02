@@ -1,5 +1,6 @@
 ﻿using PipelineFramework.Abstractions;
 using PipelineFramework.Abstractions.Builder;
+using System;
 
 namespace PipelineFramework.Builder
 {
@@ -10,15 +11,18 @@ namespace PipelineFramework.Builder
         {
         }
 
-        internal static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> Initialize(
-            IPipelineComponentExecutionStatusReceiver executionStatusReceiver) => 
-                new NonAsyncPipelineBuilder<TPayload>(executionStatusReceiver);
+        public static IInitialPipelineComponentHolder<IPipeline<TPayload>, IPipelineComponent<TPayload>, TPayload> Initialize(
+            IPipelineComponentExecutionStatusReceiver executionStatusReceiver) 
+                => new NonAsyncPipelineBuilder<TPayload>(executionStatusReceiver);
         
-        public override IPipeline<TPayload> Build()
+        public override IPipeline<TPayload> Build(string pipelineName = null)
             => new Pipeline<TPayload>(
                 State.ComponentResolver, 
                 State.ComponentNames, 
                 State.Settings, 
-                State.PipelineComponentExecutionStatusReceiver);
+                State.PipelineComponentExecutionStatusReceiver)
+            {
+                Name = pipelineName ?? $"Pipeline{Guid.NewGuid():N}"
+            };
     }
 }

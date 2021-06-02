@@ -16,7 +16,7 @@ namespace PipelineFramework.Core.Examples.Components
         {
             base.Initialize(settings);
 
-            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5));
+            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(1));
         }
 
         public override async Task<ExamplePipelinePayload> ExecuteAsync(ExamplePipelinePayload payload, CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ namespace PipelineFramework.Core.Examples.Components
         {
             base.Initialize(settings);
 
-            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(5));
+            _delay = Settings.GetSettingValue("DelayTimeSpan", TimeSpan.FromSeconds(1));
         }
 
         public override ExamplePipelinePayload Execute(ExamplePipelinePayload payload, CancellationToken cancellationToken)

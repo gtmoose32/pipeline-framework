@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-#pragma warning disable 4014
 
 namespace PipelineFramework
 {
@@ -40,6 +39,10 @@ namespace PipelineFramework
             _componentExecutionStatusReceiver = componentExecutionStatusReceiver;
         }
         #endregion
+
+
+        /// <inheritdoc />
+        public string Name { get; set; }
 
         /// <inheritdoc />
         public Task<T> ExecuteAsync(T payload) => ExecuteAsync(payload, default);

@@ -31,7 +31,7 @@ namespace PipelineFramework.Abstractions.Builder
         } 
         #endregion
 
-        public abstract TPipeline Build();
+        public abstract TPipeline Build(string pipelineName = null);
 
         public IPipelineBuilder<TPipeline> WithSettings(IDictionary<string, IDictionary<string, string>> settings)
         {
