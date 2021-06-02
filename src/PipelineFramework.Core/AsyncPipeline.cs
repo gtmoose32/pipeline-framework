@@ -88,8 +88,9 @@ namespace PipelineFramework
                 return await task.ConfigureAwait(false);
             }
 
+            var executionStartingInfo = new PipelineComponentExecutionStartingInfo(component.Name, payload);
             await _componentExecutionStatusReceiver.ReceiveExecutionStartingAsync(
-                    new PipelineComponentExecutionStartingInfo(component.Name, payload))
+                    executionStartingInfo)
                 .ConfigureAwait(false);
 
             var stopwatch = new Stopwatch();
@@ -102,7 +103,7 @@ namespace PipelineFramework
 
                 stopwatch.Stop();
                 await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(
-                        new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed))
+                        new PipelineComponentExecutionCompletedInfo(executionStartingInfo, stopwatch.Elapsed))
                     .ConfigureAwait(false);
 
                 return result;
@@ -111,7 +112,7 @@ namespace PipelineFramework
             {
                 stopwatch.Stop();
                 await _componentExecutionStatusReceiver.ReceiveExecutionCompletedAsync(
-                        new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed, e))
+                        new PipelineComponentExecutionCompletedInfo(executionStartingInfo, stopwatch.Elapsed, e))
                     .ConfigureAwait(false);
 
                 throw;

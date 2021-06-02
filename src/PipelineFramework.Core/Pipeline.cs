@@ -78,8 +78,9 @@ namespace PipelineFramework
             if (_componentExecutionStatusReceiver == null)
                 return component.Execute(payload, cancellationToken);
 
+            var executionStartingInfo = new PipelineComponentExecutionStartingInfo(component.Name, payload);
             _componentExecutionStatusReceiver.ReceiveExecutionStarting(
-                new PipelineComponentExecutionStartingInfo(component.Name, payload));
+                executionStartingInfo);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             try
@@ -87,14 +88,14 @@ namespace PipelineFramework
                 var result = component.Execute(payload, cancellationToken);
                 stopwatch.Stop();
                 _componentExecutionStatusReceiver.ReceiveExecutionCompleted(
-                    new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed));
+                    new PipelineComponentExecutionCompletedInfo(executionStartingInfo, stopwatch.Elapsed));
                 return result;
             }
             catch (Exception e)
             {
                 stopwatch.Stop();
                 _componentExecutionStatusReceiver.ReceiveExecutionCompleted(
-                    new PipelineComponentExecutionCompletedInfo(component.Name, payload, stopwatch.Elapsed, e));
+                    new PipelineComponentExecutionCompletedInfo(executionStartingInfo, stopwatch.Elapsed, e));
                 throw;
             }
         }

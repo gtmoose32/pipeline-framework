@@ -21,6 +21,8 @@
     <PackageReleaseNotes>
 Changes in v5.1.0
 * Added support for named pipelines to assist with using multiple pipelines of same payload type.
+Changes in v5.0.3
+* BREAKING: Fixed issue with PipelineComponentExecutionCompletedInfo where the timestamp was getting set to the completed time instead of the starting time. This involved a breaking change to the constructor in order to support.
 Changes in v5.0.2
 * Added check for null task returned from AsyncPipelineComponents to prevent NullReferenceException.
 Changes in v5.0.1
