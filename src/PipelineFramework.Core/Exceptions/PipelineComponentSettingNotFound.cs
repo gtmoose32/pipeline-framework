@@ -15,7 +15,7 @@ namespace PipelineFramework.Exceptions
             "Pipeline component named '{0}' is referencing a setting named '{1}' that cannot be found.";
 
         #region ctor
-        internal PipelineComponentSettingNotFoundException(IPipelineComponent component, string settingName)
+        public PipelineComponentSettingNotFoundException(IPipelineComponent component, string settingName)
             : base(component)
         {
             SettingName = settingName;

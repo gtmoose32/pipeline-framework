@@ -9,7 +9,7 @@
     <PackageProjectUrl>https://github.com/gtmoose32/pipeline-framework</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
-    <Version>5.1.0</Version>
+    <Version>5.1.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
@@ -19,22 +19,24 @@
     <Product>PipelineFramework.Core</Product>
     <LangVersion>latest</LangVersion>
     <PackageReleaseNotes>
-Changes in v5.1.0
-* Added support for named pipelines to assist with using multiple pipelines of same payload type.
-* Bug fix for using scoped lifetime pipeline components.
-Changes in v5.0.3
-* BREAKING: Fixed issue with PipelineComponentExecutionCompletedInfo where the timestamp was getting set to the completed time instead of the starting time. This involved a breaking change to the constructor in order to support.
-Changes in v5.0.2
-* Added check for null task returned from AsyncPipelineComponents to prevent NullReferenceException.
-Changes in v5.0.1
-* Added missing payload property to execution info classes used by IAsyncPipelineComponentExecutionStatusReceiver and IPipelineComponentExecutionStatusReceiver.
-Changes in v5.0.0
-* BREAKING: Removed name paramter from Initialize method on IPipelineComponent interface.
-* BREAKING: Removed ability to add component by name through builder.
-* BREAKING: All pipeline ctors are now internal only.  Creation only allowed through builder.
-* Added support for disposable pipelines.
-* Removed conditional CancellationToken parameters from pipeline interfaces in favor of overload methods intead.
-* Added component execution status updates.
+      Changes in v5.1.1
+      * Modified exception types to have public ctors to facilitate unit testing.
+      Changes in v5.1.0
+      * Added support for named pipelines to assist with using multiple pipelines of same payload type.
+      * Bug fix for using scoped lifetime pipeline components.
+      Changes in v5.0.3
+      * BREAKING: Fixed issue with PipelineComponentExecutionCompletedInfo where the timestamp was getting set to the completed time instead of the starting time. This involved a breaking change to the constructor in order to support.
+      Changes in v5.0.2
+      * Added check for null task returned from AsyncPipelineComponents to prevent NullReferenceException.
+      Changes in v5.0.1
+      * Added missing payload property to execution info classes used by IAsyncPipelineComponentExecutionStatusReceiver and IPipelineComponentExecutionStatusReceiver.
+      Changes in v5.0.0
+      * BREAKING: Removed name paramter from Initialize method on IPipelineComponent interface.
+      * BREAKING: Removed ability to add component by name through builder.
+      * BREAKING: All pipeline ctors are now internal only.  Creation only allowed through builder.
+      * Added support for disposable pipelines.
+      * Removed conditional CancellationToken parameters from pipeline interfaces in favor of overload methods intead.
+      * Added component execution status updates.
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

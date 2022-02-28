@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/gtmoose32/pipeline-framework</RepositoryUrl>
     <PackageId>PipelineFramework.Extensions.Microsoft.DependencyInjection</PackageId>
     <Product>PipelineFramework.Extensions.Microsoft.DependencyInjection</Product>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <NeutralLanguage>en</NeutralLanguage>
@@ -18,11 +18,13 @@
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\Release\netstandard2.1\PipelineFramework.Extensions.Microsoft.DependencyInjection.xml</DocumentationFile>
     <LangVersion>latest</LangVersion>
     <PackageReleaseNotes>
-Changes in v2.0.0
-* Added IServiceCollection extension method support for named pipelines.
-* Updated package dependency Microsoft.Extensions.DependencyInjection to v5.
-Changes in v2.0.1
-* Reverted Microsoft.Extensions.DependencyInjection package dependency back to >= 3.1.6.
+      Changes in v2.0.2
+      * Updated core library to facilitate unit testing with exceptions.
+      Changes in v2.0.1
+      * Reverted Microsoft.Extensions.DependencyInjection package dependency back to >= 3.1.6.
+      Changes in v2.0.0
+      * Added IServiceCollection extension method support for named pipelines.
+      * Updated package dependency Microsoft.Extensions.DependencyInjection to v5.
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

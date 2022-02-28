@@ -14,7 +14,7 @@ namespace PipelineFramework.Exceptions
         private const string ErrorMessage = "Pipeline execution halted!  Pipeline component named '{0}' has thrown an exception.  See inner exception for details.";
 
         #region ctor
-        internal PipelineExecutionException(
+        public PipelineExecutionException(
             IPipelineComponent component, Exception componentException)
             : base(component, componentException)
         { }
